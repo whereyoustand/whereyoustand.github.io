@@ -124,3 +124,7 @@ Code: **MIT**.
 ## Disclaimer
 
 This is an educational tool for self-understanding. The result is an approximate description of answer patterns. It carries no moral judgement, states no political position, and makes no claim about any existing government.
+
+**It is not a psychometric instrument.** There are no population norms, no reliability or validity testing, and the calibration set is small — 11 profiles written from primary texts and 12 human answer sheets. Treat it as a structured way of describing your answers, not as a measurement of a trait.
+
+It is also deliberately **not** framed as entertainment. A toy does not need published thresholds and a documented false-positive rate; this does, which is why those numbers are in [METHOD.md](METHOD.md).

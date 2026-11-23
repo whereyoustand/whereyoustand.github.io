@@ -943,11 +943,11 @@ function renderResult(){
     ${refHtml}
 
     <div class="card">
-      <h3>分享给作者</h3>
-      <div style="font-size:13px;color:#888;margin-bottom:12px">复制下面这段发给我，或直接截图</div>
-      <button class="btn ghost" style="margin-bottom:10px" onclick="copyResult()">复制结果文本</button>
+      <h3>保存这次结果</h3>
+      <div style="font-size:13px;color:#888;margin-bottom:12px">复制成文本可以留档，也可以粘给作者核对；想要一张图就点生成分享卡。</div>
+      <button class="btn ghost" style="margin-bottom:10px" onclick="copyResult()">复制完整结果</button>
       <button class="btn ghost" style="margin-bottom:10px;margin-left:8px" onclick="makeShareCard()">生成分享卡</button>
-      <pre id="raw">${buildText(S)}</pre>
+      <details style="margin-top:4px"><summary style="font-size:12.5px;color:#999;cursor:pointer;outline:none">查看完整文本</summary><pre id="raw" style="margin-top:10px">${buildText(S)}</pre></details>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:8px">

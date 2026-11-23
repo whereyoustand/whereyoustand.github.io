@@ -908,11 +908,11 @@ function renderResult(){
     ${refHtml}
 
     <div class="card">
-      <h3>Share with the author</h3>
-      <div style="font-size:13px;color:#888;margin-bottom:12px">Copy the block below and send it, or just screenshot it</div>
-      <button class="btn ghost" style="margin-bottom:10px" onclick="copyResult()">Copy result text</button>
+      <h3>Save this result</h3>
+      <div style="font-size:13px;color:#888;margin-bottom:12px">Copy it as text to keep a record or to send for a check; the share card makes an image instead.</div>
+      <button class="btn ghost" style="margin-bottom:10px" onclick="copyResult()">Copy full result</button>
       <button class="btn ghost" style="margin-bottom:10px;margin-left:8px" onclick="makeShareCard()">Share card</button>
-      <pre id="raw">${buildText(S)}</pre>
+      <details style="margin-top:4px"><summary style="font-size:12.5px;color:#999;cursor:pointer;outline:none">Show the full text</summary><pre id="raw" style="margin-top:10px">${buildText(S)}</pre></details>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:8px">

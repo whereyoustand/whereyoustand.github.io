@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>政治立场测试</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+background:#f7f7f8;color:#1a1a1a;line-height:1.65;font-size:16px}
+.wrap{max-width:640px;margin:0 auto;padding:0 0 96px;min-height:100vh;background:#fff}
+@media(min-width:700px){body{padding:24px 0}.wrap{border-radius:16px;box-shadow:0 2px 24px rgba(0,0,0,.06);min-height:auto}}
+
+/* 封面 */
+.cover{padding:56px 28px 40px;text-align:center}
+.cover h1{font-size:26px;font-weight:600;letter-spacing:.5px;margin-bottom:14px}
+.cover .sub{color:#666;font-size:14px;line-height:1.8;margin-bottom:32px}
+.cover .meta{display:flex;justify-content:center;gap:28px;font-size:13px;color:#999;margin-bottom:36px}
+.cover .meta div{text-align:center}
+.cover .meta b{display:block;font-size:20px;color:#1a1a1a;font-weight:600}
+.note{background:#f5f5f7;border-radius:12px;padding:18px 20px;font-size:13.5px;color:#555;text-align:left;line-height:1.8;margin-bottom:32px}
+.note b{color:#1a1a1a}
+
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:500;
+background:#1a1a1a;color:#fff;cursor:pointer;transition:.15s}
+.btn:active{transform:scale(.98);opacity:.85}
+.btn.ghost{background:#f0f0f2;color:#1a1a1a}
+.btn:disabled{opacity:.35;cursor:default}
+
+/* 进度 */
+.bar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+padding:12px 24px;border-bottom:1px solid #eee}
+.bar .row{display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:7px}
+.track{height:3px;background:#eee;border-radius:2px;overflow:hidden}
+.fill{height:100%;background:#1a1a1a;width:0;transition:width .25s ease}
+
+/* 题目 */
+.q{padding:32px 24px}
+.q .no{font-size:12px;color:#bbb;letter-spacing:1px;margin-bottom:10px}
+.q h2{font-size:17.5px;font-weight:500;line-height:1.7;margin-bottom:26px}
+.opt{display:flex;align-items:flex-start;gap:14px;padding:15px 16px;border:1.5px solid #e8e8ea;
+border-radius:12px;margin-bottom:11px;cursor:pointer;transition:.12s;background:#fff}
+.opt:active{background:#fafafa}
+.opt.on{border-color:#1a1a1a;background:#fafafa}
+.key{flex:0 0 24px;height:24px;border-radius:50%;background:#f0f0f2;display:flex;align-items:center;
+justify-content:center;font-size:12px;font-weight:600;color:#888;transition:.12s}
+.opt.on .key{background:#1a1a1a;color:#fff}
+.txt{flex:1;font-size:15px;line-height:1.6}
+
+/* 排序题 */
+.rank-hint{font-size:12.5px;color:#999;margin-bottom:14px}
+.rk{display:flex;align-items:flex-start;gap:14px;padding:15px 16px;border:1.5px solid #e8e8ea;
+border-radius:12px;margin-bottom:11px;cursor:pointer;transition:.12s;background:#fff}
+.rk.on{border-color:#1a1a1a;background:#fafafa}
+.rk .key{background:#f0f0f2}
+.rk.on .key{background:#1a1a1a;color:#fff}
+
+/* 底部 */
+.foot{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);
+backdrop-filter:blur(10px);border-top:1px solid #eee;padding:12px 24px;max-width:640px;margin:0 auto}
+.foot .inner{display:flex;gap:10px}
+.foot .btn{flex:1}
+.foot .btn.ghost{flex:0 0 88px}
+
+/* 结果 */
+.res{padding:40px 24px}
+.res h1{font-size:22px;font-weight:600;margin-bottom:6px}
+.res .verdict{font-size:15px;color:#666;margin-bottom:30px}
+.card{background:#fafafa;border-radius:14px;padding:22px;margin-bottom:18px}
+.card h3{font-size:13px;color:#999;font-weight:500;letter-spacing:.5px;margin-bottom:16px}
+.top1{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.top1 .nm{font-size:24px;font-weight:600}
+.top1 .sc{font-size:14px;color:#999}
+.warn{background:#fff8e6;border:1px solid #ffe0a3;border-radius:10px;padding:14px 16px;
+font-size:13.5px;color:#7a5c00;line-height:1.7;margin-top:14px}
+.dim{display:flex;align-items:center;gap:10px;margin-bottom:11px;font-size:12.5px}
+.dim .lb{flex:0 0 62px;color:#666;text-align:right}
+.dim .tr{flex:1;height:20px;background:#f0f0f2;border-radius:4px;position:relative;overflow:hidden}
+.dim .md{position:absolute;left:50%;top:0;bottom:0;width:1px;background:#ddd}
+.dim .bd{position:absolute;top:3px;bottom:3px;border-radius:2px;background:#1a1a1a}
+.dim .vl{flex:0 0 38px;font-size:11px;color:#999;text-align:right}
+.rk-item{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee;font-size:14px}
+.rk-item:last-child{border:none}
+.rk-item .n{color:#666;font-size:12.5px;width:22px}
+.rk-item .s{color:#999;font-size:12.5px}
+.tag{display:inline-block;padding:4px 11px;background:#eee;border-radius:20px;font-size:12.5px;
+margin:0 7px 7px 0;color:#555}
+pre{background:#f5f5f7;border-radius:10px;padding:14px;font-size:11.5px;line-height:1.7;
+overflow-x:auto;color:#444;font-family:ui-monospace,Menlo,monospace;white-space:pre-wrap;word-break:break-all}
+.dim-modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.dim-box{background:#fff;width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:26px 22px 30px;max-height:82vh;overflow:auto}
+.dim-h{font-size:18px;font-weight:600;margin-bottom:14px}
+.dim-q{font-size:14px;color:#666;margin-bottom:18px;line-height:1.8;padding-bottom:14px;border-bottom:1px solid #eee}
+.dim-side{font-size:14px;line-height:1.9;margin-bottom:14px}
+.dim-side b{color:#1a1a1a}
+.dim-close{width:100%;margin-top:18px;padding:14px;border:0;border-radius:12px;background:#1a1a1a;color:#fff;font-size:15px}
+.dimhint{font-size:11px;color:#bbb;margin-left:4px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<div id="scModal" style="display:none;position:fixed;inset:0;background:rgba(20,20,20,.93);z-index:9999;overflow:auto;-webkit-overflow-scrolling:touch">
+  <div style="max-width:560px;margin:0 auto;padding:22px 16px 40px;text-align:center">
+    <p style="color:#f2f2f2;font-size:14px;margin:0 0 14px;line-height:1.7">手机上<b>长按图片</b>保存到相册；电脑上可直接点下载。</p>
+    <img id="scImg" alt="分享卡" style="width:100%;max-width:420px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.4)">
+    <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a id="scDl" download="values-coordinate.png" style="background:#1a1a1a;color:#fff;text-decoration:none;padding:11px 26px;border-radius:9px;font-size:14px">下载图片</a>
+      <button onclick="document.getElementById('scModal').style.display='none'" style="background:transparent;color:#f2f2f2;border:1px solid #777;border-radius:9px;padding:11px 26px;font-size:14px;cursor:pointer">关闭</button>
+    </div>
+  </div>
+</div>
+<img id="qrSrc" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAx4AAAMeCAIAAAAcWEVpAAAUM0lEQVR4nO3ZQW7jOhZAUbvhhQjw/pdkgLsw4FEPGqhBj34x9zMMc848EvVIuS5U98/nfQMAoPCf5CoAAEgrAICSr1YAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQAgrQAA9uOrFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBA5nE70XU9v3sJv84Yr9vGVh6JzUcx58h3yk79iOnNnb255R15zjc3TvzB9NUKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACDz6C71443x+u4lbOG6nrfjrNzciQHOLW9up+butWyAKx9q87fDL9JPmcP+K1zjyH875vhqBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAAJlHd6nf6Lqet72N8bodZ2Lsc3OY299lM1/5UEeevc0PEgfb/0js//7uzFcrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAIDMo7sU7Ou6nufda4zXsr9aNoe55a281+YmHmpuepufc/hGvloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGQe3aXgr13Xc83Uxnid91Bzjpz5slHs/1DAt/PVCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAg8+gu9RuN8fruJfzGAV7Xc8GfTC9v4q/mlnfkoV05is2Xt+zQLnsN9z9+y5jD2Xy1AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgMyju9SPd13P717CrzM38zFea240Z+JeE0+0cnorH2rO5g9lp75i5fTm+LeD/+OrFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBA5v75vLurwd+5rqeR3W63MV6bz2HZTs2NYm55y8bunK+3/zvFwXy1AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDIPLpL/UbX9Vx2rzFe5z3U5uZmvvkA55a3+fFbtlNzN1p5kCbutfmJ3f81XDbzZa8hX+SrFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBA5v75vG/Hua7nmhuN8bodN4q5h1o28/3HvvnxW7lTy2x+JFY67/it3Nwj34453qmv8NUKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMo/uUj/eGK/vXsIWruu5+fQmVrhyeRP3mpv5Spu/HcsO7cq3Y/9Tcd7bsfk556fw1QoAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAIHP/fN7d1X6263r+7Z+M8Vpzo2lzK+QrO7Vs5isP0pGO3KmJhzpyeZv/9K18qGX3OnKn5vhqBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQeXSX+vHGeH33ErZwXc/Npze3wp2Xt//ZW7bCzTd3/5lvPsBlb8fKORz5dhz5O7aMr1YAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQuX8+b+P8n+t6/u0oxnjtvLzFK9z5oeZutDmb+1P2d/OdWunIn9ll5kax+c/sOPHt8NUKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACBz/3zet+Nc1/O2sTFe541i5UMts/n05pa37F4rH2pzR45i2Su/+Rzm+FfgbL5aAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBk7p/P+3ac63quudEYr52XN73CZQ+1+QCXTW/O5gdp5fI2f6iVB2lihStfQ79Ii+cwzc/sV/hqBQCQkVYAABlpBQCQkVYAANIKAGA/vloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBA5v75vG/Hua7nxF+N8dr2RivNPdScZaPY/KFWLm9zK9+OibHPLe/I/d385d38Z/bI3zH+8NUKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMvfP591djX/kup47T2qM1+YPNbHCzWe+v7lTsbkjT8XmOzUx8yN/kVaaG8Wyn9mx9/Tm+GoFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJB53E50Xc81NxrjddvbxAqXTW/lAOduNDeKZQ+1cqeW2fz4HTnzzW3+Gs6tcOUv0hxH/St8tQIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyEgrAICMtAIAyDy6S/1G1/W8HbfCMV5rbrTS3PLmRrHM5ss7cuZzjnynjpze3L02P7TLlufE/uGrFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBA5v75vLur8Y9c19OkvmKM15oBbr5Ty+YwN4q55c3N/MgjsWyAm+/U/jM/75zzRb5aAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQObRXeo3uq7n7ThjvG7HjX3uoTYfxdzx2/yhVtr8/d18ecsO0tyNVk5v2S8SP4WvVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAGWkFAJCRVgAAmUd3KXY0xutv/+S6nmtuNG3ZvfYfxQQP9VPejrl7LXPkQZqz7CCtdOROLeOrFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBA5v75vLur8S+6ruea+Y7xWra8Zfeau9F5mztt2QCPPEibPxRfnPkyKzd3YhQrz/nmfLUCAMhIKwCAjLQCAMhIKwCAjLQCAMhIKwCAjLQCAMhIKwCAjLQCAMhIKwCAjLQCAMhIKwCAjLQCAMhIKwCAjLQCAMhIKwCAjLQCAMjcP5/37TjX9VxzozFeOy9vboVzy5sbxZzz9nfl9I6cOSQ2//Xb/N8O/vDVCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADL3z+fdXe1nu67nbWNjvNY81LIbTZtYoc1dP/M5czu1+aFdubxlO7XMkXPY/BdppbH3Ts3x1QoAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAIHP/fN7d1X6263r+7Z+M8bod91BHmtupzad35EOttP/7u/Pv2OYHaeXmbj7zI8/55ny1AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDI3D+f9+041/Wc+KsxXrclNl/e/uYGuMyRO7Vs5nPTO3J5y+61+UOtfN83f3k3/7dj8+Wt5KsVAEBGWgEAZKQVAEBGWgEAZKQVAEBGWgEAZKQVAEBGWgEAZKQVAEBGWgEAZKQVAEBGWgEAZKQVAEBGWgEAZKQVAEBGWgEAZO6fz7u72q9zXc/b3sZ4rXmoiRstvtd5p2LlHDZ/qM3fRA/1U3Zqc5v/9PGHr1YAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAAJn75/PurgZ/57qeO49sjNfEX3mor0xvpc0fatlB2nyn5uZw5EOtNDHAI3dqjq9WAAAZaQUAkJFWAAAZaQUAkJFWAAAZaQUAkJFWAAAZaQUAkJFWAAAZaQUAkJFWAAAZaQUAkJFWAAAZaQUAkJFWAAAZaQUAIK0AAPbzuJ3oup7fvYRfZ4zXzvdyJH6KzXdqbnlzb8eyd2rlzFf+UGy+v8vMLW/zN3Fz/kMQACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACDz6C71443x+u4lbOG6nsvuZeYH76+D9MVRzL0dE/dadqPFp2KCXyTTS/hqBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAABlpBQCQkVYAAJlHd6nf6Lqet72N8bodZ/OxL5v53Bw2X96R5ma++f7OmVje3Bwcv5+yU2PvEzvHVysAgIy0AgDISCsAgIy0AgCQVgAA+/HVCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADLSCgAgI60AADKP7lLw167red7UJh5qjNfEjeb+am7mE/daubwjD9LcAHc+EnOW3Wj/g7RyFOctbyVfrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMtIKACAjrQAAMo/uUrDIGK/Dlnddz9tx05t7qJWbO7HCueWt3N/NLZv5kVa+U3bqK3y1AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDISCsAgIy0AgDI3D+f9+041/Wc+KsxXv/CWn4e0zOK6lRsbvNX/siZL9umI3/HVh6JzUexOV+tAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAICOtAAAy0goAIPPoLvXjXdfzu5fAXjs1xut2nM3P+dzMN3+oI3k7vjKKuRO78u3wM/sVvloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGSkFQBARloBAGTun8+7uxoAwK/mqxUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQBkpBUAQEZaAQDcKv8F0HPMAa4WMEYAAAAASUVORK5CYII=" style="display:none" alt="">
+<script>
+const D = {"q": [{"n": 1, "o": "1", "d": 1, "t": "一个延续了几百年的村落规矩，村里人一直照着做。新搬来的年轻人认为它不合理，要求废除。你倾向——", "opts": ["能延续几百年，必然有它的道理，不该轻易动", "先追问它当初为什么存在；如果那个理由已经消失，就该改", "该由村里人自己投票决定", "先看这条规矩实际带来了什么结果，好的就留，坏的就废", "这种问题没有普遍答案，各村自己看着办", "这规矩的道理不归人说了算，人没资格判它对错"], "type": "s"}, {"n": 2, "o": "18", "d": 1, "t": "一位公认有智慧的老人说：「有些规矩不需要理由，传下来就是理由。」你的反应是——", "opts": ["同意。这种智慧是几代人试错积累下来的", "不同意。任何规矩都该能说出理由", "关键看谁有权决定改不改", "看它现在还有没有用", "老人有老人的道理，我有我的，不必争", "有些东西本来就不归人管，问「为什么」已经问错了"], "type": "s"}, {"n": 3, "o": "3", "d": 2, "t": "一个老厂区要拆迁，绝大多数住户已签约搬走，有 3 户坚持不走。你倾向——", "opts": ["为了整体利益，按法律可以强制拆迁，给足补偿", "不能强制。3 户不同意就不能拆", "提高补偿直到他们自愿同意，但绝不强制", "由法院裁决，程序走完就执行", "让他们直接跟开发方谈，政府别插手"], "type": "s"}, {"n": 4, "o": "20", "d": 2, "t": "有人说：「没有集体，个人什么都不是。」你的反应是——", "opts": ["基本同意。人的一切能力、语言、意义都靠社会提供", "不同意。社会是人造出来的，人可以重造它", "部分同意，但集体也必须由个人授权才有正当性", "要看是哪种集体。家庭和国家完全不是一回事"], "type": "s"}, {"n": 5, "o": "6", "d": 3, "t": "回头看过去三十年，你觉得最大的变化是由什么带来的？", "opts": ["政策和决策者的关键选择", "技术和生产方式的进步", "几件谁也没预料到的事凑在一起", "无数普通人日复一日的努力累积", "外部环境的变化，我们只是被动应对", "两样都在起作用，分不清哪个更关键"], "type": "s"}, {"n": 6, "o": "30", "d": 3, "t": "一家公司十年前做了个关键决定（比如转型做新业务），之后发展完全不同。你觉得——", "opts": ["那个决定是关键。换一个决定就是另一家公司", "差别不大。行业趋势到了，总会有人做成", "会不一样，但大方向由行业决定", "这种假设没有意义"], "type": "s"}, {"n": 7, "o": "9", "d": 4, "t": "面对一个以前没出现过的新问题（比如网络诈骗、平台抽成越来越高），你认为最好的应对是——", "opts": ["立新法、设新机构，专门管它", "用现有法律扩张解释，先对付着", "从技术上在源头解决，不靠制度堆积", "先别管，很多新问题会随着技术和习惯的变化自己消失", "不用管，让行业自己形成规矩", "承认无解，只能控制损害"], "type": "s"}, {"n": 8, "o": "22", "d": 4, "t": "一整套规矩（比如一个村的乡规民约、一个家的家规），能不能事先设计好？", "opts": ["能，只要设计得足够好", "能设计框架，细节只能边做边改", "不能整体设计，只能一点点改", "越想设计越糟。好的规矩都是慢慢长出来的"], "type": "s"}, {"n": 9, "o": "14", "d": 5, "t": "一个孩子偷了东西，家里很穷。你觉得——", "opts": ["环境造成的。换个环境他会是好孩子", "穷不是理由。人性里的贪念人人都有", "看他有没有被教过。教了就能改", "不该讨论原因，该讨论怎么处理", "取决于他自己怎么想"], "type": "s"}, {"n": 10, "o": "26", "d": 5, "t": "「如果资源无限充足，人还会争吗？」", "opts": ["不会。争都是因为不够", "会。人争的不只是资源", "会争，但形式会变", "无法想象"], "type": "s"}, {"n": 11, "o": "N5", "d": 6, "t": "你支持某个主张，最重要的理由是——", "opts": ["它符合事物发展的客观规律，迟早会实现", "它在实践中被证明有效", "它在道德上是对的，即使永远实现不了也该追求", "它是我们祖辈一直这么做的", "我说不清，就是觉得对"], "type": "s"}, {"n": 12, "o": "N6", "d": 6, "t": "一个绝对公平、没有贫穷的社会，现实中可能永远做不到。值得为它奋斗吗？", "opts": ["值得。哪怕所有人都反对，也该坚持", "不值得。做不到的理想会害死人", "值得当方向，但不该当成施工图", "关键看奋斗的过程会不会伤害现在的人", "这问题太抽象，说不好"], "type": "s"}, {"n": 13, "o": "N1", "d": 7, "t": "一个城市的房租连续三年上涨，年轻人租不起房。你认为——", "opts": ["政府应该直接管制租金上限", "政府应该大量建保障房，增加供给", "政府应该给租房者发补贴", "政府不该干预。涨价说明供给不足，市场会自己调整", "这是市场规律，没办法"], "type": "s"}, {"n": 14, "o": "N2", "d": 7, "t": "「一个行业如果完全放开，价格会自己找到合理的位置。」你的反应——", "opts": ["同意。价格是最好的信号", "不同意。住房、医疗、教育不能完全交给市场", "大体同意，但要防止垄断", "关键看它会不会把成本转嫁给别人", "这些理论讨论没意义"], "type": "s"}, {"n": 15, "o": "7", "d": 8, "t": "社区里有一户人家，垃圾常年堆在门口，影响邻居。你认为——", "opts": ["社区应该强制他清理，必要时罚款", "社区只能劝导，不能强制", "邻居可以起诉他", "这是他家的事，别人管不着", "社区出钱帮他清理"], "type": "s"}, {"n": 16, "o": "31", "d": 8, "t": "有人说：「一个院子管得越少，住着越舒服。」你的反应是——", "opts": ["同意。管多了都是麻烦", "不同意。没人管就乱套", "看管什么。安全和卫生该管，别的别管", "关键不是管多少，是谁来管、怎么管", "管不管都要花钱，问题在钱从哪来"], "type": "s"}, {"n": 17, "o": "2", "d": 9, "t": "几个村要合建一个垃圾站，选址吵了半年。你倾向——", "opts": ["由上面统一规划，选一个整体成本最低的位置", "每个村自己决定要不要建，不建就自己想办法", "统一规划，但任何受影响的村都有否决权", "统一规划，但选址由独立机构按技术标准定", "让出价决定，谁愿意承接谁拿补偿", "由附近受影响的人自己跟建设方谈，谈拢就建，谈不拢就不建"], "type": "s"}, {"n": 18, "o": "28", "d": 9, "t": "一个大组织里，各地分部的情况差别很大。你认为总部应该——", "opts": ["统一规定，否则会失控", "只定底线，具体自己定", "完全放权，只考核结果", "按各分部的能力，分别放多少权", "根本不该有总部"], "type": "s"}, {"n": 19, "o": "12", "d": 10, "t": "一条街上的几十家小商户，要一起跟批发商谈进货价。你认为最有效的做法是——", "opts": ["由街道或市场管理方统一去谈", "大家推几个代表去谈", "请个懂行的律师或中间人去谈", "自己联合起来，一起进货、一起分", "不搞组织，各家自己想办法", "大家投票授权，请专业的人去谈"], "type": "s"}, {"n": 20, "o": "24", "d": 10, "t": "「有组织的团体，比一盘散沙的个人更能保护自己。」你认为——", "opts": ["同意。必须组织起来", "不同意。组织起来反而会被少数人控制", "看什么组织。公益性和营利性完全不一样", "组织要有，但不能有专职干部，容易官僚化", "不如直接引入外部竞争，让服务方互相压价", "组织要有，但不能有专职干部（容易官僚化），最好再让外部竞争压价"], "type": "s"}, {"n": 21, "o": "37", "d": 11, "t": "一所学校从外面调来一位校长。他抓得严、把成绩带上去了，但他不是本校提上来的，老师们也没参与推选。你觉得他有资格当这个校长吗？", "opts": ["有。能力强、成绩好就是资格", "没有。不是大家选的，成绩再好也不正当", "让他先干。但要定期考核，干不好能换下来", "只要人正派、不折腾老师就行", "看老师们认不认可他"], "type": "s"}, {"n": 22, "o": "38", "d": 11, "t": "一个车间换了主任。该开的会开了、该问的都问了、该报的也报了，但产量和人心都没起色。你认为——", "opts": ["流程走完就够了，结果不全怪他", "流程都走对了但没效果，说明流程本身有问题", "应该追责，但追的是执行不力", "该换人，但要走正常程序换", "这车间本来就难带，怪不了他"], "type": "s"}, {"n": 23, "o": "N4", "d": 11, "t": "「一个决定只要程序是对的，结果不好也该接受。」你的反应——", "opts": ["同意。程序是唯一可靠的东西", "不同意。结果不好说明程序有问题", "看结果有多坏", "关键看程序本身是不是真的公正", "程序都是形式，结果才重要"], "type": "s"}, {"n": 24, "o": "N3", "d": 12, "t": "村长是全村投票选出来的，人缘特别好，但几年下来没修成一条路、没办成一件事。你认为——", "opts": ["既然选出来了，就该让他做满任期", "应该启动罢免，由村民重新投票", "应该由上级出面换人", "事情没办成，不能全怪他", "选错人是投票的人的责任，只能等下次"], "type": "s"}, {"n": 25, "o": "N9", "d": 12, "t": "一个部门的负责人，应该由谁来决定？", "opts": ["由上级任命。他要向上负责，不是向下讨好", "由部门成员投票选举。他要向下负责", "上级提名，成员投票确认", "上级任命，但成员有权中途罢免", "谁定都行，能干事最重要"], "type": "s"}, {"n": 26, "o": "16", "d": 13, "t": "你所在的社区已经运行了十几年，大家都习惯了。最近有人提出要大改——换掉现在的管法，重新选人，重定规矩。你倾向——", "opts": ["现在这样就挺好，没必要折腾", "有些地方确实该改，但不用全推倒", "应该趁现在还有共识，大改一次", "改可以，但先得说清楚改成什么样", "怎么改都行，只要别影响我"], "type": "s"}, {"n": 27, "o": "29", "d": 13, "t": "有人说：「一个组织如果三年没变化，说明它已经死了。」你的反应——", "opts": ["同意。不变就是退步", "不同意。稳定本身就是价值", "看什么组织。有些东西本来就该稳定", "关键是变的方向对不对，不是变不变", "变不变都是少数人决定的，跟我没关系"], "type": "s"}, {"n": 28, "o": "4", "d": 14, "t": "一个县要改掉一项实行了几十年的老政策。有两种做法：一是先挑几个乡试点，跑通了再推开；二是一次性全面改掉，长痛不如短痛。你倾向——", "opts": ["先试点，稳妥", "一次性改掉，拖着只会更麻烦", "先试点，但设定明确的推广时间表", "直接改，但留个可以反悔调整的口子", "改不改都行，看谁在推动"], "type": "s"}, {"n": 29, "o": "33", "d": 14, "t": "渐进改革和激进改革，你更倾向哪种？", "opts": ["渐进更可靠。激进改革失败的例子更多", "激进更彻底。渐进最后什么也改不成", "看议题。有些能等，有些不能等", "关键不在快慢，在方向对不对", "讨论这个没意义，现实里都是被推着走"], "type": "s"}, {"n": 30, "o": "11", "d": 15, "t": "你家门口那条路坏了几年，一直没人修。你认为最可能推动修好的是——", "opts": ["一个有能力的牵头人", "大家一起反映、一起施压", "现有的管理方主动作为", "外部专业机构介入", "等条件成熟，自然会解决"], "type": "s"}, {"n": 31, "o": "23", "d": 15, "t": "「改变从来都是少数人推动的。」你的反应——", "opts": ["同意。多数人只是跟随", "不同意。没有多数人参与的改变不牢靠", "少数人发起，多数人决定成败", "关键是有没有制度让多数人能参与", "什么都改变不了"], "type": "s"}, {"n": 32, "o": "5", "d": 16, "t": "你需要找一个人帮你照看几天房子。你会优先找——", "opts": ["亲戚或老乡，血浓于水", "邻居，住了很多年互相了解", "签正规合同的专业机构", "平台上下单，有评价和保险", "谁便宜找谁"], "type": "s"}, {"n": 33, "o": "19", "d": 16, "t": "「一个团队里，大家关系好最重要，规矩是次要的。」你的反应——", "opts": ["同意。人对了什么都好办", "不同意。规矩清楚才不会伤感情", "两者都要，但关系是基础", "两者都要，但规矩是基础", "看团队大小。人少靠关系，人多靠规矩"], "type": "s"}, {"n": 34, "o": "15", "d": 17, "t": "一个远方的陌生人遇到了困难，和你的邻居遇到了同样的困难。你认为你对他们负有的责任——", "opts": ["完全一样，都是人", "邻居优先，但陌生人也不能不管", "只管邻居，远的管不了", "都管不了，这是政府的事", "看情况，谁更需要帮谁", "个人管不了那么远。这类事该由公共制度承担"], "type": "s"}, {"n": 35, "o": "27", "d": 17, "t": "「人的道德义务是有边界的，越远越淡。」你的反应——", "opts": ["同意。这是人之常情", "不同意。义务不该因为距离而改变", "情感上会淡，但义务不该淡", "边界不是距离，是关系", "谈义务太虚，看实际能力"], "type": "s"}, {"n": 36, "o": "8", "d": 18, "t": "一种新技术能大幅提升效率，但它要求把大量个人信息集中到一处管理。你首先想到的是——", "opts": ["技术只是工具，关键看谁用", "这种技术本身就会锁定某种权力结构", "技术自己会推动社会变化，人拦不住", "某些技术即使有益也不该用", "先用了再说，出问题再调整"], "type": "s"}, {"n": 37, "o": "21", "d": 18, "t": "「工具就是工具，枪不杀人，人杀人。」你的反应——", "opts": ["同意。责任永远在人", "不同意。有些工具的设计本身就引导了用法", "部分同意，但工具会改变人的行为习惯", "看什么工具。枪造出来就是杀人的，桶造出来就是装东西的，不一样", "这种讨论没意义，看结果"], "type": "s"}, {"n": 38, "o": "13", "d": 19, "t": "一项新技术长期后果不确定，但短期收益很大。你认为监管应该——", "opts": ["先证明长期无害，才允许推广", "先允许，出了问题再管", "看情况。涉及健康和安全的要求严一点，其他放松", "不该有统一监管，让使用者和市场自己判断", "看它能不能撤回。能撤回就先上，不能撤回就等"], "type": "s"}, {"n": 39, "o": "25", "d": 19, "t": "「宁可慢一点，也不要出错。」你的反应——", "opts": ["同意。有些错不能犯", "不同意。不冒险就什么也做不成", "看错能不能挽回", "关键是错了之后谁来承担", "慢本身就是错"], "type": "s"}, {"n": 40, "o": "10", "d": 20, "t": "村里要修一条水渠，但得邻村配合才修得成。你的做法是——", "opts": ["尽量拉拢所有能拉拢的人，哪怕以前不对付", "只跟平时关系好的一起干", "谁在这件事上得利就找谁，不谈以后", "不求人，自己干", "看情况，没有固定策略"], "type": "s"}, {"n": 41, "o": "32", "d": 20, "t": "「今天的朋友可能是明天的对手。」你的反应——", "opts": ["同意。所以不能把话说死", "不同意。反复横跳最后没人信你", "看什么事。有些可以让，有些不能让", "关键是有没有共同利益，不是有没有交情", "我不参与这些"], "type": "s"}, {"n": 42, "o": "N7", "d": 21, "t": "你相信某件事是对的，最终的依据是——", "opts": ["神或天意如此", "它符合天理，事情本来就该是这样", "它符合历史发展的规律", "它符合自然规律，人也是自然的一部分", "总有一个「不用再问为什么」的起点，接受就行", "可以一直往下问，没有尽头", "问到最后会绕回原来的问题"], "type": "s"}, {"n": 43, "o": "N8", "d": 21, "t": "抛开教科书，凭直觉说：你觉得这个世界——", "opts": ["是被某个有意志的存在安排好的", "有一种客观规律在，但它没有目的，也不回应人", "本来没有秩序，秩序是人编出来的", "说不清"], "type": "s"}, {"n": 44, "o": "V1", "d": 22, "t": "单位的钱怎么花，你觉得该让外面知道多少——", "opts": ["公开最后花了多少、花在哪，就够了", "结果要公开，每一步是怎么讨论的也要留档，有人问就得查得到", "全过程公开，谁都能来质询每一笔", "不用公开。内部定完，执行起来更快", "公开也是走过场，改变不了什么"], "type": "s"}, {"n": 45, "o": "V2", "d": 22, "t": "「只要结果是好的，过程不公开也没关系。」你的反应——", "opts": ["同意。结果最重要", "不同意。过程不公开，错了也没法纠", "看事情。涉密事项可以例外", "关键是有没有独立的人或机构能查", "公开也是表演，改变不了什么"], "type": "s"}, {"n": 46, "o": "W1", "d": 23, "t": "一个村里，村委会和族里几位长辈都能拍板，一件事拖了三个月推不动。你觉得根源是——", "opts": ["一开始就不该让两边都能拍板，该有一个说了算", "缺一个能最终裁决的机制", "缺一个逼他们必须谈成的压力", "不是问题。僵持说明双方都还有道理", "各有各的道理，本来就不该强行统一"], "type": "s"}, {"n": 47, "o": "W2", "d": 23, "t": "有人说：「权力只要集中，迟早会腐化。」你的反应——", "opts": ["基本同意。分散和制衡是唯一的办法", "有道理，但分散也会导致没人负责", "不一定。看掌权的人，不看分不分散", "不同意。分散本身就是腐化，大家都不负责", "看具体情况"], "type": "s"}, {"n": 48, "o": "W3", "d": 23, "t": "一个县要修一条路，需要征用三个村的土地，三个村都不同意。你认为——", "opts": ["县里该有最终决定权，为全县利益拍板", "由上级市里裁决", "继续协商，直到三个村都同意", "任何一个村不同意就不能修", "改方案，绕开这三个村"], "type": "s"}, {"n": 49, "o": "X1", "d": 24, "t": "一家跨国公司在好几个国家都逃税。你觉得最该由谁管——", "opts": ["各国自己立法，各管各的", "各国联合起来定一套规则", "由一个世界性的机构来管", "管不了，这是全球化的必然", "本国先把自己的漏洞堵上，别管别人"], "type": "s"}, {"n": 50, "o": "X2", "d": 24, "t": "「一个国家的问题，只能靠这个国家自己的人解决。」你同意吗——", "opts": ["同意。外人插手只会更糟", "大体同意，但严重的人道危机该干预", "不同意。很多问题本来就是外部造成的", "不同意。人的处境不分国界，谁看见了都该管", "看情况"], "type": "s"}, {"n": 51, "o": "X3", "d": 24, "t": "说到「我们」这个词，你最先想到的是——", "opts": ["我的国家", "我所在的地区或城市", "和我处境相同的人，不管在哪个国家", "全人类", "我不太用这个词"], "type": "s"}, {"n": 52, "o": "17", "d": 0, "t": "要修一条路，正好从你家门口过。噪音变大，但出行方便很多。你判断这件事的依据是——", "opts": ["只要补偿合理、不影响健康，我可以接受", "补偿再多也不行，这是我的家", "看整体上是不是对大家更好", "该由大家投票决定，我个人怎么想不重要", "我不接受对我生活的影响，但也不反对别人接受"], "type": "s"}, {"n": 53, "o": "34", "d": 0, "t": "你平时会主动关注政策、公共议题或社会新闻吗？", "opts": ["几乎每天都看", "遇到大事会看", "偶尔刷到", "基本不看", "刻意回避"], "type": "s"}, {"n": 54, "o": "35", "d": 0, "t": "「像我这样的人，对公共事务能有多大影响？」", "opts": ["很大，参与能改变结果", "有一点，至少在小事上", "很小，但还是要表达", "没有，都是上面定的", "不是能不能的问题，是我不关心"], "type": "s"}, {"n": 55, "o": "36", "d": 0, "t": "「决策者会回应普通人的诉求吗？」", "opts": ["会，渠道有效", "有时会，看议题", "很少，除非闹大", "不会，只回应有实力的人", "没想过"], "type": "s"}, {"n": 56, "o": "39", "d": 0, "t": "你接到上级一个你认为违反规定的指示（比如让你在报表上做「技术性处理」）。你的第一反应是——", "opts": ["执行。责任不在我，我按令办事", "执行，但书面留痕，事后说明", "先说明我的疑虑，若被驳回则执行", "拒绝执行，并说明理由", "拒绝执行，并向监督部门报告", "公开这件事"], "type": "s"}, {"n": 57, "o": "40", "d": 0, "t": "一家新能源车企靠持续借债扩张，销量增长很快但一直没盈利。后来行业遇冷，现金流断裂。事后复盘，你认为最该追问的是——（可多选，并按重要性排序）", "opts": ["谁批准的扩张计划？决策程序有没有走完", "钱花到哪去了？为什么财务不透明", "借钱的时候，股东和员工知情吗", "董事会和监事会的监督为什么没起作用", "银行和投资人为什么敢借", "制度上本来就没有能拦住它的机制", "换谁当 CEO 都一样，问题在整个行业的玩法"], "type": "r"}, {"n": 58, "o": "41", "d": 0, "t": "如果一项技术能让你的孩子天生更聪明、更健康，但只有少数人负担得起。你倾向——", "opts": ["应该禁止，会造成不可逆的分化", "允许，但要用公共资金让所有人用得起", "允许，这是个人选择", "允许，但不该用于增强，只能治病", "无所谓"], "type": "s"}, {"n": 59, "o": "42", "d": 0, "t": "不同国家、不同群体之间，本质是什么关系？", "opts": ["本质是竞争，只能靠实力自保", "可以通过规则和合作获得共同收益", "是敌是友取决于怎么看待对方，可以改变", "这些太远，跟我没关系", "说不清"], "type": "s"}, {"n": 60, "o": "43", "d": 0, "t": "你所在单位要推行一项改革，短期内会削弱你所在部门的权力和资源。", "opts": ["支持，整体效率更重要", "支持，但要争取合理的过渡安排", "表面支持，实际拖延", "明确反对，说明理由", "不表态，看风向"], "type": "s"}, {"n": 61, "o": "44", "d": 0, "t": "有人说：「社会问题会一个个被解决，只是需要时间。」你的反应——", "opts": ["同意。问题是有数的，解决一个少一个", "大体同意。老问题解决了会出现新问题，但总体在变好", "不太同意。问题解决不完，只是换一种形式", "不同意。有些问题注定无解，能做的只是减轻痛苦"], "type": "s"}], "anchors": {"无政府共产主义": [-0.5, 0.0, 0.5, 0.7, -0.9, 0.0, -0.9, 1.0, 0.9, 0.9, -0.5, 0.9, 0.9, 0.9, 0.9, 0.0, 0.8, 0.0, 0.5, -0.8, 0.7, 0.9, 1.0, -0.5], "无政府个人主义": [-0.8, 1.0, 0.5, 0.9, 0.0, 0.5, 0.8, 1.0, 1.0, 0.5, -0.5, 0.5, 0.7, 0.8, 0.8, 0.6, 0.5, 0.0, 0.5, 0.9, 0.0, 0.5, 1.0, 0.0], "毛主义": [0.5, -0.9, -0.8, -0.7, -0.9, -0.9, -1.0, -0.9, -0.8, -0.7, 0.5, 0.0, 0.9, 0.9, 0.5, -0.5, 0.5, 0.5, 0.5, -1.0, 0.0, -0.5, -0.7, 0.6], "社会民主主义": [-0.5, 0.0, 0.0, -0.5, -0.5, 0.0, -0.8, 0.5, -0.5, 0.5, 0.0, 0.7, 0.5, -0.9, 0.5, 0.5, 0.5, -0.5, -0.5, 0.0, 0.0, 0.7, 0.5, -0.5], "社会自由主义": [-0.7, 0.5, -0.5, -0.6, 0.0, 0.5, -0.5, 0.7, 0.0, 0.5, 0.0, 0.8, 0.0, -0.8, -0.5, 0.6, 0.5, -0.5, -0.5, 0.0, 0.0, 0.6, 0.7, -0.5], "宗教社会主义": [1.0, -0.8, -0.5, 0.0, -0.6, 0.9, -0.7, -0.5, -0.5, 0.0, 0.0, 0.0, 0.5, -0.5, 0.0, -0.8, 0.6, 0.0, -0.5, 0.0, -0.9, 0.0, 0.0, 0.0], "自由主义": [-0.8, 0.9, 0.0, 0.7, 0.5, 0.5, 0.7, 0.8, 0.5, 0.7, 0.0, 0.7, -0.5, -0.6, -0.5, 0.9, 0.5, -0.5, 0.5, 0.5, 0.0, 0.7, 0.8, -0.5], "自由至上": [-0.7, 1.0, 0.5, 0.9, 0.5, 0.5, 1.0, 1.0, 0.8, 0.9, -0.5, 0.5, 0.0, -0.5, 0.5, 1.0, 0.6, -0.5, 0.6, 0.8, 0.0, 0.0, 0.5, 0.0], "保守": [0.5, -0.7, 0.5, 0.9, 0.7, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -0.9, -0.9, -0.6, -0.7, -0.5, 0.0, -0.5, 0.0, 0.0, -0.5, 0.0, 0.7], "社群主义": [-0.5, -0.9, 0.0, 0.6, 0.0, 0.6, -0.5, -0.5, 0.5, 0.9, 0.5, 0.0, -0.7, -0.7, 0.0, -1.0, -0.5, 0.0, -0.5, 0.0, 0.0, 0.0, 0.5, 0.5], "威权法西斯": [-0.6, -0.95, -0.833, -0.8, 0.6, 0.0, 0.0, -0.967, -0.967, -0.933, 0.5, -0.967, 0.8, 0.667, -0.833, -0.933, -1.0, 0.0, 0.633, 0.5, 0.0, -0.9, -0.95, 0.9], "国家资本主义": [-0.5, -0.7, 0.0, -0.6, 0.0, -0.5, -0.8, -0.6, -0.8, -0.7, 0.8, -0.6, 0.5, -0.5, -0.7, 0.0, 0.0, -0.5, 0.5, 0.7, 0.0, -0.7, -0.8, 0.5], "技术治理运动": [-0.6, -0.5, 0.5, -0.7, 0.0, -0.9, -0.5, -0.5, -0.5, -0.5, 0.9, -0.5, 0.6, 0.0, -0.8, 0.5, 0.5, 0.5, 0.6, 0.0, 0.0, 0.5, -0.9, -0.5], "生态主义": [0.5, -0.8, 0.0, -0.5, -0.5, 0.5, -0.6, 0.0, 0.5, 0.7, -0.5, 0.5, 0.7, 0.0, 0.6, 0.0, 0.9, 0.6, -0.9, 0.0, 0.9, 0.8, 0.5, -0.5], "儒家": [0.5, -0.9, -0.7, 0.6, -0.7, 0.8, 0.0, -0.5, -0.5, 0.0, 0.5, -0.5, -0.8, -0.8, -0.7, -0.9, -0.5, 0.0, -0.6, 0.0, -0.5, -0.5, -0.5, 0.5], "法家": [-0.5, -0.8, -0.9, -0.8, 0.9, -0.6, -0.7, -0.95, -0.9, -0.9, 0.8, -1.0, 0.7, 0.6, -0.9, 0.5, -0.6, -0.5, 0.5, 0.5, 0.0, -0.6, -0.9, 0.7], "伊斯兰主义": [1.0, -0.9, -0.6, 0.5, 0.5, 0.9, -0.5, -0.7, -0.6, 0.6, 0.0, 0.0, -0.5, 0.0, 0.0, -0.95, 0.0, 0.0, -0.5, 0.0, -1.0, -0.5, -0.7, -0.5], "女性主义": [-0.6, 0.5, -0.5, -0.5, -0.5, 0.6, -0.5, 0.8, 0.0, 0.6, 0.0, 0.7, 0.8, 0.5, 0.5, 0.5, 0.7, 0.0, 0.0, 0.0, 0.0, 0.8, 0.5, -0.5], "宗族自治": [0.0, -0.7, 0.5, 0.8, 0.0, 0.5, 0.0, 0.0, 1.0, 0.9, 0.0, 0.5, -0.8, -0.8, 0.5, -0.8, -0.9, 0.0, -0.5, 1.0, 0.0, 0.0, 0.7, 0.8], "私人主义": [-0.5, 1.0, 0.5, 0.8, 0.6, 0.5, 0.8, 0.9, 0.5, 0.5, 0.8, -0.5, -0.5, -0.5, 0.6, 0.8, -0.8, -0.6, 0.7, 1.0, 0.0, 0.0, 0.6, 0.5], "政治犬儒": [-0.7, 0.0, 0.0, 0.6, 0.9, 0.0, 0.0, 0.0, -0.5, -0.6, 0.5, -0.8, 0.0, 0.0, 0.5, 0.6, -0.5, 0.0, 0.0, 0.8, 0.0, -0.5, 0.5, 0.0], "虚无主义": [-0.9, 0.0, 0.5, 0.9, 0.5, 0.0, 0.0, 0.0, 0.0, -0.5, -0.5, -0.9, 0.5, 0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 1.0, 0.0, -0.5, 0.5, 0.0], "史前泛灵论": [1.0, -1.0, 0.6, 0.9, -0.5, 0.9, -0.8, -0.9, -0.8, 0.5, -0.5, 0.5, -0.95, -0.9, 0.0, -0.95, -0.95, 0.5, -0.8, 0.5, -0.7, -0.5, 0.6, 0.7], "神权政治": [1.0, -0.9, -0.7, 0.5, 0.6, 0.9, -0.5, -0.9, -0.9, -0.5, 0.0, -0.6, -0.9, -0.8, -0.7, -0.9, -0.8, 0.0, -0.6, 0.0, -1.0, -0.8, -0.8, -0.5], "道家": [0.5, -0.6, 0.5, 0.95, -0.5, 0.5, 0.6, 0.7, 0.7, 0.5, -0.7, 0.0, -0.7, -0.6, 0.5, -0.5, 0.0, 0.5, -0.6, 0.8, 1.0, 0.0, 0.8, 0.5], "墨家": [0.6, -0.6, -0.5, -0.5, -0.5, 0.0, -0.5, -0.5, -0.6, -0.5, 0.7, 0.0, 0.6, 0.0, 0.0, 0.0, 0.8, 0.0, 0.0, 0.5, -0.5, 0.7, -0.5, -0.5], "功利主义": [-0.8, 0.6, 0.0, -0.6, 0.5, -0.8, 0.0, 0.5, 0.0, 0.5, 0.9, 0.5, 0.5, -0.5, -0.5, 0.7, 0.9, -0.5, 0.5, 0.0, 0.0, 0.5, 0.0, -0.5], "社会达尔文主义": [0.5, 0.5, 0.0, 0.7, 0.9, -0.9, 0.9, 0.0, 0.0, 0.0, 0.8, 0.0, 0.0, -0.5, 0.0, 0.5, -0.7, 0.0, 0.5, 0.6, 0.8, -0.5, 0.0, 0.5], "黑格尔主义": [0.7, -0.6, -0.9, 0.0, 0.0, -0.7, 0.0, 0.0, -0.6, -0.5, 0.5, 0.0, 0.5, -0.5, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, -0.5, 0.5], "尼采主义": [-0.9, 0.5, -0.8, 0.8, 0.7, 0.5, 0.5, 0.5, 0.5, 0.0, 0.0, -0.7, 0.6, 0.5, -0.9, 0.5, -0.6, 0.0, 0.6, 0.7, 0.0, -0.6, 0.0, 0.0], "甘地主义": [0.7, -0.6, 0.5, 0.5, -0.7, 0.8, 0.5, 0.6, 0.8, 0.8, -0.6, 0.6, 0.5, 0.0, 0.9, -0.6, 0.7, 0.8, -0.5, 0.0, 0.0, 0.9, 0.7, 0.0], "贤能政治": [-0.5, -0.5, -0.5, -0.8, 0.5, -0.7, 0.5, -0.5, -0.6, -0.5, 1.0, -0.6, 0.0, -0.5, -0.9, 0.0, -0.5, 0.0, 0.0, 0.5, 0.0, 0.5, -0.6, 0.5], "自由保守主义": [-0.5, 0.7, 0.0, -0.5, 0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0, -0.5, -0.6, -0.5, 0.5, 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 0.0, 0.5], "民族主义": [-0.5, -0.6, -0.5, 0.0, 0.5, 0.0, 0.0, -0.5, -0.5, 0.0, 0.0, 0.0, 0.0, -0.5, 0.0, -0.5, -0.9, 0.0, -0.5, 0.5, 0.0, -0.5, -0.5, 0.9], "无政府工团主义": [0.0, -0.7, 0.0, -0.6, -0.6, -0.5, -0.8, 0.9, 1.0, 1.0, 0.0, 0.9, 0.8, 0.9, 0.9, 0.5, 0.9, 0.0, -0.5, 0.5, 0.6, 0.8, 0.9, -0.5], "家长式保守主义": [-0.5, -0.5, 0.0, -0.5, 0.6, 0.5, -0.5, -0.7, -0.5, -0.5, 0.5, 0.0, -0.5, -0.5, -0.7, 0.0, -0.5, 0.0, -0.5, 0.0, 0.0, -0.5, -0.7, 0.6], "超人类主义": [-0.6, 0.5, -0.5, -0.7, -1.0, 0.5, 0.5, 0.6, 0.0, 0.5, 0.5, 0.5, 0.9, 0.7, -0.5, 0.6, 0.6, 1.0, 0.6, 0.0, 0.0, 0.5, 0.0, -0.5], "解放神学": [1.0, -0.7, -0.5, -0.5, -0.5, 0.8, -0.8, -0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.7, 0.0, 0.7, 0.0, -0.5, 0.5, -0.9, 0.6, 0.5, -0.5], "左翼威权主义": [0.0, -0.8, -0.5, -0.8, -0.5, -0.8, -0.9, -0.8, -0.9, -0.8, 0.7, -0.9, 0.0, 0.0, -0.6, 0.5, 0.5, -0.5, -0.5, -0.5, 0.0, -0.8, -0.9, 0.5], "后殖民主义": [-0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.6, 0.0, 0.0, 0.6, 0.5, 0.6, 0.5, 0.6, 0.7, 0.0, 0.8, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.6], "新保守主义": [-0.5, -0.5, -0.5, -0.5, 0.7, -0.5, 0.8, -0.5, -0.5, -0.5, 0.6, 0.0, -0.5, 0.5, -0.5, 0.5, -0.6, 0.0, 0.5, -0.5, 0.0, -0.5, -0.5, 0.7], "新自由主义": [-0.5, 0.5, 0.0, -0.6, 0.5, -0.5, 0.9, 0.5, -0.5, -0.5, 0.5, 0.0, 0.0, -0.5, -0.6, 0.6, 0.5, 0.0, 0.5, 0.6, 0.0, 0.0, 0.0, -0.5], "秩序自由主义": [-0.5, 0.5, -0.5, -0.8, 0.5, 0.0, 0.6, 0.5, -0.5, 0.0, 0.5, 0.5, 0.0, -0.5, -0.5, 0.7, 0.5, 0.0, -0.5, 0.0, 0.0, 0.5, -0.5, 0.5], "中国特色社会主义": [-0.5, -0.9, -0.5, -0.5, 0.0, -0.7, -0.5, -0.6, -0.6, -0.5, 0.6, -0.6, 0.5, -0.9, 0.0, -0.5, -0.5, -0.8, -0.6, -0.5, 0.6, -0.5, -0.9, 0.5], "左翼民粹": [-0.6, -0.7, -0.5, -0.5, -0.5, 0.5, -0.8, -0.5, -0.5, 0.7, 0.5, 0.5, 0.8, 0.6, 0.9, -0.5, -0.5, -0.5, 0.5, -0.6, 0.0, 0.5, 0.0, 0.5], "右翼民粹": [-0.5, -0.6, 0.0, 0.0, 0.5, 0.5, 0.5, -0.6, -0.5, 0.6, 0.5, 0.5, 0.5, 0.0, 0.6, -0.5, -0.9, -0.5, 0.5, 0.5, -0.5, 0.0, 0.0, 0.9], "列宁主义": [-0.5, -0.9, 0.0, -0.8, -0.8, -0.9, -0.6, -0.7, -0.9, -0.5, 0.5, -0.5, 0.9, 0.9, -0.8, 0.0, 0.7, 0.6, 0.5, -1.0, 0.5, -0.5, -0.7, -0.5], "斯大林主义": [-0.5, -0.95, -0.8, -0.8, -0.6, -0.8, -1.0, -0.95, -0.9, -0.9, 0.7, -0.9, 0.6, 0.8, -0.9, 0.0, -0.5, 0.5, 0.5, -0.8, 0.6, -0.9, -0.95, 0.8], "欧洲共产主义": [-0.5, -0.7, -0.5, -0.5, -0.5, -0.5, -0.6, 0.0, 0.0, 0.5, 0.5, 0.6, 0.5, -0.6, 0.5, 0.5, 0.7, -0.5, -0.5, -0.5, 0.5, 0.6, 0.5, -0.5], "铁托主义": [-0.5, -0.8, -0.5, -0.5, -0.5, -0.6, -0.5, -0.5, 0.5, 0.5, 0.5, 0.0, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.0, -0.5, 0.5, 0.5, 0.5, 0.0], "经典马克思主义": [-0.8, -0.9, -0.5, -0.6, -0.6, -0.9, -0.9, -0.5, -0.5, 0.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 1.0, -0.8, 0.6, -0.9, 0.8, 0.5, -0.5, -1.0], "数据主义": [0.5, -0.5, -0.6, -0.6, 0.5, -0.7, 0.0, 0.5, -0.5, 0.0, 0.6, -0.5, 0.7, 0.5, -0.6, 0.6, 0.6, -0.6, 0.5, 0.0, 0.6, 0.6, -0.5, -0.5], "算法治理": [0.5, -0.5, -0.5, -0.8, 0.6, -0.6, -0.5, -0.5, -0.7, -0.5, -0.5, -0.7, 0.6, 0.5, -0.6, 0.7, 0.5, -0.8, 0.5, 0.0, 0.6, 0.5, -0.7, -0.5], "世界联邦主义": [-0.8, -0.5, -0.5, -0.8, -0.5, 0.7, -0.5, -0.5, -0.8, -0.5, -0.5, 0.9, 0.7, -0.5, 0.0, 0.8, 0.9, 0.0, -0.5, -0.8, 0.6, 0.8, 0.5, -1.0]}, "clusters": {"法西斯家族": ["威权法西斯"], "无政府家族": ["无政府共产主义", "无政府个人主义", "无政府工团主义"], "社会主义家族": ["经典马克思主义", "毛主义", "社会民主主义", "社会自由主义", "宗教社会主义", "中国特色社会主义", "列宁主义", "斯大林主义", "欧洲共产主义", "铁托主义"], "自由主义家族": ["自由主义", "自由至上", "新自由主义", "秩序自由主义"], "保守家族": ["保守", "自由保守主义", "家长式保守主义", "新保守主义", "社群主义", "宗族自治"], "技术治理家族": ["技术治理运动", "超人类主义", "贤能政治", "数据主义", "算法治理"], "消极家族": ["私人主义", "政治犬儒", "虚无主义"], "非西方轴心": ["儒家", "法家", "墨家", "道家", "伊斯兰主义", "甘地主义"], "生态": ["生态主义"], "女性主义": ["女性主义"], "国家资本主义": ["国家资本主义"], "法西斯变体": ["意大利法西斯（国家崇拜）", "纳粹主义（种族中心）", "日本军国主义（天皇神道）"], "前现代宗教": ["史前泛灵论", "神权政治"], "古典近代哲学": ["功利主义", "社会达尔文主义", "黑格尔主义", "尼采主义"], "贤能政治": ["贤能政治"], "民族主义家族": ["民族主义", "新保守主义"], "生态家族": ["生态主义"], "宗教家族": ["宗教社会主义", "解放神学", "神权政治", "伊斯兰主义"], "全球南方": ["后殖民主义"], "社会民主主义系": ["社会民主主义", "社会自由主义"], "民粹家族": ["左翼民粹", "右翼民粹"], "全球主义家族": ["世界联邦主义"]}, "variants": {"威权法西斯": {"意大利法西斯（国家崇拜）": [-0.5, -0.9, -0.9, -0.8, 0.7, -0.5, -0.6, -1.0, -1.0, -1.0, 0.6, -1.0, 0.9, 0.8, -0.8, -0.9, -1.0, -0.5, 0.6, 0.5, 0.0, -0.7, -0.9, 0.9], "纳粹主义（种族中心）": [-0.7, -1.0, -0.9, -0.9, 0.8, -0.5, -0.5, -1.0, -1.0, -1.0, 0.5, -1.0, 1.0, 0.9, -0.9, -1.0, -1.0, 0.0, 0.7, 0.6, 0.0, -0.95, -0.95, 0.95], "日本军国主义（天皇神道）": [0.5, -0.95, -0.7, -0.7, 0.5, 0.5, -0.7, -0.9, -0.9, -0.8, 0.5, -0.9, 0.5, 0.5, -0.8, -0.9, -1.0, 0.0, 0.6, 0.5, -0.5, -0.8, -0.9, 0.95]}, "社会自由主义": {"进步主义": [-0.6, 0.0, -0.5, -0.7, -0.5, 0.5, -0.5, 0.0, -0.5, 0.0, 0.0, 0.6, 0.8, 0.0, -0.5, 0.5, 0.6, 0.0, 0.0, 0.5, 0.0, 0.5, 0.5, -0.5]}, "民族主义": {"左翼民族主义": [-0.5, -0.7, -0.5, -0.6, -0.5, -0.5, -0.6, -0.5, -0.6, -0.5, 0.5, -0.5, 0.5, 0.0, 0.5, 0.0, -0.9, 0.0, -0.5, 0.5, 0.0, -0.5, 0.0, 0.7]}, "生态主义": {"深生态": [0.5, -1.0, -0.5, -0.5, -0.7, 0.7, -0.6, -0.8, 0.5, 0.6, 0.0, 0.5, -0.6, 0.6, 0.5, -0.6, 1.0, 0.8, -0.8, 0.0, 1.0, 0.5, 0.6, -0.5]}, "列宁主义": {"托洛茨基主义（不断革命）": [-0.6, -0.9, -0.8, -0.8, -0.7, -0.9, -1.0, -0.9, -0.8, 0.5, 0.5, -0.9, 1.0, 1.0, -0.8, 0.5, 0.8, -0.6, 0.8, -0.9, 0.5, 0.5, 0.5, -0.9]}, "斯大林主义": {"霍查主义（反修正主义）": [-0.5, -1.0, -0.9, -0.9, -0.7, -0.9, -1.0, -1.0, -1.0, -1.0, 0.8, -1.0, 0.5, 0.9, -1.0, 0.0, -0.9, 0.5, 0.5, -0.9, 0.7, -1.0, -1.0, 0.9], "民族布尔什维主义": [-0.5, -0.9, -0.7, -0.8, -0.6, -0.7, -0.6, -0.9, -0.8, -0.8, 0.6, -0.9, 0.8, 0.8, -0.8, 0.0, -1.0, 0.5, 0.5, -0.8, 0.5, -0.8, -0.95, 1.0]}, "毛主义": {"卡斯特罗主义（游击中心）": [0.5, -0.9, -0.8, -0.6, -0.8, -0.8, -0.9, -0.8, -0.6, 0.5, 0.5, 0.0, 0.9, 0.9, 0.6, -0.5, 0.6, 0.5, 0.6, -0.7, 0.5, 0.0, -0.6, 0.5]}, "无政府工团主义": {"自治社会主义（工人委员会）": [-0.5, -0.9, -0.6, -0.5, -0.6, -0.6, -0.7, 0.9, 1.0, 1.0, 0.0, 0.9, 0.8, 0.8, 0.9, 0.6, 0.9, 0.0, -0.5, 0.6, 0.6, 0.9, 0.8, -0.5]}, "欧洲共产主义": {"正统马克思主义（考茨基）": [-0.7, -0.7, -0.5, -0.6, -0.5, -0.9, -0.5, 0.5, -0.5, 0.5, 0.0, 0.6, 0.0, -0.5, 0.0, 0.5, 0.6, -0.5, -0.6, -0.5, 0.0, 0.5, 0.5, -0.5]}, "技术治理运动": {"加速主义": [-0.6, -0.7, 0.5, -0.7, 0.5, -0.7, 0.0, 0.5, -0.5, -0.5, 0.7, 0.0, 1.0, 0.8, -0.7, 0.5, 0.7, -1.0, 1.0, 0.5, 0.7, 0.5, -0.5, -0.5]}, "自由主义": {"全盘西化（胡适式）": [-0.8, 0.8, -0.5, 0.5, -0.5, 0.5, 0.7, 0.9, 0.5, 0.5, -0.5, 0.9, 0.8, -0.5, -0.5, 0.8, 0.7, 0.5, 0.5, 0.8, 0.7, 0.9, 0.7, -0.9]}}, "qmap": {"1": [1, {"A": 0.4, "B": -0.8, "C": -0.7, "D": -0.6, "E": 0.0, "F": 1.0}], "18": [1, {"A": 0.4, "B": -0.9, "C": -0.8, "D": -0.6, "E": 0.0, "F": 1.0}], "3": [2, {"A": -0.7, "B": 1.0, "C": 0.5, "D": 0.3, "E": 0.5}], "20": [2, {"A": -1.0, "B": 1.0, "C": 0.2, "D": 0.0}], "6": [3, {"A": -0.8, "B": 0.3, "C": 1.0, "D": -0.3, "E": 0.8, "F": 0.0}], "30": [3, {"A": -0.6, "B": 0.8, "C": 0.5, "D": 0.0}], "9": [4, {"A": -0.9, "B": -0.4, "C": -0.2, "D": 0.2, "E": 0.4, "F": 0.2}], "22": [4, {"A": -1.0, "B": -0.3, "C": 0.6, "D": 1.0}], "14": [5, {"A": -0.8, "B": 0.9, "C": -0.6, "D": 0.0, "E": 0.3}], "26": [5, {"A": -1.0, "B": 1.0, "C": 0.4, "D": 0.0}], "N5": [6, {"A": -1.0, "B": 0.0, "C": 1.0, "D": 0.0, "E": 0.0}], "N6": [6, {"A": 1.0, "B": -0.8, "C": 0.3, "D": 0.0, "E": 0.0}], "N1": [7, {"A": -0.9, "B": -0.7, "C": -0.4, "D": 0.9, "E": 0.5}], "N2": [7, {"A": 1.0, "B": -0.9, "C": 0.4, "D": 0.0, "E": 0.0}], "7": [8, {"A": -0.7, "B": 0.1, "C": 0.2, "D": 1.0, "E": -0.3}], "31": [8, {"A": 1.0, "B": -0.9, "C": 0.2, "D": 0.0, "E": 0.0}], "2": [9, {"A": -0.5, "B": 0.9, "C": 0.2, "D": 0.0, "E": 0.6, "F": 0.8}], "28": [9, {"A": -1.0, "B": 0.2, "C": 1.0, "D": 0.5, "E": 1.0}], "12": [10, {"A": -1.0, "B": -0.5, "C": 0.0, "D": 1.0, "E": 0.0, "F": -0.3}], "24": [10, {"A": 0.5, "B": -0.4, "C": 0.0, "D": 0.5, "E": 1.0, "F": 0.8}], "37": [11, {"A": 1.0, "B": -0.8, "C": -0.3, "D": 0.5, "E": 0.3}], "38": [11, {"A": -0.5, "B": 0.8, "C": 0.3, "D": 0.2, "E": 0.0}], "N3": [12, {"A": 0.9, "B": 0.5, "C": -0.9, "D": -0.2, "E": 0.7}], "N4": [11, {"A": -1.0, "B": 0.8, "C": 0.0, "D": -0.3, "E": 1.0}], "N9": [12, {"A": -1.0, "B": 1.0, "C": 0.3, "D": -0.3, "E": 0.0}], "16": [13, {"A": -1.0, "B": -0.3, "C": 0.9, "D": 0.4, "E": 0.0}], "29": [13, {"A": 1.0, "B": -0.9, "C": -0.3, "D": 0.0, "E": 0.0}], "4": [14, {"A": -0.9, "B": 0.9, "C": -0.4, "D": 0.2, "E": 0.0}], "33": [14, {"A": -0.8, "B": 0.9, "C": 0.0, "D": 0.0, "E": 0.0}], "11": [15, {"A": -0.8, "B": 0.8, "C": -0.2, "D": -0.6, "E": 0.0}], "23": [15, {"A": -0.9, "B": 0.9, "C": 0.0, "D": 0.2, "E": 0.0}], "5": [16, {"A": -1.0, "B": -0.7, "C": 0.7, "D": 1.0, "E": 0.8}], "19": [16, {"A": -1.0, "B": 1.0, "C": -0.5, "D": 0.5, "E": 0.0}], "15": [17, {"A": 1.0, "B": 0.3, "C": -0.9, "D": -0.5, "E": -0.2, "F": -0.5}], "27": [17, {"A": -0.8, "B": 1.0, "C": 0.2, "D": 0.3, "E": 0.0}], "8": [18, {"A": -1.0, "B": 1.0, "C": 0.6, "D": 0.8, "E": 0.0}], "21": [18, {"A": -1.0, "B": 1.0, "C": 0.3, "D": 0.0, "E": 0.0}], "13": [19, {"A": -1.0, "B": 1.0, "C": -0.4, "D": 0.8, "E": 0.0}], "25": [19, {"A": -1.0, "B": 0.7, "C": 0.0, "D": 0.0, "E": 0.8}], "10": [20, {"A": -1.0, "B": -0.2, "C": 0.8, "D": 1.0, "E": 0.0}], "32": [20, {"A": -0.5, "B": -0.8, "C": 0.0, "D": 0.8, "E": 0.0}], "N7": [21, {"A": -1.0, "B": -0.3, "C": 0.3, "D": 1.0, "E": null, "F": null, "G": null}], "N8": [21, {"A": -1.0, "B": 0.5, "C": 1.0, "D": 0.0}], "V1": [22, {"A": -0.2, "B": 0.6, "C": 1.0, "D": -1.0, "E": -0.5}], "V2": [22, {"A": -0.5, "B": 1.0, "C": 0.0, "D": 0.7, "E": -0.5}], "W1": [23, {"A": -1.0, "B": -0.5, "C": 0.4, "D": 0.7, "E": 1.0}], "W2": [23, {"A": 1.0, "B": 0.3, "C": -0.7, "D": -1.0, "E": 0.0}], "W3": [23, {"A": -1.0, "B": -0.6, "C": 0.6, "D": 0.9, "E": 0.3}], "X1": [24, {"A": 0.8, "B": -0.8, "C": -1.0, "D": 0.0, "E": 1.0}], "X2": [24, {"A": 1.0, "B": 0.3, "C": -0.7, "D": -1.0, "E": 0.0}], "X3": [24, {"A": 1.0, "B": 0.5, "C": -0.7, "D": -1.0, "E": 0.0}]}, "dims": ["人定/天定", "集体/个人", "人为/大势", "设计/生长", "性善/性恶", "必然/应然", "行政/市场", "管制/自由", "中央/地方", "官方/民间", "程序/结果", "任命/选举", "守成/变革", "改革/革命", "精英/群众", "人情/契约", "自己人/所有人", "工具/立场", "谨慎/冒险", "联合/交易", "神/自然", "内部/公开", "一元/多元", "国际/本国"], "poles": [["人定", "天定"], ["集体", "个人"], ["人为", "大势"], ["设计", "生长"], ["性善", "性恶"], ["必然", "应然"], ["行政", "市场"], ["管制", "自由"], ["中央", "地方"], ["官方", "民间"], ["程序", "结果"], ["任命", "选举"], ["守成", "变革"], ["改革", "革命"], ["精英", "群众"], ["人情", "契约"], ["自己人", "所有人"], ["工具", "立场"], ["谨慎", "冒险"], ["联合", "交易"], ["神", "自然"], ["内部", "公开"], ["一元", "多元"], ["国际", "本国"]], "marks": {"12": {"E": "不要组织，各家自己办"}, "24": {"B": "组织能保护人，但会被少数人把持"}, "N7": {"E": "相信有一个不用再问的起点", "F": "可以一直追问下去，没有终点", "G": "追问到最后会绕回原点"}}, "methodAnchors": ["功利主义", "尼采主义"], "info": {"无政府共产主义": {"one": "不要国家，也不要私有制，靠自愿公社和按需分配组织社会", "figures": "克鲁泡特金、马赫诺、西班牙 CNT-FAI", "tenets": ["废除国家与私有制", "公社联邦、直接民主", "各尽所能，按需分配"], "misread": "以为无政府就是混乱。它主张的是「有序但没有统治」——靠自组织和互助，不靠命令", "read": "《互助论》克鲁泡特金", "history": "1840 年代蒲鲁东提出「财产就是盗窃」，但真正成型是 1870 年代巴枯宁与马克思分裂之后。克鲁泡特金 1902《互助论》用生物学证据论证合作比竞争更自然。实践高峰是 1936 年西班牙内战中的加泰罗尼亚——CNT-FAI 组织工人自治和集体农场，1939 年被佛朗哥镇压。此后主要作为思想传统存在，影响了 1968 年后的自治运动、1994 年墨西哥萨帕塔起义。"}, "无政府个人主义": {"one": "个人主权不可侵犯，任何集体（包括公社）都无权强迫你", "figures": "施蒂纳、梭罗、塔克", "tenets": ["个人是唯一实在", "结社必须自愿且可随时退出", "反对一切强制，包括资本的强制"], "misread": "以为它等于无政府资本主义。区别在：它反对「所有」强制，包括雇主的强制", "read": "《唯一者及其所有物》施蒂纳", "history": "施蒂纳 1844《唯一者及其所有物》是起点：「我只关心我自己」。梭罗 1849《论公民的不服从》提供了实践版本——拒绝纳税、拒绝服从不义之法。19 世纪美国人塔克办《自由》杂志传播这套主张。它和无政府共产主义的区别是：不要求集体所有制，个人可以拥有财产，只要不强制他人。"}, "毛主义": {"one": "把人的主观能动性推到极致，相信群众、怀疑官僚", "figures": "毛泽东", "tenets": ["农村包围城市", "继续革命、反复冲击官僚体系", "一穷二白可以画出最新最美的图画"], "misread": "以为它只是中国版马列。它对官僚体系的敌意，在整个马列谱系里独一无二", "read": "《实践论》《矛盾论》《湖南农民运动考察报告》", "history": "1920 年代毛泽东在实践中形成「农村包围城市」，与共产国际的「城市中心」路线相反。1930 年代延安时期成体系（《实践论》《矛盾论》）。1949 建国后，1950 年代后期与苏联决裂（反修正主义），1966 年发动文革，主张「继续革命」、不断冲击官僚体系。1970 年代输出到东南亚和拉美，秘鲁「光辉道路」是其中最极端的变体。"}, "社会民主主义": {"one": "不推翻资本主义，用选票和福利把它改造成更平等的社会", "figures": "伯恩施坦、瑞典社民党、北欧模式", "tenets": ["走议会道路而不是革命", "福利国家与再分配", "劳资谈判与阶级妥协"], "misread": "以为它是温和的共产主义。它早已放弃公有制和革命，是资本主义内部的改良。也不要和「民主社会主义」混为一谈——后者（桑德斯、科尔宾）仍然主张超越资本主义，社民则只想把资本主义改得温和些。", "read": "《社会主义的前提和社会民主党的任务》伯恩斯坦", "history": "名称变过三次。19 世纪中叶「社会民主主义」与科学社会主义混用；1899 年伯恩施坦《社会主义的前提和社会民主党的任务》把它改造成改良主义；1951 年法兰克福宣言后改称「民主社会主义」；1990 年代苏东剧变后又改回「社会民主主义」，以划清与「现实社会主义」的界限。\n组织史：德国社民党 1891 年爱尔福特纲领仍带革命色彩，1959 年哥德斯堡纲领正式放弃公有制、承认市场竞争。瑞典 1938 年萨尔特舍巴登协议把劳资谈判制度化，形成「北欧模式」——高税收、高福利、强工会、开放市场。二战后英国工党建立 NHS。1970 年代滞胀暴露福利国家财政压力，1990 年代转向「社会投资型国家」（吉登斯、布莱尔）。"}, "社会自由主义": {"one": "自由市场可以要，但必须让最弱势的人过得去", "figures": "罗尔斯、凯恩斯、美国进步主义运动", "tenets": ["自由优先，但允许再分配", "差别原则：不平等只有在对最弱者有利时才正当", "国家提供底线保障"], "misread": "以为是中间派和稀泥。它有明确原则——自由不可交易，但任何不平等都需要辩护", "read": "《正义论》罗尔斯", "history": "19 世纪末英国「新自由主义」（格林、霍布豪斯）提出：自由不只是不被干涉，还需要物质条件——没有教育和最低收入，言论自由是空的。1930 年代凯恩斯革命证明市场不能自动实现充分就业，需要财政干预。1942 年贝弗里奇报告画出福利国家蓝图。1971 年罗尔斯《正义论》用「无知之幕」给再分配提供了哲学论证：如果你不知道自己会生在哪个家庭，你会同意一套保护最弱者的规则。战后在英美欧逐步制度化，1970 年代滞胀后受质疑，1990 年代「第三条道路」试图调和效率与公平。"}, "宗教社会主义": {"one": "用信仰的伦理要求去支持经济平等", "figures": "古铁雷斯、解放神学、部分伊斯兰社会主义者", "tenets": ["贫穷本身就是不义", "财产带有社会义务", "信仰要求改造现世而不只是安慰"], "misread": "以为宗教必然保守。解放神学在拉美是左翼运动的思想来源", "read": "《解放神学》古铁雷斯", "history": "19 世纪末英国出现「基督教社会主义」（莫里斯、金斯利），试图调和信仰与社会改造。20 世纪拉美解放神学是最高峰——古铁雷斯 1971《解放神学》主张「上帝站在穷人一边」，1970 年代尼加拉瓜有神父直接参加革命政府。伊斯兰世界另有 1950 年代印尼、埃及的伊斯兰社会主义。"}, "自由主义": {"one": "个人权利优先，国家权力必须被限制、被分立", "figures": "洛克、密尔、孟德斯鸠", "tenets": ["法治与分权", "言论、结社、信仰自由", "国家是必要的恶"], "misread": "以为自由主义就是放任经济。古典自由主义确实含经济放任，但现代自由主义支持干预", "read": "《论自由》密尔", "history": "洛克 1690《政府论》确立自然权利与同意的原则。孟德斯鸠 1748《论法的精神》提出三权分立。密尔 1859《论自由》划定个人自由的边界：只在伤害他人时才可限制。19 世纪是自由主义的黄金期，也是它分裂的时期——经济上走向放任，政治上走向普选。20 世纪正式分裂为古典自由主义（偏市场）与社会自由主义（偏再分配）。"}, "自由至上": {"one": "只要不伤害别人，国家什么都别管", "figures": "诺齐克、罗斯巴德、哈耶克", "tenets": ["自我所有权", "最小国家（或没有国家）", "市场能解决大部分协调问题"], "misread": "以为它等于无政府。多数自由至上主义者接受一个只管治安和契约的「守夜人国家」", "read": "《无政府、国家与乌托邦》诺齐克", "history": "20 世纪的产物。哈耶克 1944《通往奴役之路》警告计划经济通向极权。罗斯巴德 1970 年代发展出无政府资本主义。诺齐克 1974《无政府、国家与乌托邦》用「资格理论」论证：任何超出守夜人国家的再分配都侵犯个人权利。1970 年代后在美国影响政治（茶党、自由党），但从未成为主流执政力量。"}, "保守": {"one": "不反对改变，但反对按图纸改造社会", "figures": "伯克、奥克肖特、斯克拉顿", "tenets": ["传统里含着说不清的智慧", "变革要渐进、要有机", "抽象原则危险"], "misread": "以为保守就是顽固守旧。伯克支持美国革命，反对的是法国大革命那种理性重建", "read": "《法国革命论》伯克", "history": "伯克 1790《法国革命论》是起点：反对用抽象理性重建社会，主张社会是「世代之间的契约」。19 世纪欧洲保守主义与君主、教会结盟。20 世纪美国新保守主义（1950 年代《国家评论》创刊）把重点转向反共与外交强硬。英国另有一支「一国保守主义」，主张精英对底层的责任，与美式新保守不同。"}, "社群主义": {"one": "人不是原子，权利离不开共同体的善", "figures": "麦金泰尔、桑德尔、泰勒", "tenets": ["自我由共同体塑造", "权利必须在共同善的框架里讨论", "反对「无牵挂的自我」"], "misread": "以为它等于集体主义。它不否定个人权利，只否定「可以脱离社会谈权利」", "read": "《追寻美德》麦金泰尔", "history": "1980 年代作为对罗尔斯的回应出现。麦金泰尔 1981《追寻美德》批评现代道德哲学丢掉了「实践传统」。桑德尔 1982《自由主义与正义的局限》批评「无牵挂的自我」。泰勒强调「承认的政治」。它在哲学上影响很大，但没有形成独立政党——因为主张多是否定性的（反对原子化），缺少完整的制度方案。"}, "威权法西斯": {"one": "国家（或民族、领袖）是最高目的，个人只是材料", "figures": "墨索里尼、希特勒、日本军部", "tenets": ["领袖原则", "全能国家渗透一切", "用神话与意志取代理性辩论"], "misread": "以为它是极端保守。它是革命性的——要彻底打碎旧秩序、重建新人", "read": "《极权主义的起源》阿伦特（批判性阅读）", "history": "1919 年墨索里尼在意大利创立「战斗法西斯」，「法西斯」原意是束棒（权威象征），1922 年进军罗马夺权。德国纳粹 1933 年上台。日本 1930 年代由军部主导，天皇制加军国主义。三国 1940 年签同盟。战败后作为组织被消灭，但作为思潮反复以新形式出现。学界通常分三类：意大利式国家崇拜、德国式种族主义、日本式天皇军国。"}, "国家资本主义": {"one": "国家像董事会一样经营经济，市场是工具不是目的", "figures": "朴正熙、新加坡淡马锡模式、改革时期的中国", "tenets": ["国家主导产业升级", "保留市场但控制命脉行业", "效率优先于程序"], "misread": "以为它是计划经济。它大量使用市场手段，只是所有权和控制权留在国家手里", "read": "《资本主义、社会主义与民主》熊彼特", "history": "不是马克思的原词，他用它描述「资本主义最后阶段」。20 世纪被用来指：苏联新经济政策（1921-28）、纳粹德国经济、东亚发展型国家（1961 年后的韩国、新加坡）、改革后的中国。理论化者是熊彼特 1942《资本主义、社会主义与民主》。核心特征是国家作为最大股东和规划者，但保留市场和工资关系。"}, "技术治理运动": {"one": "让工程师按效率原则管理社会，用能量单位取代价格", "figures": "凡勃伦、霍华德·斯科特、Technocracy Inc.", "tenets": ["工程师知道怎么提高效率，但决策权在商人手里", "商人靠限制生产维持价格，这是「破坏性生产」", "用能量凭证取代货币，用焦耳计量整个经济", "议会和政党处理不了技术问题"], "misread": "以为是「专家治国」或「技术官僚制」。它更激进——要废除价格体系本身，不只是让专家多说话。也不限于 1930 年代，凡勃伦 1921 年的《工程师与价格体系》是它的理论源头。", "read": "凡勃伦《工程师与价格体系》（1921）；Technocracy Inc.《Technocracy Study Course》（1934）", "history": "1919 年 William Henry Smyth 造出 technocracy 一词。1921 年凡勃伦《工程师与价格体系》提出「技术人员苏维埃」。1932 年 Howard Scott 在哥伦比亚大学成立 Technocracy Inc.，有制服、徽章、会员制，是技术治理唯一一次变成群众运动。主张能量凭证、废除价格。1940 年代后衰落，但影响了后来的系统论和控制论。"}, "生态主义": {"one": "经济增长不是目的，生态承载力才是硬约束", "figures": "卡逊、深层生态学、各国绿党", "tenets": ["代际与物种正义", "反对无限增长", "自然有内在价值，不只是资源"], "misread": "以为它等于环保政策。它质疑的是「增长」本身，不只是治理污染", "read": "《寂静的春天》卡逊", "history": "1962 年卡逊《寂静的春天》揭露农药危害，被视为起点。1972 年罗马俱乐部《增长的极限》提出增长存在物理边界。1970 年代各国绿党成立，德国绿党（1980）最成功。理论分两支：浅生态（改良环境政策）与深生态（自然有内在价值，人类只是生态一员，Naess 1973 年提出）。1990 年代后进入主流政治，也被批评「从运动变成了一个部门」。"}, "儒家": {"one": "靠道德教化而不是刑罚，靠关系伦理而不是契约", "figures": "孔子、孟子、荀子", "tenets": ["仁与礼", "为政以德，譬如北辰", "君臣父子各安其位"], "misread": "以为儒家就是专制工具。原典里「以德抗君」是正当的，孟子甚至认为诛暴君不算弑君", "read": "《论语》《孟子》", "history": "孔子（前 551-479）死后弟子分裂为八派。孟子（性善）与荀子（性恶）是两大分支。汉武帝时（前 134）「罢黜百家独尊儒术」，儒学成为官学。宋明理学（朱熹 1130-1200）吸收佛道，建立心性论体系。明清科举以朱注为标准。20 世纪整体衰落，1980 年代后「新儒家」（海外牟宗三、杜维明，大陆蒋庆）试图复兴。"}, "法家": {"one": "人性本私，靠制度、赏罚和权术统治，不靠道德感化", "figures": "韩非、商鞅、李斯", "tenets": ["法（成文法）、术（驭臣之术）、势（权位）", "轻罪重罚", "反对仁义说教"], "misread": "以为法家就是法治。它的「法」是君主的工具，不约束君主本人", "read": "《韩非子》", "history": "商鞅（前 4 世纪）在秦变法，韩非（前 280-233）集大成。秦统一后成为官方意识形态，但秦亡后名声大坏，汉以后形成「外儒内法」的格局。20 世纪被重新评价：章太炎、梁启超视其为「法治」雏形；1970 年代有「评法批儒」运动；当代学者更多把它看作「国家能力」的早期理论。"}, "伊斯兰主义": {"one": "伊斯兰不只是信仰，还是整套社会秩序", "figures": "库特卜、霍梅尼、穆斯林兄弟会", "tenets": ["教法治理", "反对世俗化", "乌玛（信仰共同体）优先于民族国家"], "misread": "以为它等于恐怖主义。它是广谱的政治运动，从温和政党到极端组织都有", "read": "《伊斯兰与世俗主义》相关论述", "history": "1928 年哈桑·班纳创立穆斯林兄弟会，是组织起点。1950-60 年代库特卜在狱中写《路标》，提出「蒙昧状态」理论，为激进派提供依据。1979 年伊朗革命建立第一个伊斯兰共和国。此后分化：温和派进入议会（土耳其 AKP、突尼斯复兴党），激进派走向武装（基地组织、ISIS）。学界强调它是「政治伊斯兰」的统称，不是单一组织。"}, "女性主义": {"one": "性别不是自然命运，是权力结构", "figures": "波伏娃、朱迪斯·巴特勒、贝尔·胡克斯", "tenets": ["公私领域都要审视权力", "身体自主", "交叉性：性别与阶级、种族交织"], "misread": "以为它只要求男女平等。它更根本的追问是：「性别」这个范畴本身怎么被建构的", "read": "《第二性》波伏娃", "history": "1792 年沃斯通克拉夫特《女权辩护》是起点，1848 年美国塞内卡福尔斯会议是第一个组织性集会。第一波（19 世纪末-20 世纪初）争选举权。第二波（1960-70 年代）由波伏娃 1949《第二性》提供理论，提出「个人的即政治的」。第三波（1990 年代）以巴特勒 1990《性别麻烦》为代表：性别是表演，不是本质。当代有交叉性理论（Crenshaw 1989）与社交媒体时代的第四波。"}, "宗族自治": {"one": "国家别管，我们自己按祖宗的规矩办", "figures": "传统乡村宗族、地方自治传统", "tenets": ["地方事务地方办", "以血缘和身份为纽带", "国家只管治安和税收"], "misread": "以为它等于保守主义。它更接近「地方主义」，对全国性的文化议题往往不关心", "read": "《乡土中国》费孝通", "history": "中国传统乡村的基本形态。费孝通 1947《乡土中国》做了经典描述：「皇权不下县」。宗族有祠堂、族田、族规、族长，承担教化、救济、纠纷调解。1900 年代后国家政权下沉，宗族被削弱。1980 年代后部分地区复兴（修族谱、重建祠堂）。学界视其为「地方自治」的本土资源，也批评它的父权与排外。"}, "私人主义": {"one": "政治跟我没关系，我过好自己就行", "figures": "无——它是一种状态，不是一套体系", "tenets": ["个人生活优先", "不为抽象集体牺牲", "对公共事务冷感"], "misread": "以为这是「没立场」。这本身就是一个立场，而且是现代社会里人数最多的一种", "read": "《独自打保龄》帕特南（描述这种状态的后果）", "history": "不是一套理论，是一种状态。托克维尔 1830 年代《论美国的民主》最早描述「个人主义」如何让人退出公共生活。帕特南 2000《独自打保龄》用数据证明美国社会资本在 1960 年代后持续下降。英格尔哈特的「后物质主义」研究显示：物质安全提高后，一部分人转向自我实现而非集体行动。"}, "政治犬儒": {"one": "所有政治都是利益和表演，别当真", "figures": "无——它同样是一种状态", "tenets": ["不相信任何承诺", "认为参与没有意义", "以嘲讽代替行动"], "misread": "以为犬儒就是清醒。它和现实主义的区别是：现实主义还愿意行动，犬儒已经放弃", "read": "《犬儒主义与政治》相关论述", "history": "源自古希腊犬儒学派（第欧根尼），但现代含义不同：不是「蔑视世俗」，而是「不相信任何公共承诺」。1970 年代后研究增多，斯洛特戴克 1983《犬儒理性批判》是代表作。政治学里用「政治信任度下降」来量化它。与政治冷漠的区别：冷漠是不关心，犬儒是关心过然后失望了。"}, "虚无主义": {"one": "没有客观的价值，一切判断都是虚构", "figures": "尼采（作为诊断者，不是信徒）、部分后现代思想家", "tenets": ["价值是人造的", "没有最终依据", "一切秩序背后都是权力"], "misread": "以为虚无主义等于悲观。它可以通向绝望，也可以通向「自己创造价值」", "read": "《查拉图斯特拉如是说》尼采", "history": "屠格涅夫 1862《父辈与子辈》首次让「虚无主义者」成为流行词。尼采 1880 年代诊断「欧洲虚无主义」：最高价值自行贬值。海德格尔 1940 年代把它解释为「存在的遗忘」。20 世纪后现代主义（利奥塔「对宏大叙事的怀疑」）被视为它的延续。争论焦点一直是：虚无主义是病症，还是解放。"}, "史前泛灵论": {"one": "万物有灵，人与自然是同一张关系网", "figures": "无具体作者，人类最漫长的世界观", "tenets": ["祖先与自然神灵参与日常", "循环时间观，没有「进步」这个概念", "部落就是全部道德圈"], "misread": "以为是原始迷信。它是一套完整世界观，而且「万物有灵」在当代生态伦理里被重新提起", "read": "《金枝》弗雷泽", "history": "人类学上指 19 世纪泰勒（1871《原始文化》）提出的「万物有灵」阶段，后来被批评为进化论式的偏见。当代人类学（Descola 2005、Viveiros de Castro）认为泛灵论不是「早期迷信」，而是一套不同的本体论：自然与文化不分，动物也是「人」。它影响了当代生态哲学与「多物种民族志」。"}, "神权政治": {"one": "神的法就是国法，不存在「世俗」这个领域", "figures": "中世纪教廷、萨伏那洛拉、塔利班", "tenets": ["启示高于理性", "教法即宪法", "统治者只对神负责"], "misread": "以为它只是政教合一。核心在于：没有任何独立于神的正当性来源", "read": "《上帝之城》奥古斯丁", "history": "古代普遍形态：埃及法老、巴比伦神庙、以色列士师。中世纪欧洲教廷是最完整的版本（1075 年格里高利改革确立教权高于王权）。近代世俗化后衰落，1979 年伊朗革命是当代最重要的复兴。理论核心：不存在独立于神的正当性来源，法律、道德、政治是一体的。"}, "道家": {"one": "最好的治理是不治理，让事物自己成", "figures": "老子、庄子", "tenets": ["无为而治", "反对人为造作", "天道自然，人应顺之"], "misread": "以为道家就是避世。它有明确的政治主张：政府越小越好，干预越多越糟", "read": "《道德经》《庄子》", "history": "老子（约前 6 世纪）《道德经》五千言，庄子（前 4 世纪）发展出「齐物」「逍遥」。汉初「黄老之治」（前 2 世纪）曾为官方意识形态，主张清静无为、与民休息。汉武帝后让位于儒家，但一直作为补充存在。当代被重新解读为「自发秩序」的资源（哈耶克引用过）和生态思想的源头。"}, "墨家": {"one": "兼爱（对所有人一样的爱）+ 尚同（统一于上级）+ 实用（有用才算对）", "figures": "墨子", "tenets": ["兼相爱，交相利", "非攻", "尚贤、节用"], "misread": "以为墨家是和平主义。它同时主张「尚同」——下级服从上级，组织严密如军事团体", "read": "《墨子》", "history": "墨子（约前 470-391）曾学儒而后反儒。组织严密，首领称「巨子」，成员可赴汤蹈火。主张兼爱、非攻、尚贤、节用。战国时与儒学并称「显学」，秦汉后衰亡，原因至今有争议（组织性太强？主张太苦？）。近代被重新发现：梁启超视其为「中国社会主义先驱」，2010 年代后又因「兼爱」和《墨经》里的光学力学知识受到新关注。"}, "功利主义": {"one": "判断对错只看后果：能不能让总幸福最大化", "figures": "边沁、密尔、辛格", "tenets": ["最大幸福原则", "后果论", "所有有感受的存在都算进计算"], "misread": "以为它等于自私。它要求你把别人的幸福和自己的同等计算，这是很苛刻的要求", "read": "《功利主义》密尔", "history": "1789 年边沁《道德与立法原理导论》提出最大幸福原则：判断对错只看后果，每个有感受的存在都算一份。19 世纪英国一系列立法改革（济贫法、公共卫生法、刑法改革）背后都有功利主义的身影。密尔 1861 年《功利主义》区分快乐的质量，并另提自由原则防止多数人压迫少数人。20 世纪功利主义进入经济学（福利经济学、成本收益分析）。1971 年罗尔斯批评它可能为了多数人的利益牺牲少数人。1975 年辛格《动物解放》把道德圈扩到动物。当代的「有效利他主义」运动是它的直系后代。"}, "社会达尔文主义": {"one": "社会就是生存竞争，弱者被淘汰是自然规律", "figures": "斯宾塞、萨姆纳", "tenets": ["不干预竞争", "反对福利制度", "等级是自然形成的"], "misread": "以为它来自进化论。达尔文本人反对这种套用，它是把生物学隐喻硬搬到社会上", "read": "《社会达尔文主义》霍夫施塔特（批判史）", "history": "斯宾塞（1820-1903）在达尔文《物种起源》之前就提出「社会进化」，后来被贴上这个标签（他自己并不接受）。萨姆纳在美国传播「自由竞争的淘汰是自然的」。19 世纪末到 20 世纪初影响极大，为殖民、种族等级、反福利提供了「科学」依据。20 世纪后名声彻底败坏，但经济政策里的「适者生存」论调仍在。"}, "黑格尔主义": {"one": "历史是理性的自我展开，国家是伦理的最高形态", "figures": "黑格尔", "tenets": ["辩证法", "绝对精神", "国家高于市民社会"], "misread": "以为它等于保守。黑格尔既影响了马克思（左），也影响了法西斯国家理论（右）", "read": "《法哲学原理》黑格尔", "history": "黑格尔（1770-1831）《精神现象学》1807、《法哲学原理》1821。核心是辩证法：历史是精神自我展开的过程，矛盾推动前进，国家是伦理的最高形态。1830 年代黑格尔学派分裂为左派（费尔巴哈、马克思）与右派（保守的国家哲学）。20 世纪被科耶夫、泰勒等人重新解读，影响了存在主义与社群主义。"}, "尼采主义": {"one": "现有道德是弱者发明的枷锁，人要自己创造价值", "figures": "尼采（身后被各种挪用）", "tenets": ["权力意志", "主人道德 vs 奴隶道德", "超人"], "misread": "以为尼采等于纳粹。他明确反对反犹主义和民族主义，是妹妹篡改了他的遗稿", "read": "《论道德的谱系》", "history": "尼采（1844-1900）《查拉图斯特拉》1883、《论道德的谱系》1887。核心概念：主人道德 vs 奴隶道德、权力意志、超人。1889 年精神崩溃后，妹妹伊丽莎白篡改遗稿并与纳粹合作，使他长期被误认为法西斯先驱——这是思想史上最著名的歪曲之一。20 世纪被存在主义、后结构主义反复挪用。"}, "甘地主义": {"one": "用非暴力不合作瓦解权力，而不是夺取权力", "figures": "甘地", "tenets": ["非暴力（ahimsa）", "不合作", "手段即目的，不能用坏手段换好结果"], "misread": "以为它等于软弱。它是主动的、有组织的对抗，只是拒绝使用暴力", "read": "《甘地自传》", "history": "甘地（1869-1948）在南非（1893-1914）形成非暴力抵抗方法，回印度后于 1919 年阿姆利则惨案后转向全国不合作运动。1930 年食盐长征是标志性行动。理论核心：手段即目的——用不纯洁的手段到不了纯洁的目的；「坚持真理」（satyagraha）不是被动忍受，而是主动对抗。影响了马丁·路德·金和曼德拉早期运动。"}, "贤能政治": {"one": "治理要靠能力和政绩选拔，不靠投票，也不靠血统", "figures": "孔子（尚贤）、科举制、李光耀、贝淡宁", "tenets": ["选贤与能，能力可以被考核", "政绩优先于民意，长期利益高于短期选票", "用人看德行与实绩，不看出身与关系"], "misread": "以为它是独裁的遮羞布。规范版本要求选拔过程可考核、政绩可查——这和靠暴力维持、靠秘术驭下的威权不是一回事", "read": "《贤能政治》贝淡宁", "history": "中国脉络最长：孔子讲「选贤与能」（《礼记·礼运》），汉代察举制，隋唐科举制（605 年起）运行一千三百年，靠考试而非血统选官。西方有柏拉图的哲学王。近代英国 1855 年建立文官考试制度，公认借鉴了中国科举。新加坡 1959 年后由李光耀推行精英选拔、高薪养廉、行政高效，被视为当代最完整的实践。理论上的当代版本是贝淡宁《贤能政治》（2015）：主张用「能力 + 德行」的选拔竞争，替代或补充一人一票。主要批评是：选拔标准由谁定？如何防止选拔者自我复制成一个封闭阶层？"}, "自由保守主义": {"one": "个人自由要保，但秩序和传统也不能丢——自由不是想干什么就干什么", "figures": "柏克（部分）、迪斯雷利、撒切尔、欧洲人民党（德国 CDU、法国 UMP）", "tenets": ["个人自由与财产权优先，但需要道德与法律约束", "相信市场，但国家要维持秩序与底线", "变革要渐进，尊重既有制度"], "misread": "以为是「自由派 + 保守派」的和稀泥。它有一条明确原则：自由必须由秩序承载，无约束的自由会自我毁灭。所以它在经济上放手，在社会事务上却主张管束", "read": "《保守主义》休·塞西尔；或《自由与秩序》", "history": "19 世纪英国托利党内部出现「自由托利主义」，迪斯雷利的「一国保守主义」把工人阶级纳入国家关怀，以对抗自由党的个人主义。20 世纪撒切尔主义强化经济自由，欧洲大陆的自由保守主义（德国 CDU、法国 UMP）则更强调社会团结与基督教传统。它与古典自由主义的根本区别是：不认为市场能解决所有问题，国家要维护道德与秩序框架。"}, "民族主义": {"one": "民族是第一位的，其他忠诚都要让位", "figures": "费希特、马志尼、孙中山（三民主义）、各国右翼政党", "tenets": ["民族是政治合法性的唯一来源", "文化同质优先于多元", "对外以民族利益为唯一尺度"], "misread": "以为是法西斯。民族主义没有「领袖原则」和「暴力崇拜」，它可以和民主（威尔逊式自决）、社会主义（第三世界民族解放）结合", "read": "《民族与民族主义》盖尔纳", "history": "1789 年法国革命把「主权在民」变成「主权在民族」，是起点。19 世纪意大利、德国统一是高峰。一战后威尔逊「民族自决」把它变成国际原则。二战后因纳粹而污名化，但 1960 年代亚非拉反殖民、1990 年代东欧解体、2010 年代欧美右翼崛起，反复回归。"}, "无政府工团主义": {"one": "不要政党，不要国家，工人自己通过工会直接管理生产", "figures": "索雷尔、西班牙 CNT-FAI、法国 CGT 早期", "tenets": ["工会是革命的主体，不是政党的工具", "总罢工是主要手段", "工厂委员会直接管理生产"], "misread": "以为是工会主义。它要废掉国家本身，不是争取更好的劳动合同", "read": "《反思暴力》索雷尔", "history": "1895 年法国 CGT 成立，确立「直接行动」路线。1900 年代传到西班牙、意大利、美国（IWW）。1936 年西班牙内战是唯一的大规模实践，CNT 组织了几百万工人的自治。1939 年被佛朗哥镇压后衰落。"}, "家长式保守主义": {"one": "上层有责任照顾下层，但下层要接受上层的管束", "figures": "迪斯雷利、俾斯麦、教皇利奥十三《新事》通谕", "tenets": ["社会是有机整体，不是契约", "精英有照顾弱者的义务", "国家提供福利，同时也规定道德规范"], "misread": "以为是威权主义。它确实要管束，但核心是「照顾」——用福利换取服从，不是单靠暴力", "read": "《保守主义》休·塞西尔", "history": "19 世纪英国迪斯雷利「一国保守主义」提出托利党有义务照顾工人阶级。同期俾斯麦在德国建立世界第一个养老和医疗保险，目的是削弱社会主义。1891 年教皇《新事》通谕为天主教社会教义奠基。20 世纪北欧和拉美部分保守政党延续这一传统。"}, "深生态": {"one": "自然有内在价值，不只是资源；人类只是生态网的一环", "figures": "奈斯、塞申斯、《生态学家》杂志", "tenets": ["所有生命有同等内在价值", "人口和消费必须下降", "反对增长经济"], "misread": "以为是环保主义。环保主义是「保护资源为了人类」，深生态是「自然本身就是目的」", "read": "《生态、共同体与生活方式》奈斯", "history": "1973 年奈斯提出「深生态」概念，区分浅生态（技术改良）和深生态（根本转变）。1985 年塞申斯整理出八条纲领。它影响了「地球优先！」等激进环保运动和生态女性主义。"}, "超人类主义": {"one": "人应该用技术改造自己，包括身体和智力", "figures": "朱利安·赫胥黎、FM-2030、尼克·博斯特罗姆", "tenets": ["衰老是可以用技术解决的", "认知增强是一项权利", "人的形态不是固定的"], "misread": "以为是科幻。它有明确的伦理纲领和政治主张（延长寿命研究经费、基因编辑合法化）", "read": "《超人类主义》博斯特罗姆", "history": "1957 年赫胥黎首次使用「transhumanism」一词。1980 年代埃廷格和 FM-2030 推动人体冷冻与「upwingers」运动。1998 年世界超人类主义协会成立。2000 年代后与有效利他主义、长期主义合流，在硅谷有大量信徒。"}, "解放神学": {"one": "上帝站在穷人一边，信仰必须变成社会行动", "figures": "古铁雷斯、卡马拉大主教、邦霍费尔（部分）", "tenets": ["结构性贫困是罪", "教会要与穷人站在一起", "解放是信仰的一部分，不只是来世"], "misread": "以为是宗教慈善。它要求改变造成贫困的制度，不只是救济", "read": "《解放神学》古铁雷斯", "history": "1960 年代拉美出现「基层教会共同体」。1971 年古铁雷斯《解放神学》出版。1979 年拉美主教会议（普埃布拉）正式承认这一路线。尼加拉瓜有神父直接参加革命政府。梵蒂冈在 1980 年代多次批评，方济各教皇后转向接纳。"}, "左翼威权主义": {"one": "经济上要平等，政治上不要自由", "figures": "斯大林、霍查、部分第三世界军政府", "tenets": ["国有制 + 一党制", "平等优先于自由", "意识形态必须统一"], "misread": "以为是马克思主义。马克思本人对政治自由有承诺（出版自由、普选），左翼威权是把这些丢掉的版本", "read": "《意识形态的终结》贝尔（相关章节）", "history": "1917 年后苏俄逐步取消反对党和新闻自由，1921 年喀琅施塔得事件是转折点。斯大林时期定型。二战后东欧各国复制。1970 年代柬埔寨红色高棉是最极端版本。它与「马列革命」的区别在权力可见性和任命机制。"}, "后殖民主义": {"one": "殖民没有随独立结束，它以文化和经济的形式继续", "figures": "萨义德、斯皮瓦克、霍米·巴巴、法农", "tenets": ["知识生产本身带有殖民结构", "「普遍性」往往是西方特殊性的伪装", "被殖民者要夺回叙述权"], "misread": "以为是历史研究。它是对当代国际秩序和知识体系的批判", "read": "《东方学》萨义德", "history": "1952 年法农《黑皮肤，白面具》。1978 年萨义德《东方学》确立「东方不是地理，是西方的建构」。1980 年代斯皮瓦克、巴巴把解构主义引入。它与马克思主义、女性主义交叉，形成「交叉性」理论。"}, "新保守主义": {"one": "自由民主需要强国家在海外捍卫，在国内则要管住道德", "figures": "欧文·克里斯托、诺曼·波德霍雷茨、保罗·沃尔福威茨", "tenets": ["美国价值具有普遍性，应主动输出", "福利国家腐蚀个人责任", "对外强硬是和平的前提"], "misread": "以为它等于传统保守主义。传统保守主义反对海外干预，新保守主义恰恰主张积极干预", "read": "《新保守主义读本》", "history": "1960-70 年代一批原左翼知识分子（克里斯托、贝尔）转向，1970 年代成型。1980 年代里根政府、2000 年代小布什政府是高峰（伊拉克战争）。它与自由保守主义的区别在对外政策：新保守主张价值输出和军事干预。"}, "左翼民族主义": {"one": "民族解放和社会主义是一件事——反帝的同时要社会平等", "figures": "马志尼（部分）、尼赫鲁、苏加诺、纳赛尔、庇隆", "tenets": ["反帝与反资本主义是同一条战线", "国家主导工业化", "民族独立先于个人自由"], "misread": "以为是「左派 + 爱国」的简单叠加。它有一条独立逻辑：在落后国家，阶级解放必须通过民族解放实现，所以民族独立是社会主义的前提", "read": "《想象的共同体》安德森", "history": "19 世纪意大利马志尼把民族解放与共和理想结合。20 世纪亚非拉反殖民运动是高峰：尼赫鲁的国大党社会主义、苏加诺的「纳沙贡」、纳赛尔的阿拉伯社会主义、恩克鲁玛的非洲社会主义。拉美的庇隆主义是另一支。1970 年代后随不结盟运动衰落，但在拉美（查韦斯）和南亚仍有影响。"}, "新自由主义": {"one": "市场是配置资源的最好方式，国家的任务是保护市场，不是替代市场", "figures": "哈耶克、弗里德曼、撒切尔、里根", "tenets": ["私有化与放松管制", "财政纪律与低税", "贸易与资本自由流动"], "misread": "以为是「新的自由主义」。中文里这个词有两个来源：①19 世纪末英国的 new liberalism（格林、霍布豪斯，主张国家干预以实现自由）——那是本库的「社会自由主义」；②20 世纪的 neoliberalism（哈耶克、弗里德曼），指市场原教旨。两者方向相反", "read": "《通往奴役之路》哈耶克；《资本主义与自由》弗里德曼", "history": "1938 年巴黎「李普曼讨论会」首次使用该词。1947 年朝圣山学社成立。1970 年代凯恩斯主义在滞胀中失效，给了它机会。1979 年撒切尔、1980 年里根上台是转折点。1989 年「华盛顿共识」把它变成国际金融机构的贷款条件。1999 年西雅图反全球化运动、2008 年金融危机后受重创，但基本框架仍在。"}, "秩序自由主义": {"one": "市场要自由竞争，但竞争规则必须由强国家来制定和维持", "figures": "欧肯、艾哈德、勒普克、弗莱堡学派", "tenets": ["国家不干预价格，但必须反垄断", "货币稳定是国家的首要责任", "市场秩序需要法律框架持续维护"], "misread": "以为是新自由主义。新自由主义认为市场自己能解决大部分问题，秩序自由主义认为市场秩序本身需要国家持续维护——没有裁判就没有比赛", "read": "《经济政策原理》欧肯", "history": "1930 年代弗莱堡学派形成（欧肯、勒普克）。二战后艾哈德在德国推行「社会市场经济」，1957 年《反限制竞争法》是标志。它区别于英美新自由主义的地方：更重视反垄断、更接受社会保障、更强调国家的中立裁判角色。2008 年金融危机后欧洲对它的兴趣回升。"}, "进步主义": {"one": "社会应该主动向前改，用政策和制度解决不平等", "figures": "杜威、美国进步党、罗斯福新政、北欧社民", "tenets": ["政府是改革的工具，不是问题本身", "科学和专业知识应该用于治理", "权利要扩展到新领域（社会权、环境权）"], "misread": "以为是激进左翼。进步主义相信制度内的改良，不主张推翻制度，但它对变革速度的要求比社会自由主义更急", "read": "《民主与教育》杜威", "history": "1890-1920 年美国进步时代（反托拉斯、妇女选举权、食品药物立法）。1930 年代罗斯福新政。1960 年代民权运动。它与「社会自由主义」的区别主要在变革姿态：社会自由主义偏「守住已有的福利制度」，进步主义偏「继续推进新议题」。"}, "中国特色社会主义": {"one": "党的领导、公有制为主体、市场经济、共同富裕，四件事一起要", "figures": "邓小平、江泽民、胡锦涛、习近平", "tenets": ["中国共产党领导是中国特色社会主义最本质的特征", "公有制为主体、多种所有制经济共同发展", "市场在资源配置中起决定性作用，更好发挥政府作用", "共同富裕是社会主义的本质要求", "改革是社会主义制度的自我完善，不是改旗易帜"], "misread": "以为是「国家资本主义」或「威权主义」的另一种说法。它自己的表述是「以人民为中心」，并明确反对把市场当目的。也不等于计划经济——它把市场写进了社会主义里面，而不是在两者之间选一个。", "read": "《中华人民共和国宪法》序言与总纲；《中国共产党章程》总纲；习近平《在庆祝中国共产党成立100周年大会上的讲话》", "history": "1978 年十一届三中全会从「以阶级斗争为纲」转向经济建设。1982 年十二大提出「建设有中国特色的社会主义」。1992 年十四大确立社会主义市场经济体制。1997 年十五大写入党章的邓小平理论。2002 年十六大提出「三个代表」。2007 年十七大提出科学发展观。2017 年十九大提出习近平新时代中国特色社会主义思想。2021 年建党百年宣布全面建成小康社会。"}, "左翼民粹": {"one": "人民对精英，加上国家控制经济", "figures": "查韦斯、莫拉莱斯、齐普拉斯、伊格莱西亚斯", "tenets": ["社会被分成「普通人民」和「腐败精英」两个阵营", "精英（政客、银行家、媒体）偷走了人民的东西", "让人民直接掌权，绕过中间机构", "经济上要国有化、再分配、反紧缩"], "misread": "以为是「社会主义」。它比社会主义更反建制：不信任工会官僚、不信任议会程序，只信任「人民」这个整体。也不要求改变生产关系，只要求把「人民的钱」拿回来。", "read": "Mudde & Kaltwasser《民粹主义：一个非常简短的导论》；Laclau《论民粹主义理性》", "history": "19 世纪俄国民粹派最早用这个词，主张跳过资本主义直接进村社社会主义。20 世纪拉美的庇隆、瓦加斯是早期形态。1998 年查韦斯当选是当代起点。2010 年代希腊 Syriza、西班牙 Podemos 把它带进欧洲。2016 年桑德斯、科尔宾的竞选被称作「左翼民粹时刻」。"}, "右翼民粹": {"one": "人民对精英，加上「这个国家被外人占了」", "figures": "特朗普、勒庞、欧尔班、法拉奇", "tenets": ["人民对精英，精英包括政客、媒体、专家", "民族国家是唯一正当的政治单位，超国家机构是篡权", "移民和文化多元威胁「我们的人民」", "福利只该给自己的国民"], "misread": "以为是「保守主义」。它反建制、反现有精英，而保守主义恰恰尊重既有权威。也不等于法西斯——它不主张废除选举，反而要求选举「真正代表人民」。", "read": "Mudde《民粹主义》；Judis《民粹主义爆炸》；Müller《什么是民粹主义？》", "history": "1972 年法国国民阵线成立，是当代原型。1990 年代奥地利自由党、瑞士人民党崛起。2000 年代北欧右翼民粹（丹麦人民党、瑞典民主党）成气候。2016 年特朗普当选与英国脱欧是高峰。2010 年代欧尔班、卡钦斯基把它变成执政力量。"}, "列宁主义": {"one": "一个纪律严明的先锋党，带无产阶级夺取政权", "figures": "列宁、托洛茨基（早期）、共产国际", "tenets": ["工人不会自发产生革命意识，需要先锋党从外部灌输", "帝国主义是资本主义的最高阶段，战争不可避免", "革命可以在一个或几个国家首先胜利", "无产阶级专政，一切权力归苏维埃", "党的组织原则是民主集中制"], "misread": "以为是「马克思主义」。它是马克思主义在俄国条件下的改造：马克思等着资本主义充分发展，列宁认为可以在落后的俄国先革命。也不等于「一党独裁」——列宁时期党内还有派别争论。", "read": "列宁《怎么办？》《国家与革命》《帝国主义是资本主义的最高阶段》", "history": "1902 年《怎么办？》提出先锋党理论。1903 年俄国社会民主工党分裂为布尔什维克与孟什维克。1915 年《论欧洲联邦口号》提出「一国首先胜利」。1917 年十月革命。1919 年成立共产国际。1924 年列宁去世，党内路线斗争开始。"}, "斯大林主义": {"one": "一国建成社会主义，靠计划和官僚机器赶超", "figures": "斯大林、日丹诺夫、苏联模式", "tenets": ["社会主义可以在一国建成，不必等世界革命", "优先发展重工业，农业集体化", "指令性计划经济，五年计划", "阶级斗争在社会主义时期会加剧", "党的一元领导，民主集中制转向集中"], "misread": "以为是「列宁主义的自然延续」。托洛茨基派认为它是列宁主义的背叛。也不只是「独裁」——它是一套完整的工业化赶超方案，1930 年代让苏联变成工业强国。", "read": "斯大林《论辩证唯物主义和历史唯物主义》《苏联社会主义经济问题》；科恩《布哈林传》对照读", "history": "1924 年列宁去世后，斯大林与托洛茨基、季诺维也夫、布哈林先后斗争。1928 年第一个五年计划与农业集体化。1936 年宪法。1936-38 年大清洗。1945 年苏联成为超级大国。1956 年赫鲁晓夫秘密报告否定斯大林。"}, "欧洲共产主义": {"one": "走议会道路，放弃无产阶级专政", "figures": "贝林格（意共）、卡里略（西共）、马歇（法共）", "tenets": ["在民主制度内通过选举上台，不搞暴力革命", "放弃无产阶级专政的提法，尊重多党制", "共产党是群众党，不是先锋队", "反对苏联的领导，各国走自己的路"], "misread": "以为是「社会民主主义」。它仍然自称共产主义，主张超越资本主义，只是不用专政手段。也不等于「改良主义」——它要改变所有制，不只是调节分配。", "read": "贝林格《欧洲共产主义的设想》；卡里略《欧洲共产主义与国家》", "history": "1970 年代西欧共产党选举得票上升，但不愿完全苏联化。1975 年意共与西共发表联合声明。1977 年马德里峰会，意、西、法三党确立「欧洲共产主义」。1980 年代后衰退，意共 1991 年改为左翼民主党。"}, "铁托主义": {"one": "工人自治、市场社会主义、不结盟", "figures": "铁托、卡德尔、南斯拉夫共产主义者联盟", "tenets": ["工厂归工人委员会管理，不是国家管理", "保留市场机制，但限制资本", "不加入苏联阵营，走不结盟路线", "联邦制，各民族自治"], "misread": "以为是「另一种苏联模式」。它恰恰是苏联模式的反对者，1948 年就被斯大林开除出共产党情报局。也不等于「市场经济」——它反对私有化，只反对国家所有制。", "read": "卡德尔《社会主义自治》；南斯拉夫《实践》杂志", "history": "1948 年南斯拉夫与苏联决裂，被开除出共产党情报局。1950 年开始工人自治。1955 年与印度、埃及发起不结盟运动。1980 年铁托去世，联邦松动。1990 年代南斯拉夫解体。"}, "经典马克思主义": {"one": "阶级、剥削、历史必然——革命是无产阶级自己的事", "figures": "马克思、恩格斯、早期卢森堡", "tenets": ["至今一切社会的历史都是阶级斗争的历史", "资本家占有剩余价值，这是剥削的结构，不是坏人的贪婪", "经济基础决定上层建筑，不是观念决定历史", "无产阶级的解放只能由无产阶级自己完成", "共产主义不是设计出来的蓝图，是历史矛盾展开的结果", "全世界无产者联合起来——资本没有祖国，劳动者也不该有"], "misread": "以为是「列宁主义」。马克思没有提出先锋党，也没有说革命可以在一国首先胜利——那是列宁在俄国条件下的改造。也不等于「要消灭一切私有财产」：他区分了生活资料和生产资料。", "read": "《共产党宣言》《1844 年经济学哲学手稿》《资本论》第一卷；恩格斯《社会主义从空想到科学的发展》", "history": "1848 年《共产党宣言》。1864 年第一国际成立，1872 年因巴枯宁派分裂而解散。1867 年《资本论》第一卷。1871 年巴黎公社，马克思写成《法兰西内战》。1883 年马克思去世，恩格斯整理遗稿。第二国际成立后，马克思主义分裂为改良（伯恩施坦）与革命（列宁）两支。"}, "数据主义": {"one": "宇宙由数据流构成，一切价值在于对数据处理的贡献", "figures": "赫拉利、平台资本主义、推荐算法", "tenets": ["一切现象和实体都可以还原为数据流", "一个东西的价值，等于它对数据处理的贡献", "人的感受和自由意志，是生化算法的输出", "数据化是不可逆的进程，人会主动交出决策权"], "misread": "以为是「重视数据」。它是一种本体论——认为数据比经验更实在。也不等于技术治理：技术治理是让专家掌权，数据主义是让数据自己说话，专家也只是数据处理链条上的一环。", "read": "赫拉利《未来简史》最后三章；Shoshana Zuboff《监视资本主义时代》", "history": "词由 David Brooks 2013 年在《纽约时报》首次使用，赫拉利 2016 年《未来简史》使其流行。思想上接控制论（维纳）与信息论（香农）。2010 年代平台经济把它从隐喻变成现实：推荐算法、信用评分、预测性警务。"}, "算法治理": {"one": "公共决策交给算法，人只设定目标", "figures": "智利 Cybersyn、爱沙尼亚电子政务、城市大脑", "tenets": ["人的判断有偏见、会疲劳、可被收买，算法没有", "权威来自「可验证的正确」，不来自选举也不来自任命", "人负责设定目标，算法负责执行", "决策过程应当可审计、可复现"], "misread": "以为是「用电脑办公」。它主张的是决策权的转移，不是工具升级。也不等于技术治理：技术治理是让专家掌权，算法治理是让人退出决策，专家只负责维护算法。", "read": "Aneesh《The Global Rise of the Modern Algorithmic State》；Danaher 等《Algorithmic Governance》", "history": "1960 年代智利 Cybersyn 项目（Stafford Beer）是前身。1990 年代电子政务。2010 年代算法进入公共决策：预测性警务（PredPol）、澳大利亚 Robodebt 福利追缴、中国城市大脑。2018 年剑桥分析事件后，「算法问责」成为公共议题。"}, "世界联邦主义": {"one": "国家主权应当部分让渡给一个联邦式的世界政府，只管有限的事", "figures": "但丁、康德、H. G. 威尔斯、World Federalist Movement", "tenets": ["战争源于国际无政府状态，只有高于国家的法律秩序才能根除", "世界政府的职能是有限的：安全、环境、跨国司法，其余归各国", "必须由民主程序产生，不能由大国协调代替", "主权不是绝对的，可以分割、可以委托"], "misread": "以为是「世界大同」或全球主义精英的阴谋。它要的是有限职能的联邦，不是单一世界国；也明确反对由安理会五常说了算。也不要和「国际组织」混为一谈——联合国没有直接征税权和强制执行力，只是它的部分实现。", "read": "康德《永久和平论》（1795）；但丁《论世界帝国》（1310）；World Federalist Movement《蒙特勒宣言》", "history": "但丁 1310 年《论世界帝国》最早系统论证普世帝国。康德 1795 年提出自由国家的联盟。1910 年海牙和平会议。1938 年 Atlantic Union 运动。1947 年 United World Federalists 成立。1990s 后转向具体机制：国际刑事法院（1998）、气候变化协定。欧盟是最接近的现实样本——超国家机构 + 成员国保留大部分主权。"}}, "layers": {"政治立场": [2, 7, 8, 9, 10, 11, 12, 13, 22, 23, 24], "方法论": [4, 6, 14, 15, 19, 20], "世界观": [1, 3, 5, 16, 17, 18, 21]}, "dimInfo": {"0": {"q": "规则和权力，最终凭什么算数？", "lo": "规则是人商量出来的。理由说得清就留，说不清就改。没有哪个规矩是「不用问为什么」的。", "hi": "有些规矩不需要理由。它背后有神、天道、历史规律或自然法则，人只能顺着来。"}, "1": {"q": "社会的基本单位是什么？", "lo": "人离开共同体什么都不是。语言、意义、能力，都是社会给的。", "hi": "社会只是个体的总和。个体才是权利和意义的最终载体。"}, "2": {"q": "历史由什么推动？", "lo": "关键决策、领袖意志、人的选择改变走向。换一个决定就是另一个结局。", "hi": "技术、人口、地理、趋势到了就会发生。人只是顺势，或者被动应对。"}, "3": {"q": "制度能不能事先设计好？", "lo": "能。设计得足够好，它就能按设计运行。", "hi": "不能。好的制度是试错累积出来的，越想设计越糟。"}, "4": {"q": "人天性怎么样？", "lo": "人性本善，或者可以通过教育、环境改造变好。", "hi": "人性有恒定的自私和局限，只能靠制度约束，改不掉。"}, "5": {"q": "你相信一个主张，凭什么？", "lo": "它符合发展趋势，迟早会实现。所以值得信。", "hi": "它在道理上是对的，即使永远实现不了，也该追求。", "mid": "它在实践中被证明有效，所以值得信。既不看「必然」，也不看「应然」。"}, "6": {"q": "经济该由谁调配？", "lo": "政府定指标、发许可、管价格，用行政手段配置资源。", "hi": "价格和竞争自己会找到位置，政府少插手。"}, "7": {"q": "社会事务该管多少？", "lo": "社区、行为、言论都需要规则约束。没人管就乱套。", "hi": "管得越少越舒服。人有自己的判断，不需要事事立规矩。"}, "8": {"q": "权力该集中还是分散？", "lo": "统一规划、统一规定，否则会失控。", "hi": "各地情况差别很大，自己决定才合理。"}, "9": {"q": "介于国家和个人之间的组织，归谁？", "lo": "由行政机构统一代理——居委会、上级派出机构。", "hi": "由自治团体自己组织——业委会、合作社、行业协会。"}, "10": {"q": "一个人够不够格，看什么？", "lo": "来源正当才算数。程序不对，干得再好也不正当。", "hi": "干得好就有资格。结果是最硬的证据。"}, "11": {"q": "领导的权力从哪来？", "lo": "上级委派，或者按能力提拔。不需要被领导者投票。", "hi": "被领导者投票授权。选出来才算数。"}, "12": {"q": "现状该不该动？", "lo": "现在这样挺好。稳定本身就是价值，不必折腾。", "hi": "不变就是退步。该改就得改。"}, "13": {"q": "要改的话，怎么改？", "lo": "先试点、渐进推开、留回调余地。", "hi": "一次性推倒重来。长痛不如短痛，拖下去只会更麻烦。"}, "14": {"q": "改变靠谁推动？", "lo": "有能力的人牵头、发起。多数人只是跟随。", "hi": "多数人参与才牢靠。没有群众基础的变化，立不住。"}, "15": {"q": "人和人靠什么维系？", "lo": "血缘、地缘、关系、面子。人对了，什么都好办。", "hi": "合同、规则、法律程序。规矩清楚才不会伤感情。"}, "16": {"q": "你的道德义务覆盖到哪？", "lo": "越近责任越重。远方的管不了，也不该由个人管。", "hi": "都是人，责任一样。距离不改变义务。"}, "17": {"q": "技术是中性工具，还是本身带倾向？", "lo": "枪不杀人，人杀人。关键看谁用、怎么用。", "hi": "某些技术的设计本身就会锁定某种权力结构，用起来就改不了。"}, "18": {"q": "面对后果不确定的新事物，怎么处理？", "lo": "先证明无害，才允许推广。有些错不能犯。", "hi": "先允许，出了问题再管。不冒险就什么也做不成。"}, "19": {"q": "怎么跟别人合作？", "lo": "拉拢所有能拉拢的，哪怕立场不同。把敌人缩到最小。", "hi": "谁有共同利益就跟谁合作，不谈长期交情。或者干脆自己干。"}, "20": {"q": "如果有一个更高的秩序，它是什么？", "lo": "一个有意志的存在，会安排、会回应、会审判。", "hi": "客观规律，没有目的，也不回应人的祈求。"}, "21": {"q": "决策过程该让多少人知道？", "lo": "效率优先。不必事事摊开，内部处理完给个结果就行。", "hi": "过程必须可查、可质询。看不见的过程没法纠错。"}, "22": {"q": "权力该归一个中心，还是分散在几个中心？", "lo": "必须有一个最终拍板的地方。多头就是内耗，出事没人负责。", "hi": "权力必须分散、互相牵制。单一中心迟早会腐化，哪怕它一开始是好的。"}, "23": {"q": "变革该以什么为单位？", "lo": "很多问题只能跨国解决。把自己圈在国界里，是自欺。", "hi": "先把本国的事办好。别国的事，我们没能力也不该替他们决定。"}}, "dimEn": {"1": "Conventionalism / Transcendent Order", "2": "Collectivism / Individualism", "3": "Voluntarism / Determinism", "4": "Constructivism / Spontaneous Order", "5": "Human Perfectibility / Original Sin", "6": "Historicism / Normativism", "7": "Interventionism / Laissez-Faire", "8": "Paternalism / Liberty", "9": "Centralization / Decentralization", "10": "Corporatism / Pluralism", "11": "Proceduralism / Consequentialism", "12": "Appointment / Electoral Accountability", "13": "Status Quo / Reform", "14": "Reformism / Revolutionism", "15": "Vanguardism / Spontaneism", "16": "Gemeinschaft / Gesellschaft", "17": "Particularism / Universalism", "18": "Instrumentalism / Substantivism", "19": "Precautionary / Proactionary", "20": "Coalition-building / Transactionalism", "21": "Personal God / Impersonal Order", "22": "Arcana Imperii / Publicity", "23": "Unitary / Pluralist", "24": "Internationalism / Nationalism"}, "anchorEn": {"无政府共产主义": "Anarcho-communism", "无政府个人主义": "Anarcho-individualism", "毛主义": "Maoism", "社会民主主义": "Social Democracy", "社会自由主义": "Social Liberalism", "宗教社会主义": "Religious Socialism", "自由主义": "Liberalism", "自由至上": "Libertarianism", "保守": "Conservatism", "社群主义": "Communitarianism", "威权法西斯": "Authoritarian Fascism", "国家资本主义": "State Capitalism", "技术治理运动": "Technocracy Movement", "生态主义": "Ecologism", "儒家": "Confucianism", "法家": "Legalism", "伊斯兰主义": "Islamism", "女性主义": "Feminism", "宗族自治": "Lineage Self-governance", "私人主义": "Privatism", "政治犬儒": "Political Cynicism", "虚无主义": "Nihilism", "史前泛灵论": "Animism", "神权政治": "Theocracy", "道家": "Daoism", "墨家": "Mohism", "功利主义": "Utilitarianism", "社会达尔文主义": "Social Darwinism", "黑格尔主义": "Hegelianism", "尼采主义": "Nietzscheanism", "甘地主义": "Gandhism", "贤能政治": "Meritocracy", "自由保守主义": "Liberal Conservatism", "民族主义": "Nationalism", "无政府工团主义": "Anarcho-syndicalism", "家长式保守主义": "Paternalistic Conservatism", "深生态": "Deep Ecology", "超人类主义": "Transhumanism", "解放神学": "Liberation Theology", "左翼威权主义": "Left Authoritarianism", "后殖民主义": "Postcolonialism", "新保守主义": "Neoconservatism", "左翼民族主义": "Left-wing Nationalism", "新自由主义": "Neoliberalism", "秩序自由主义": "Ordoliberalism", "进步主义": "Progressivism", "中国特色社会主义": "Socialism with Chinese Characteristics", "左翼民粹": "Left-Wing Populism", "右翼民粹": "Right-Wing Populism", "列宁主义": "Leninism", "斯大林主义": "Stalinism", "欧洲共产主义": "Eurocommunism", "铁托主义": "Titoism", "经典马克思主义": "Classical Marxism", "数据主义": "Dataism", "算法治理": "Algocracy", "世界联邦主义": "World Federalism"}, "regimes": [{"id": "su_khrush", "f": "su", "n": "赫鲁晓夫时期的苏联", "p": "1956–1964", "pl": "苏联", "s": "「解冻」", "sc": "de-Stalinization", "note": "1956 苏共二十大秘密报告批判个人崇拜。垦荒运动、玉米运动。文化解冻。1964 被解职。", "kn": "", "v": [0.5, -0.9, -0.8, -0.8, -0.5, -0.9, -1.0, -0.8, -0.9, -0.7, 0.6, -0.9, 0.5, 0.8, -0.7, 0.5, -0.5, 0.5, 0.8, -0.8, 0.6, -0.5, -0.9, -0.5]}, {"id": "su_brezh", "f": "su", "n": "勃列日涅夫时期的苏联", "p": "1964–1982", "pl": "苏联", "s": "「发达社会主义」", "sc": "stagnation / gerontocracy", "note": "干部终身制，经济停滞，军备扩张，1979 入阿富汗。1968 后提出「有限主权论」。", "kn": "", "v": [0.5, -0.9, -0.5, -0.8, 0.5, -0.9, -1.0, -0.9, -0.9, -0.8, 0.6, -0.9, -0.8, 0.5, -0.8, 0.5, -0.5, 0.5, -0.8, -0.8, 0.6, -0.9, -1.0, 0.3]}, {"id": "su_gorb", "f": "su", "n": "戈尔巴乔夫时期的苏联", "p": "1985–1991", "pl": "苏联", "s": "「新思维」「公开性」", "sc": "perestroika", "note": "1989 首次竞争性选举，1990 取消宪法第六条，1991 解体。改革派与掘墓人之争。", "kn": "", "v": [-0.5, -0.7, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.8, 0.9, -0.5, 0.5, 0.5, 0.5, 0.8, -0.5, 0.6, 0.9, 0.5, -0.5]}, {"id": "cn_mao", "f": "su", "n": "毛泽东时期的中国", "p": "1949–1976", "pl": "中国", "s": "「无产阶级专政下继续革命」", "sc": "Maoist regime", "note": "土改、三大改造、人民公社、大跃进、文革。1981 年决议将文革定性为内乱，同时肯定前期理论。", "kn": "", "v": [0.5, -0.9, -0.8, -0.5, -0.9, -0.9, -0.9, -0.8, -0.5, -0.5, 0.8, -0.8, 0.8, 1.0, 0.8, 0.5, -0.5, 0.8, 0.8, -0.8, 0.6, -0.8, -1.0, -0.5]}, {"id": "cu_castro", "f": "su", "n": "卡斯特罗时期的古巴", "p": "1959–2008", "pl": "古巴", "s": "「社会主义革命」", "sc": "socialist one-party regime", "note": "1961 宣布社会主义，1976 宪法，古巴共产党为唯一合法政党，免费医疗教育。", "kn": "", "v": [0.5, -0.9, -0.6, -0.8, -0.7, -0.9, -1.0, -0.9, -0.9, -0.8, 0.6, -0.9, 0.8, 1.0, 0.7, 0.5, -0.5, 0.8, 0.7, -0.8, 0.6, -0.8, -1.0, -0.5]}, {"id": "kr_park", "f": "dev", "n": "朴正熙时期的韩国", "p": "1961–1979", "pl": "韩国", "s": "「韩国式民主主义」", "sc": "开发独裁（개발독재 / 開発独裁）", "note": "1961 政变，1972 维新宪法取消连任限制。经济企划院主导五年计划，出口导向。学界名由韩国学者自造。", "kn": "", "v": [-0.5, -0.9, -0.8, -0.5, 0.5, -0.8, -0.9, -0.8, -0.8, -0.7, 0.8, -0.9, 0.8, 0.7, -0.5, 0.5, -0.8, -0.8, 0.8, -0.6, 0.7, -0.8, -0.9, 0.8]}, {"id": "sg_lee", "f": "dev", "n": "李光耀时期的新加坡", "p": "1965–1990", "pl": "新加坡", "s": "「亚洲价值观」（1990s 与马哈迪并称）", "sc": "soft authoritarianism / illiberal democracy", "note": "人民行动党长期执政，组屋、公积金、廉政公署。经济高度开放但政治竞争受限。「亚洲价值观」已被森（1997）系统批评。", "kn": "", "v": [-0.5, -0.7, -0.7, -0.6, 0.5, -0.7, 0.0, -0.6, -0.8, -0.6, 0.8, -0.8, 0.5, -0.5, -0.5, 0.8, -0.6, -0.7, 0.5, 0.5, 0.6, -0.7, -0.8, 0.5]}, {"id": "id_suharto", "f": "dev", "n": "苏哈托时期的新秩序", "p": "1966–1998", "pl": "印尼", "s": "「新秩序」（Orde Baru）", "sc": "authoritarian developmentalism", "note": "1965 反共清洗后上台，伯克利集团主导经济，家族与军人裙带。1975 吞并东帝汶。", "kn": "", "v": [-0.5, -0.9, -0.7, -0.5, 0.7, -0.7, -0.5, -0.6, -0.8, -0.7, 0.8, -0.9, 0.7, 0.5, -0.6, -0.5, -0.9, -0.6, 0.4, -0.5, 0.6, -0.8, -0.9, 0.6]}, {"id": "ph_marcos", "f": "dev", "n": "马科斯时期的菲律宾", "p": "1972–1986", "pl": "菲律宾", "s": "「新社会」（Bagong Lipunan）", "sc": "personalist authoritarianism / kleptocracy", "note": "1972 戒严，1981 名义解严但保留法令统治权。裙带资本主义。1986 人民力量革命。", "kn": "", "v": [-0.5, -0.7, -0.5, -0.5, 0.7, -0.5, -0.5, -0.5, -0.8, -0.7, 0.5, 0.3, 0.5, 0.5, -0.5, -0.8, -0.9, 0.3, 0.5, -0.5, 0.5, -0.8, -0.9, 0.5]}, {"id": "rw_kagame", "f": "dev", "n": "卡加梅时期的卢旺达", "p": "2000– ", "pl": "卢旺达", "s": "「发展优先于族群」", "sc": "developmental patrimonialism", "note": "1994 大屠杀后卢旺达爱国阵线执政。取消族群标识，全民医保、禁塑、电子政务。", "kn": "", "v": [-0.5, -0.8, -0.8, -0.6, 0.5, -0.6, -0.5, -0.5, -0.7, -0.5, 0.9, -0.8, 0.7, 0.5, -0.7, 0.5, -0.6, -0.7, 0.7, 0.3, 0.6, -0.7, -0.8, 0.5]}, {"id": "cn_deng", "f": "dev", "n": "邓小平时期的中国", "p": "1978–1992", "pl": "中国", "s": "「有中国特色的社会主义」", "sc": "market-Leninism / developmental state", "note": "家庭联产承包，四个经济特区，1992 南巡与社会主义市场经济。政治上坚持四项基本原则。", "kn": "", "v": [-0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.0, 0.0, 0.0, 0.5, 0.8, -0.5, 0.8, -0.5, 0.0, 0.5, -0.5, -0.8, -0.5, 0.5, 0.8, -0.5, -0.8, 0.5]}, {"id": "my_mahathir", "f": "dev", "n": "马哈蒂尔时期的马来西亚", "p": "1981–2003", "pl": "马来西亚", "s": "「2020 宏愿」", "sc": "electoral authoritarianism / ethnic patronage state", "note": "新经济政策（按族群配额），国产车 Proton，多媒体超级走廊。巫统长期执政。", "kn": "", "v": [-0.5, -0.7, -0.7, -0.6, 0.5, -0.5, 0.0, -0.5, -0.7, -0.5, 0.8, -0.6, 0.7, 0.5, -0.5, 0.5, -0.8, -0.6, 0.5, 0.5, 0.5, -0.6, -0.6, 0.6]}, {"id": "jp_meiji", "f": "modern", "n": "明治日本", "p": "1868–1912", "pl": "日本", "s": "「富国强兵」「殖产兴业」「和魂洋才」", "sc": "Meiji oligarchy / authoritarian modernization", "note": "废藩置县、地税改革、征兵制、官营模范工厂。1889 宪法，天皇总揽统治权，内阁对天皇负责。", "kn": "", "v": [0.5, -0.9, -0.8, -0.7, 0.5, -0.8, -0.8, -0.8, -0.8, -0.7, 0.6, -0.9, 0.8, 0.7, -0.7, -0.5, -0.9, 0.5, 0.8, -0.7, -0.5, -0.8, -0.9, 0.9]}, {"id": "tr_ataturk", "f": "modern", "n": "凯末尔时期的土耳其", "p": "1923–1938", "pl": "土耳其", "s": "「凯末尔主义」六箭头", "sc": "Kemalism / tutelary modernization", "note": "废除哈里发（1924）、字母改革、司法世俗化、国家主义经济。军队此后长期充当世俗监护者。", "kn": "", "v": [-0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.7, -0.6, -0.5, -0.8, 0.9, 0.7, -0.6, 0.6, -0.8, 0.5, 0.6, -0.5, 0.9, -0.5, -0.8, 0.5]}, {"id": "es_franco", "f": "corp", "n": "佛朗哥时期的西班牙", "p": "1939–1975", "pl": "西班牙", "s": "「国民运动」「有机民主」", "sc": "authoritarian-corporatist", "note": "长枪党一党制，工会垂直化，天主教为国教。1966 有机法。区别于法西斯：无彻底动员、无种族理论。", "kn": "", "v": [0.5, -0.8, -0.5, -0.5, 0.7, 0.5, -0.5, -0.5, -0.6, -0.6, -0.5, -0.8, -0.8, 0.3, -0.7, 0.5, -0.5, 0.5, -0.5, -0.7, -0.8, -0.7, -0.8, 0.5]}, {"id": "pt_salazar", "f": "corp", "n": "萨拉查时期的葡萄牙", "p": "1933–1974", "pl": "葡萄牙", "s": "「新国家」（Estado Novo）", "sc": "organic statism（林茨用语）", "note": "1933 宪法，法团院，PIDE 秘密警察。殖民地战争拖垮政权，1974 康乃馨革命。", "kn": "", "v": [0.5, -0.8, -0.5, -0.5, 0.7, 0.7, -0.5, -0.7, -0.6, -0.6, -0.5, -0.8, -0.9, 0.3, -0.7, 0.5, -0.5, 0.5, -0.8, -0.7, -0.9, -0.7, -0.8, 0.5]}, {"id": "mx_pri", "f": "corp", "n": "墨西哥革命制度党时期", "p": "1929–2000", "pl": "墨西哥", "s": "革命制度党（PRI）", "sc": "hegemonic party system（萨托利）", "note": "一党执政七十一年，每六年换届、党内指定候选人。略萨 1990 年称「完美的独裁」。", "kn": "", "v": [-0.5, -0.7, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.8, -0.7, 0.5, 0.3, 0.3, 0.3, -0.5, -0.7, -0.7, 0.3, 0.4, -0.5, 0.6, -0.8, -0.8, 0.5]}, {"id": "ar_peron", "f": "corp", "n": "庇隆时期的阿根廷", "p": "1946–1955", "pl": "阿根廷", "s": "「正义主义」（Justicialismo）「第三立场」", "sc": "populism / corporatism", "note": "庇隆自述受墨索里尼影响。工会国有化、进口替代、福利扩张。1955 政变下台。", "kn": "", "v": [-0.5, -0.7, -0.5, -0.5, -0.5, 0.5, -0.8, -0.5, -0.5, -0.7, 0.5, 0.8, 0.8, 0.6, 0.8, -0.5, -0.5, 0.5, 0.8, -0.8, 0.5, -0.5, -0.3, 0.5]}, {"id": "uk_consensus", "f": "socdem", "n": "战后英国共识", "p": "1945–1979", "pl": "英国", "s": "「巴茨克尔主义」（Butskellism，《经济学人》1954 造词）", "sc": "postwar consensus / Keynesian welfare state", "note": "艾德礼政府建 NHS、煤矿国有化、贝弗里奇报告。两党在凯恩斯主义+福利国家上大体一致。", "kn": "", "v": [-0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.9, 0.5, -0.7, 0.5, 0.8, 0.5, 0.5, -0.5, -0.5, 0.7, 0.7, 0.8, -0.5]}, {"id": "in_nehru", "f": "socdem", "n": "尼赫鲁时期的印度", "p": "1947–1964", "pl": "印度", "s": "「社会主义类型社会」（1955 国大党决议）", "sc": "state-led development + electoral democracy", "note": "混合经济，五年计划（仿苏），公营重工业，同时保留选举与多党制。", "kn": "", "v": [-0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.7, -0.5, -0.7, -0.5, -0.5, 0.9, 0.5, -0.7, 0.3, 0.6, 0.5, 0.3, -0.3, -0.3, 0.7, 0.7, 0.7, -0.3]}, {"id": "tz_nyerere", "f": "socdem", "n": "尼雷尔时期的坦桑尼亚", "p": "1961–1985", "pl": "坦桑尼亚", "s": "「乌贾马」（Ujamaa，大家庭）《阿鲁沙宣言》1967", "sc": "African socialism", "note": "一党制，银行与工厂国有化，强制村庄化。经济失败但个人声望极高，被称 Mwalimu（导师）。", "kn": "", "v": [-0.5, -0.9, -0.5, -0.7, -0.8, -0.5, -0.9, -0.5, -0.7, -0.6, 0.5, -0.8, 0.7, 0.6, 0.7, -0.5, -0.5, 0.5, 0.5, -0.7, 0.6, -0.6, -0.8, -0.5]}, {"id": "uk_thatcher", "f": "neolib", "n": "撒切尔时期的英国", "p": "1979–1990", "pl": "英国", "s": "「撒切尔主义」；「没有社会这种东西」", "sc": "neoliberal / New Right", "note": "国企私有化、削弱工会（1984 矿工罢工）、地方政府权力上收、人头税。", "kn": "", "v": [-0.5, 0.8, -0.5, 0.5, 0.5, -0.5, 0.9, 0.8, 0.5, 0.7, 0.5, 0.5, 0.9, -0.5, -0.5, 0.8, 0.8, -0.8, 0.8, 0.8, 0.8, 0.5, 0.7, 0.3]}, {"id": "cl_pinochet", "f": "neolib", "n": "皮诺切特时期的智利", "p": "1973–1990", "pl": "智利", "s": "「新制度性」", "sc": "bureaucratic authoritarianism（奥唐奈）", "note": "1973 政变推翻阿连德，芝加哥弟子推行私有化、养老金个人账户。1988 公投落败后交权。", "kn": "", "v": [-0.5, 0.5, -0.5, 0.5, 0.7, -0.5, 0.9, 0.8, 0.6, 0.5, 0.5, -0.5, 0.8, -0.5, -0.5, 0.8, 0.7, -0.8, 0.7, 0.8, 0.7, -0.6, -0.7, 0.5]}, {"id": "ve_chavez", "f": "pop", "n": "查韦斯时期的委内瑞拉", "p": "1999–2013", "pl": "委内瑞拉", "s": "「21 世纪社会主义」", "sc": "radical populism / competitive authoritarianism", "note": "1999 新宪法改国名为玻利瓦尔共和国，石油国有化，社区委员会，多次公投修宪。", "kn": "", "v": [-0.5, -0.7, -0.5, -0.5, -0.5, 0.5, -0.9, -0.5, -0.5, -0.7, 0.5, 0.8, 0.8, 0.9, 0.8, -0.5, -0.5, 0.5, 0.8, -0.8, 0.5, 0.5, -0.5, 0.5]}, {"id": "id_sukarno", "f": "pop", "n": "苏加诺时期的印度尼西亚", "p": "1959–1965", "pl": "印尼", "s": "「指导民主」（Demokrasi Terpimpin）「纳沙贡」", "sc": "guided democracy", "note": "1959 总统令恢复 1945 宪法，解散制宪议会。纳沙贡＝民族主义+宗教+共产主义三派联合。", "kn": "", "v": [-0.5, -0.8, -0.5, -0.5, -0.5, -0.5, -0.7, -0.5, -0.8, -0.7, 0.5, -0.5, 0.7, 0.7, 0.5, -0.5, -0.8, 0.5, 0.7, -0.8, 0.5, -0.5, -0.8, 0.3]}, {"id": "ru_putin", "f": "hybrid", "n": "普京时期的俄罗斯", "p": "2000– ", "pl": "俄罗斯", "s": "「主权民主」（苏尔科夫 2006）；实务用语「可控民主」", "sc": "competitive authoritarianism（Levitsky & Way）", "note": "收拢联邦电视、整编统一俄罗斯党、2004 取消州长直选、2020 修宪清零任期。", "kn": "", "v": [-0.5, -0.5, -0.5, -0.5, 0.7, -0.5, -0.5, -0.5, -0.9, -0.8, 0.5, -0.3, 0.3, 0.5, -0.5, -0.5, -0.8, 0.5, 0.6, 0.3, 0.5, -0.8, -0.9, 0.9]}, {"id": "hu_orban", "f": "hybrid", "n": "欧尔班时期的匈牙利", "p": "2010– ", "pl": "匈牙利", "s": "「非自由民主」（欧尔班 2014 年演讲原话）", "sc": "competitive authoritarianism / hybrid regime", "note": "2011 新基本法，2018 后「基督教民主」。媒体与司法改革引发欧盟第六条程序。", "kn": "", "v": [0.5, -0.5, -0.5, -0.5, 0.7, 0.5, 0.3, -0.5, -0.7, -0.5, 0.5, 0.3, -0.5, 0.3, -0.5, 0.5, -0.9, 0.5, 0.3, -0.3, 0.5, -0.7, -0.7, 0.9]}, {"id": "de_weimar", "f": "lib", "n": "魏玛共和国", "p": "1919–1933", "pl": "德国", "s": "「魏玛宪法」下的共和国", "sc": "defective democracy（默克尔用语）", "note": "比例代表制、总统紧急命令权（第 48 条）。1930 后总统内阁架空议会。", "kn": "", "v": [-0.8, 0.5, -0.5, 0.5, -0.5, 0.7, 0.5, 0.7, 0.5, 0.7, -0.5, 0.9, 0.5, -0.5, 0.3, 0.6, 0.7, 0.5, 0.7, 0.3, 0.7, 0.9, 0.9, -0.5]}, {"id": "za_mandela", "f": "lib", "n": "曼德拉时期的南非", "p": "1994–1999", "pl": "南非", "s": "「彩虹之国」「真相与和解」", "sc": "transitional democracy / consociationalism", "note": "1996 宪法（全球权利保障最完备之一），真相与和解委员会以特赦换真相。", "kn": "", "v": [-0.5, -0.5, -0.5, 0.5, -0.5, 0.8, -0.5, 0.5, 0.5, 0.7, -0.5, 0.9, 0.5, -0.5, 0.5, 0.9, 0.9, 0.5, -0.5, -0.3, 0.5, 0.8, 0.8, -0.5]}, {"id": "us_fdr", "f": "socdem", "n": "罗斯福新政时期的美国", "p": "1933–1945", "pl": "美国", "s": "「新政」（New Deal）", "sc": "embedded liberalism / Keynesian welfare state", "note": "1933 银行假日与炉边谈话，1935 社会保障法，WPA 公共工程，1935 瓦格纳法承认工会。1941 后转入战时经济。", "kn": "", "v": [-0.5, -0.6, -0.5, -0.5, -0.5, 0.6, -0.8, -0.6, -0.7, 0.5, -0.5, 0.9, 0.5, -0.5, 0.5, 0.7, 0.7, 0.5, -0.5, -0.5, 0.7, 0.7, 0.7, -0.7]}, {"id": "us_reagan", "f": "neolib", "n": "里根时期的美国", "p": "1981–1989", "pl": "美国", "s": "「里根革命」", "sc": "neoliberal turn / New Right", "note": "1981 减税，1982 沃尔克紧缩压通胀，1981 解雇 PATCO 罢工空管员，放松管制。国债从 1980 年约 9000 亿增至 1989 年约 2.8 万亿美元。", "kn": "", "v": [-0.5, 0.7, -0.5, 0.5, 0.5, -0.5, 0.9, 0.8, 0.5, 0.5, 0.5, 0.5, 0.7, -0.5, -0.5, 0.8, 0.5, -0.8, 0.7, 0.8, 0.8, 0.5, 0.7, 0.5]}, {"id": "fr_degaulle", "f": "socdem", "n": "戴高乐第五共和", "p": "1958–1969", "pl": "法国", "s": "「戴高乐主义」（Gaullisme）", "sc": "semi-presidentialism（半总统制）", "note": "1958 新宪法：总统直选（1962 修宪）、可解散国会，第五共和强行政。经济上「指导主义」：国有化、五年计划、核力量。1968 五月风暴后 1969 辞职。", "kn": "", "v": [-0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.8, 0.5, -0.5, 0.7, 0.5, -0.5, 0.5, 0.8, 0.9, 0.5, -0.5, -0.5, 0.6, 0.5, 0.5, 0.6]}, {"id": "iq_saddam", "f": "corp", "n": "复兴党伊拉克（萨达姆）", "p": "1968–2003", "pl": "伊拉克", "s": "「复兴党」（Ba'ath）「阿拉伯社会主义」", "sc": "personalist authoritarian / party-state", "note": "1968 复兴党政变上台，1979 萨达姆集权。石油国有化、免费教育与医疗、一党制、共和国卫队与安全机构。1980–88 两伊战争，1990 入侵科威特，2003 被推翻。", "kn": "", "v": [0.5, -0.9, -0.5, -0.6, 0.5, -0.5, -0.8, -0.8, -0.9, -0.8, 0.6, -0.9, -0.5, 0.5, -0.7, 0.5, -0.8, 0.5, 0.6, -0.7, 0.6, -0.9, -0.9, 0.6]}, {"id": "ly_gaddafi", "f": "pop", "n": "卡扎菲利比亚", "p": "1969–2011", "pl": "利比亚", "s": "「民众国」（Jamahiriya）「第三国际理论」", "sc": "personalist rule behind participatory facade", "note": "1969 自由军官政变，1975《绿皮书》：取消政党与代议制，设人民大会与人民委员会。实际权力在卡扎菲与革命委员会。石油国有化，2011 内战中被杀。", "kn": "", "v": [-0.5, -0.8, -0.5, -0.6, 0, -0.5, -0.8, -0.8, -0.8, -0.6, 0.5, -0.7, 0.8, 0.8, 0.5, -0.5, -0.8, 0.5, 0.7, -0.7, 0.5, -0.5, -0.8, 0.6]}, {"id": "sparta", "f": "corp", "n": "斯巴达", "p": "前9世纪–前192", "pl": "古希腊", "s": "「平等者公社」（Homoioi）", "sc": "militarized oligarchy", "note": "双王、长老会（28 人＋二王）、公民大会。公民集体军事化，希洛人（农奴）供养。来库古立法被视为不可更改。", "kn": "", "v": [0.5, -1, -0.5, -0.5, 0.5, -0.5, -0.9, -1, -0.8, -0.8, 0.5, -0.7, -0.9, 0.5, -0.8, 0.5, -1, 0.5, 0.8, -0.8, -0.5, -0.9, -0.9, 0.8]}, {"id": "fr_absolut", "f": "premodern", "n": "路易十四的绝对君主制", "p": "1643–1715", "pl": "法国", "s": "「朕即国家」；君权神授", "sc": "absolute monarchy", "note": "1661 亲政，不设首相。凡尔赛宫廷把贵族驯化为侍从。1685 废除南特敕令。重商主义（柯尔贝尔）。", "kn": "", "v": [0.8, -0.8, -0.5, -0.5, 0.5, -0.5, -0.7, -0.8, -1, -0.8, 0.5, -0.9, -0.8, 0.5, -0.9, -0.5, -0.8, 0.5, 0.5, -0.8, -0.9, -0.9, -1, 0.9]}, {"id": "pr_frederick", "f": "premodern", "n": "腓特烈二世的普鲁士", "p": "1740–1786", "pl": "普鲁士", "s": "「开明专制」；「国王是国家的第一公仆」", "sc": "enlightened absolutism", "note": "废除刑讯、1794 年《普鲁士普通邦法》、宗教宽容、推广马铃薯。同时扩军至 15 万，参与七年战争、瓜分波兰。", "kn": "", "v": [-0.5, -0.8, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.9, -0.5, 0.5, -0.9, 0.5, -0.5, -0.8, 0.8, 0.5, 0.5, 0.8, -0.8, 0.5, 0, -0.9, 0.9]}, {"id": "in_mughal", "f": "premodern", "n": "莫卧儿帝国", "p": "1526–1857", "pl": "印度", "s": "「阿克巴的 sulh-i kul（普遍宽容）」", "sc": "imperial patrimonialism", "note": "阿克巴设曼萨布达尔制（军功授田），迪万管财政。1719 年后实际分裂，1857 年印度大起义后被英国废黜。", "kn": "", "v": [0.5, -0.8, -0.5, -0.5, 0.5, -0.5, -0.7, -0.7, -0.8, 0.5, 0.5, -0.8, -0.5, 0.5, -0.8, -0.5, -0.8, 0.5, 0.6, -0.7, -0.7, -0.8, -0.8, 0.5]}, {"id": "tr_ottoman", "f": "premodern", "n": "奥斯曼帝国", "p": "1299–1922", "pl": "土耳其", "s": "「米勒特制度」；「苏丹-哈里发」", "sc": "patrimonial empire / millet system", "note": "米勒特制按宗教社团自治（东正教、亚美尼亚、犹太）。蒂玛尔制（军功采邑）。1922 苏丹制被废，1923 共和国成立。", "kn": "", "v": [0.5, -0.8, -0.5, -0.5, 0.5, 0.5, -0.5, -0.7, -0.8, -0.5, 0.5, -0.8, 0, 0.5, -0.7, 0.5, -0.8, 0.5, 0.5, -0.8, -0.8, -0.8, -0.8, -0.5]}, {"id": "mx_aztec", "f": "premodern", "n": "阿兹特克", "p": "1428–1521", "pl": "中美洲", "s": "「第五太阳」；人祭维系宇宙", "sc": "theocratic tributary empire", "note": "三方同盟，贡赋制，活人献祭（献祭者被视为神的一部分）。1519 科尔特斯登陆，1521 特诺奇蒂特兰陷落。", "kn": "", "v": [1, -0.9, -0.5, -0.5, 0.8, -0.5, -0.8, -0.8, -0.9, -0.5, 0.5, -0.8, -0.5, 0.5, -0.8, -0.5, -1, 0.5, 0.8, -0.8, -1, -0.9, -0.9, 0.8]}, {"id": "pe_inca", "f": "premodern", "n": "印加帝国", "p": "1438–1533", "pl": "安第斯", "s": "「塔万廷苏尤」；「不偷窃、不撒谎、不懒惰」", "sc": "redistributive empire / mit'a", "note": "米塔劳役制、驿道（Qhapaq Ñan）、结绳记事（quipu）、全国仓储再分配。1533 阿塔瓦尔帕被杀。", "kn": "", "v": [0.8, -1, -0.5, -0.5, 0.5, -0.5, -1, -0.9, -0.9, -0.8, 0.5, -0.8, -0.5, 0.5, -0.7, 0.7, -1, 0.5, 0.5, -0.8, -0.5, -0.8, -1, 0.9]}, {"id": "de_bismarck", "f": "corp", "n": "俾斯麦帝国", "p": "1871–1918", "pl": "德国", "s": "「铁血政策」", "sc": "authoritarian welfare state / Bonapartism", "note": "1871 帝国宪法：普选产生国会，但首相只对皇帝负责。1883–89 首创疾病、工伤、养老保险，同时 1878 颁布《反社会党人法》。", "kn": "", "v": [0.5, -0.8, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.8, 0.5, 0.5, 0.5, -0.5, 0.5, -0.8, 0.6, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.7, 0.9]}, {"id": "tw_marital", "f": "corp", "n": "台湾戒严时期", "p": "1949–1987", "pl": "中国台湾", "s": "「动员戡乱时期临时条款」", "sc": "party-state authoritarianism", "note": "1949 起戒严，党禁报禁，万年国会。1970 年代经济起飞，1987 解严、开放党禁。", "kn": "", "v": [0.5, -0.8, -0.5, -0.5, 0.5, -0.5, -0.5, -0.7, -0.8, -0.5, 0.5, -0.9, -0.5, 0.5, -0.5, 0.5, -0.9, 0.5, 0.5, -0.5, 0.5, -0.9, -0.9, 0.8]}, {"id": "eu_medieval", "f": "fd", "n": "西欧中世纪封建", "p": "9–13世纪", "pl": "西欧", "s": "「封臣的封臣不是我的封臣」", "sc": "feudalism", "note": "领主-封臣-采邑，庄园制与农奴。司法权分散在领主法庭。城市自治（特许状）在缝隙中生长。", "kn": "", "v": [0.9, -0.8, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 1, -0.5, -0.5, -0.7, -0.9, -0.5, -0.9, -1, -1, 0.5, 0.5, -0.7, -1, -0.5, 0.6, 0.8]}, {"id": "jp_edo", "f": "fd", "n": "江户幕府", "p": "1603–1868", "pl": "日本", "s": "「幕藩体制」；「锁国」", "sc": "bakuhan system", "note": "幕府与三百诸藩并存，参勤交代消耗各藩财力，武士脱离土地成为俸禄阶层。1639 锁国，1853 佩里来航后瓦解。", "kn": "", "v": [0.9, -0.9, -0.5, -0.5, 0.5, -0.5, -0.5, -0.9, 0.8, -0.5, 0.5, -0.8, -0.9, 0.5, -1, -0.9, -1, 0.5, -0.5, -0.8, -0.5, -0.8, -0.5, 1]}, {"id": "tr_erdogan", "f": "hybrid", "n": "埃尔多安时期的土耳其", "p": "2003– ", "pl": "土耳其", "s": "「新土耳其」；「强国」", "sc": "competitive authoritarianism / personalist", "note": "2002 正义与发展党上台，2017 修宪由议会制改总统制，2016 未遂政变后大规模清洗。", "kn": "", "v": [0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0, -0.5, -0.8, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.9, 0.5, 0.5, -0.5, -0.5, -0.7, -0.7, 0.8]}, {"id": "cn_beiyang", "f": "warlord", "n": "北洋政府时期", "p": "1912–1928", "pl": "中国", "s": "「中华民国」，《临时约法》", "sc": "warlordism / nominal republic", "note": "有宪法、有国会、有选举，但中央政令出不了首都：袁世凯称帝（1915）、张勋复辟（1917）、曹锟贿选（1923）、军阀混战。国家能力极弱，关税与盐税被抵押给外国银行团。", "kn": "", "v": [-0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.9, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]}, {"id": "cn_roc1912", "f": "lib", "n": "中华民国南京临时政府", "p": "1912.1–1912.3", "pl": "中国", "s": "「中华民国」、《临时约法》", "sc": "founding republic / provisional government", "note": "1911 辛亥革命后成立于南京，孙中山任临时大总统，采总统制，后为限制袁世凯改为内阁制。1912 年 2 月清帝退位，4 月迁都北京，仅存三个月。", "kn": "", "v": [-0.7, 0.5, -0.5, 0.5, -0.5, 0.6, 0.5, 0.8, 0.5, 0.7, -0.5, 0.9, 0.8, -0.5, 0.5, 0.7, 0.7, 0.5, 0.5, 0.5, 0.7, 0.8, 0.7, -0.5]}, {"id": "cn_zhou", "f": "fd", "n": "西周分封", "p": "前1046–前771", "pl": "中国", "s": "「封建亲戚，以藩屏周」", "sc": "feudalism / 宗法分封制", "note": "天子封诸侯、诸侯封卿大夫，层层分封、世袭领地，以血缘宗法维系，礼乐为共同规范。秦以后被郡县制取代——「封建与郡县」是中国两千年政体的第一次大分岔。", "kn": "", "v": [0.9, -0.8, -0.5, -0.5, 0, 0.5, 0.5, -0.5, 0.9, -0.5, -0.5, -0.5, -0.9, -0.5, -0.8, -0.9, -1, 0.5, -0.5, -0.5, -0.6, -0.5, 0.6, 0.8]}, {"id": "mn_goldenhorde", "f": "fd", "n": "金帐汗国", "p": "1240s–1502", "pl": "欧亚草原", "s": "「兀鲁思」", "sc": "nomadic indirect rule / tributary empire", "note": "拔都西征后建立，都城萨莱。不直接治理罗斯诸公国，而保留其王公、征收贡赋、颁授「雅尔力克」（册封状）。宗教宽容，伊斯兰教 14 世纪才成国教。", "kn": "", "v": [0.5, -0.7, -0.5, -0.5, 0.5, -0.5, -0.5, -0.6, 0.8, -0.5, 0.5, -0.7, -0.5, 0.5, -0.7, -0.5, -0.8, 0.5, 0.8, -0.6, -0.5, -0.6, -0.5, -0.5]}, {"id": "jp_showa", "f": "milit", "n": "昭和军国主义日本", "p": "1931–1945", "pl": "日本", "s": "「八纮一宇」「国体」", "sc": "militarist mobilization regime", "note": "军部架空内阁，1940 大政翼赞会取消政党。国家神道，总动员体制。", "kn": "", "v": [0.5, -1.0, -0.8, -0.7, 0.8, -0.9, -0.9, -0.9, -0.9, -0.8, 0.8, -0.9, 0.7, 0.8, -0.8, -0.5, -1.0, 0.8, 0.9, -0.8, -0.8, -0.9, -1.0, 1.0]}, {"id": "gr_athens", "f": "rep", "n": "雅典民主", "p": "前508–前322", "pl": "古希腊", "s": "「demokratia」（人民统治）", "sc": "direct democracy / sortition", "note": "公民大会（Ekklesia）法定人数约六千人，议事会五百人抽签产生，多数官职抽签而非选举。陶片放逐。公民权极窄：奴隶、妇女、外邦人（metoikos）都没有政治权利。", "kn": "与今日自由民主的差别不在制度，在「谁算人」：这里公民是少数；而且公民的自由是「参与统治的自由」，不是「不受干涉的自由」（贡斯当 1819 年的区分）。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.5, 0.8, 0.5, 0.8, -0.5, 0.9, -0.5, -0.5, 0.8, 0.5, -0.8, 0.5, 0.5, 0.5, 0, 0.8, 0.9, -0.8]}, {"id": "rm_republic", "f": "rep", "n": "罗马共和国", "p": "前509–前27", "pl": "古罗马", "s": "「SPQR」（元老院与罗马人民）", "sc": "mixed constitution（波利比乌斯）", "note": "执政官（选举）、元老院（终身）、保民官（人身不可侵犯）、百人团大会。波利比乌斯认为三者互相制衡，是最好的政体；这套说法后来喂给了孟德斯鸠。", "kn": "与雅典同形；区别在它是寡头共和——元老院主导，平民只有否决权（保民官）而没有创制权。", "v": [0.5, -0.8, -0.5, -0.5, 0, -0.5, 0.5, 0.5, 0.5, 0.5, -0.8, 0.6, -0.5, -0.5, -0.5, 0.8, -0.8, 0.5, 0.5, 0.5, 0, 0.6, 0.6, -0.5]}, {"id": "pl_commonwealth", "f": "rep", "n": "波兰-立陶宛联邦", "p": "1569–1795", "pl": "东欧", "s": "「黄金自由」（Złota Wolność）", "sc": "noble democracy / elective monarchy", "note": "国王由全体贵族选举（wolna elekcja），议会一人否决（liberum veto）即解散。贵族约占人口一成。1795 被俄普奥三次瓜分。", "kn": "与威尼斯同形（少数人统治）；区别在它的「少数人」是人口约一成的贵族，而且每人都有否决权——这是它被瓜分的直接原因。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.5, 0.9, 1.0, -0.5, -0.8, 1.0, -0.8, -0.5, -0.9, 0.8, -0.8, 0.5, 0.5, 0.5, 0.5, 0.8, 0.9, -0.3]}, {"id": "is_free", "f": "rep", "n": "冰岛自由邦", "p": "930–1262", "pl": "冰岛", "s": "「Alþingi」（全体大会）", "sc": "stateless commonwealth", "note": "没有国王、没有常备军、没有执行机构。法律宣讲人（lögsögumaðr）每年在辛格维利尔宣读法律，争端靠仲裁与放逐解决。1262 归附挪威王。", "kn": "与古典共和同形，但它没有国家：有法律、有议会、有裁决，唯独没有可以强制执行的权力。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.5, 0.8, 1.0, 0.8, -0.8, 0.8, -0.8, -0.5, 0.5, 0.8, -0.5, 0.5, 0.5, 0.5, -0.5, 0.8, 0.9, -0.5]}, {"id": "sumer", "f": "rep", "n": "苏美尔城邦", "p": "前3500–前2000", "pl": "两河流域", "s": "「lugal」（大人）与城邦议事会", "sc": "primitive democracy（雅各布森 1943）", "note": "乌鲁克、拉格什、乌尔各自为政。神庙掌握土地与仓储，王（lugal）由神选，早期尚有长老会与公民大会。拉格什的乌鲁卡基那改革（前2350）是人类最早的成文社会立法之一。", "kn": "与雅典同形（有公民大会）；区别在王权已经世袭，且经济命脉在神庙而不在公民。", "v": [0.8, -0.8, -0.5, -0.5, 0, -0.8, 0.5, 0.5, 0.8, -0.5, -0.5, 0.5, -0.8, -0.5, -0.5, 0.5, -0.8, 0.5, 0.5, -0.5, -1.0, -0.5, 0.8, -0.5]}, {"id": "ch_old", "f": "rep", "n": "瑞士旧邦联", "p": "1291–1798", "pl": "瑞士", "s": "「永久同盟」（Ewiger Bund）", "sc": "confederation / direct democracy", "note": "三个山谷州（乌里、施维茨、下瓦尔登）结盟抗哈布斯堡，后扩至十三州。无中央机关、无常备军、无统一货币。1618–48 三十年战争后正式脱离帝国。", "kn": "与冰岛自由邦同形；区别在它是州与州之间的军事同盟，不是个人之间的契约。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.5, 0.9, 1.0, 0.8, -0.5, 0.5, -0.8, -0.5, 0.5, 0.8, -0.5, 0.5, 0.5, 0.5, 0.5, 0.8, 0.9, -0.5]}, {"id": "gana", "f": "rep", "n": "印度列国时代的共和部族", "p": "前600–前321", "pl": "南亚", "s": "「gana-sangha」（众会）", "sc": "oligarchic republic / clan assembly", "note": "十六大国时代并非只有君主国：释迦族、离车族（Licchavi）、跋耆联盟行的是议事制——首领轮值、大事集议、以多数决。佛经里的「共和」讨论说的就是它们。公民权只属于贵族氏族，奴隶与首陀罗不在其中。", "kn": "与雅典同形（议事 + 表决）；区别在投票单位是氏族而非个人，而且它没有抽签——席位是世袭的。", "v": [0.5, -0.8, -0.5, -0.5, 0, -0.5, 0, 0.5, 0.5, 0.8, -0.5, 0.5, -0.8, -0.5, -0.8, 0.8, -0.8, 0.5, 0.5, 0.5, -0.8, 0.8, 0.8, -0.5]}, {"id": "carthage", "f": "merc", "n": "迦太基", "p": "前650–前146", "pl": "北非", "s": "「新城」（Qart-ḥadašt）", "sc": "commercial oligarchy / thalassocracy", "note": "双执政官（suffetes）与元老院，实权在少数商业家族。靠海上贸易与雇佣军，不靠公民兵。亚里士多德《政治学》把它与斯巴达、克里特并列为混合政体的范例。前146 被罗马夷平。", "kn": "与威尼斯同形；区别在它的腹地是北非内陆与西班牙银矿，不只是一条航线。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.9, 0.5, -0.5, -0.5, 0.5, 0.3, -0.8, -0.5, -0.9, 0.5, -0.8, 0.5, 0.5, 0.5, -0.5, -0.8, 0.5, -0.3]}, {"id": "venice", "f": "merc", "n": "威尼斯共和国", "p": "697–1797", "pl": "意大利", "s": "「最宁静的共和国」（La Serenissima）", "sc": "aristocratic republic / mercantile empire", "note": "大议会（Maggior Consiglio）1297 年「封闭」成世袭贵族名册（Serrata），此后只有名册上的人能执政。总督选举程序复杂到近乎防作弊设计。十人委员会管安全。", "kn": "与荷兰联省同形（商业寡头）；区别在威尼斯把政治权利写进了「黄金名册」，是封闭的世袭寡头，荷兰则靠财产与城市席位。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.9, 0.5, -0.5, -0.8, -0.8, 0.3, -0.9, -0.5, -1.0, 0.8, -0.8, 0.5, 0.5, 0.5, -0.5, -0.9, 0.3, -0.5]}, {"id": "genoa", "f": "merc", "n": "热那亚共和国", "p": "1099–1797", "pl": "意大利", "s": "「最尊贵的共和国」（La Superba）", "sc": "oligarchic republic / factional politics", "note": "与威尼斯争夺地中海霸权，1298 库尔佐拉海战俘虏马可·波罗。内部圭尔夫与吉伯林两派、贵族与平民反复政斗，多次被外国（法国、米兰、西班牙）接管。", "kn": "与威尼斯同形；区别在它从未把寡头稳定下来——派系斗争使它比威尼斯弱一个量级。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 1.0, 0.8, 0.5, -0.8, -0.5, 0.3, -0.8, -0.5, -1.0, 0.5, -0.8, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5]}, {"id": "florence", "f": "merc", "n": "佛罗伦萨共和国", "p": "1115–1532", "pl": "意大利", "s": "「人民的佛罗伦萨」", "sc": "guild republic / signoria", "note": "七大行会（Arti Maggiori）垄断政治权利，正义旗手（Gonfaloniere）由抽签与选举混合产生。美第奇家族 1434 后实际统治但保留共和外壳。马基雅维利在此写《君主论》。", "kn": "与威尼斯同形；区别在它的政治单位是行会，不是家族名册——所以手工业者有过一段真实的发言权（1378 梳毛工起义）。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 0.8, 0.8, 0.3, -0.5, -0.5, 0.5, -0.5, -0.5, -0.8, 0.5, -0.8, 0.5, 0.5, 0.5, -0.5, 0.8, 0.8, -0.5]}, {"id": "dutch", "f": "merc", "n": "荷兰联省共和国", "p": "1581–1795", "pl": "荷兰", "s": "「联合省」（De Republiek）", "sc": "regent oligarchy / federal republic", "note": "七省各有主权，执政（Stadtholder）与省议会并存。实权在「摄政团」（regenten）——少数城市家族。1602 东印度公司成立，世界上第一家股份公司。1795 被法国革命军推翻。", "kn": "与威尼斯同形；区别在它是七省联邦，中央比威尼斯弱，且宗教改革把它和天主教世界切开了。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 1.0, 1.0, 0.8, -0.5, -0.5, 0.5, -0.8, -0.5, -0.8, 0.8, -0.5, 0.5, 0.5, 0.5, -0.5, 0.8, 0.8, -0.5]}, {"id": "hansa", "f": "merc", "n": "汉萨同盟", "p": "1356–1862", "pl": "北欧", "s": "「汉萨」（Hanse）", "sc": "city league / network governance", "note": "吕贝克、汉堡、但泽等城市结盟，控制波罗的海与北海贸易。无宪法、无首都、无军队，靠商站（Kontor）与禁运（如 1397 对丹麦）执行意志。最后一次会议 1669。", "kn": "与荷兰联省同形；区别在它连「国家」都不是——没有主权、没有领土，只是一个城市之间的商会。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, 1.0, 1.0, 1.0, -0.8, -0.5, 0.3, -0.9, -0.5, -0.9, 0.5, -0.8, 0.5, 0.5, 0.5, -0.5, -0.5, 0.9, -0.8]}, {"id": "eic", "f": "charter", "n": "英属东印度公司治下的印度", "p": "1757–1858", "pl": "南亚", "s": "「Company Raj」", "sc": "chartered company rule", "note": "普拉西战役（1757）后公司成为孟加拉的实际征税者，拥有军队、铸币权、司法权。1857 印度大起义后，1858《印度政府法》把权力移交英国王室。", "kn": "与威权官僚制同形；区别在统治者的目的是分红，不是治国——所以它会在饥荒年份继续加税。", "v": [0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 1.0, 0.5, -0.8, -0.8, 0.5, -1.0, -0.5, -0.5, -1.0, -0.8, -0.8, 0.5, 0.5, -0.5, -0.5, -0.8, -0.9, 0.5]}, {"id": "voc", "f": "charter", "n": "荷属东印度公司治下的印尼", "p": "1602–1799", "pl": "东南亚", "s": "「VOC」", "sc": "chartered company rule", "note": "1602 由六家商会合并，获 21 年垄断特许状，可自行宣战、缔约、筑城。巴达维亚（1619）为总部。1799 破产，领地收归荷兰国家。", "kn": "与英属东印度公司同形；区别在它更早、更纯商业——不去建行政国家，只要香料垄断。", "v": [0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 1.0, 0.5, -0.8, -0.8, 0.5, -1.0, -0.5, -0.5, -1.0, -0.8, -0.8, 0.5, 0.5, -0.5, -0.5, -0.8, -0.9, 0.5]}, {"id": "congo", "f": "charter", "n": "刚果自由邦", "p": "1885–1908", "pl": "中非", "s": "「刚果自由邦」", "sc": "personal colony / concessionary rule", "note": "柏林会议把刚果划给利奥波德二世个人，不是比利时国家。橡胶配额制，拒交者砍手。估计死亡数百万。1908 在国际压力下改为比利时殖民地。", "kn": "它不是公司，是国王的私人领地；结构上却与公司统治同形——有军队、有征税、无选举、无司法独立，且账本归一人。", "v": [0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 1.0, 0, -0.9, -0.8, 0.5, -1.0, -0.5, -0.5, -1.0, -0.8, -0.8, 0.5, 0.5, -0.5, -0.5, -0.9, -1.0, 0.5]}, {"id": "rhodesia", "f": "charter", "n": "罗德西亚（特许公司时期）", "p": "1890–1923", "pl": "非洲南部", "s": "「英属南非公司」（BSAC）", "sc": "company rule / settler colonialism", "note": "塞西尔·罗兹的公司以王室特许状占领并治理今津巴布韦与赞比亚，1923 年公司统治结束，南罗德西亚转为自治殖民地。", "kn": "与英属东印度公司同形；区别在它统治的是移民社会，种族隔离从一开始就写进土地法。", "v": [0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.8, 0.3, -0.8, -0.8, 0.5, -1.0, -0.5, -0.5, -1.0, -0.8, -0.8, 0.5, 0.5, -0.5, -0.5, -0.8, -0.9, 0.5]}, {"id": "forager", "f": "tribe", "n": "狩猎采集游群", "p": "约前10万年–今", "pl": "全球", "s": "（无自称，通常以「人」自称）", "sc": "band society / immediate-return system", "note": "二三十人的游群，随季节移动，无私有土地、无常设首领、无成文规则。争端靠回避与迁徙解决——「用脚投票」在这里是字面意思。", "kn": "与无政府主义同形（无国家而有秩序）；区别在秩序靠血缘与互惠，不是靠自愿结社或契约。", "v": [0.5, -0.9, -0.5, -0.5, 0.5, -0.5, -0.9, 0.5, 1.0, 0.8, -0.8, 0.3, -1.0, -0.5, 0.9, 0.8, -0.8, 0.5, -0.5, 0.5, -1.0, 0.8, 0.5, -1.0]}, {"id": "iroquois", "f": "tribe", "n": "易洛魁联盟", "p": "约1450–1777", "pl": "北美", "s": "「豪德诺索尼」（长屋之人）", "sc": "confederacy / clan matron system", "note": "《大法》（Gayanashagowa）规定五十位酋长席位，由各氏族女性族长提名并可罢免；联盟议事会一致同意才决议。被认为影响了美国宪法（此说仍有争议）。", "kn": "与古典共和同形（成文大法、联邦议事会、罢免程序）；之所以归在部落，是因为权力单位是氏族而非个人，且没有常备强制力。", "v": [0.5, -0.8, -0.5, -0.5, 0.5, -0.5, -0.5, 0.8, 0.8, 0.8, -0.8, 0.6, -0.8, -0.5, 0.7, 0.8, -0.8, 0.5, 0.5, 0.5, -1.0, 0.8, 0.9, -0.8]}, {"id": "nuer", "f": "tribe", "n": "努尔人", "p": "19世纪", "pl": "南苏丹", "s": "（无 centralized 自称）", "sc": "acephalous / segmentary lineage（埃文斯-普里查德 1940）", "note": "没有首领、没有法庭、没有警察，却有可预测的秩序：靠父系世系的分裂与合并，以及「豹皮酋长」的调解。人类学里「无政府而有秩序」的经典案例。", "kn": "与无政府主义同形；区别在秩序单位是血缘分支，不是个人。这套结构无法扩张到部落之外。", "v": [0.5, -0.9, -0.5, -0.5, 0.5, -0.5, -0.8, 0.5, 1.0, 0.8, -0.8, 0.3, -1.0, -0.5, 0.9, 0.5, -0.8, 0.5, -0.5, 0.5, -1.0, 0.8, 0.5, -1.0]}, {"id": "bigman", "f": "tribe", "n": "新几内亚大人物制", "p": "—20世纪", "pl": "新几内亚高地", "s": "「big man」（人类学用语）", "sc": "big man system", "note": "权威不是继承的，是挣来的：靠养猪、宴客、赠礼积累声望，再靠声望换取追随者。人一死，权威就散了。没有职位，只有名声。", "kn": "与民粹动员同形（个人魅力而非制度）；区别在这里没有国家可夺取，魅力只能换成影响力，换不成权力。", "v": [0.5, -0.8, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.8, 0.8, -0.5, 0.3, -0.9, -0.5, 0.5, 0.5, -0.8, 0.5, 0.5, 0.5, -1.0, 0.8, 0.5, -1.0]}, {"id": "aboriginal", "f": "tribe", "n": "澳洲原住民社会", "p": "约5万年–1788", "pl": "澳洲", "s": "（以「梦幻时代」Dreaming 为秩序来源）", "sc": " hunter-gatherer ontology / country", "note": "不是「部落」而是语言与仪式网络：数百个族群，靠亲属分类与歌谣路线（songline）维系跨地域关系。土地不是财产，是责任。", "kn": "与狩猎采集游群同形；区别在它的秩序载体是仪式与歌谣路线，比血缘更大、比国家更小。", "v": [0.5, -0.9, -0.5, -0.5, 0.5, -0.5, -1.0, 0.5, 1.0, 0.8, -0.8, 0.3, -1.0, -0.5, 0.9, 0.8, -0.8, 0.5, -0.5, 0.5, -1.0, 0.8, 0.5, -1.0]}, {"id": "zulu", "f": "milit", "n": "祖鲁王国（沙卡时期）", "p": "1816–1879", "pl": "非洲南部", "s": "「祖鲁」（Zulu）", "sc": "militarized chiefdom / segmentary state", "note": "沙卡改革年龄军团（amabutho），把成年男子按年龄编成常备兵团，跨氏族征召。这是部落社会里少见的中央集权化。1879 伊散德尔瓦纳一战击败英军，同年覆灭。", "kn": "与军国动员同形；区别在它的动员单位是年龄团，不是国民——所以它无法在沙卡死后维持。", "v": [0.5, -0.8, -0.5, -0.5, 0, -0.5, -0.5, 0.3, -0.8, -0.8, 0.5, -0.5, -0.8, -0.5, -0.8, 0.5, -0.8, 0.5, 0.5, 0.5, -0.5, -0.8, -0.8, -0.5]}, {"id": "egypt", "f": "premodern", "n": "古埃及（法老时期）", "p": "前3100–前30", "pl": "埃及", "s": "「法老」＝活着的荷鲁斯", "sc": "theocratic hydraulic state", "note": "法老即神在人间的化身，维齐尔（vizier）统领书吏阶层，尼罗河水位决定税收与历法。金字塔是国家能力的展示，也是劳务组织的证据（吉萨工人村有面包房与医疗记录）。", "kn": "与古巴比伦、亚述在政体结构上几乎同形；区别在合法性来源——法老本身就是神，不需要法典来中介。", "v": [0.8, -0.9, -0.5, -0.5, 0.5, -0.8, -0.5, -0.5, -1.0, -0.8, 0.5, -1.0, -1.0, -0.5, -0.9, -0.5, -0.9, 0.5, 0.5, -0.5, -1.0, -0.9, -1.0, 0.9]}, {"id": "babylon", "f": "premodern", "n": "古巴比伦（汉谟拉比）", "p": "前1894–前539", "pl": "两河流域", "s": "「巴比伦之王、四方之王」", "sc": "bureaucratic monarchy / cuneiform law", "note": "《汉谟拉比法典》（约前1754）282 条，刻在玄武岩柱上，公开矗立。同态复仇（「以眼还眼」）与等级差别（自由民、平民、奴隶）并存。契约、借贷、婚姻、灌溉纠纷都有判例。", "kn": "与古埃及同形；它是这群古代帝国里唯一留下完整成文法典与契约文书的——所以「程序」这一维在这里明显高于其他古代政权。", "v": [0.8, -0.8, -0.5, -0.5, 0, -0.8, -0.3, -0.3, -0.8, -0.5, -0.8, -0.8, -0.8, -0.5, -0.8, 0.8, -0.8, 0.5, 0.5, 0.5, -0.8, -0.5, -0.8, 0.5]}, {"id": "assyria", "f": "premodern", "n": "亚述帝国", "p": "前911–前609", "pl": "两河流域", "s": "「亚述之王、宇宙之王」", "sc": "military empire / state terror", "note": "常备军、铁器、攻城器械；迁民政策（resettlement）把被征服人口整体搬走以打散认同。王室铭文公开记录剥皮、刺眼、堆人头——这是刻意的恐怖宣传。", "kn": "与古埃及同形；区别在统治手段——不靠神学共识，靠迁民与恐怖。", "v": [0.8, -0.9, -0.5, -0.5, -0.5, -0.8, -0.5, -0.8, -1.0, -0.8, 0.5, -1.0, -0.9, -0.5, -0.9, -0.8, -0.9, 0.5, 0.5, -0.5, -1.0, -0.9, -1.0, 1.0]}, {"id": "persia", "f": "premodern", "n": "波斯阿契美尼德帝国", "p": "前550–前330", "pl": "波斯", "s": "「万王之王」", "sc": "satrapy system / tolerant empire", "note": "居鲁士圆柱（前539）被称为最早的「人权宣言」（此说被过度营销）。二十个行省（satrapy），总督（satrap）由国王任命，保留各地法律、宗教与语言。御道与驿站系统。", "kn": "与罗马帝国同形（行省 + 宽容）；区别在它没有「公民权」这个概念——臣民不是公民。", "v": [0.5, -0.8, -0.5, -0.5, 0, -0.8, -0.3, -0.3, -0.5, -0.5, -0.5, -0.8, -0.8, -0.5, -0.8, 0.5, -0.8, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5]}, {"id": "maya", "f": "premodern", "n": "玛雅城邦", "p": "前2000–1500", "pl": "中美洲", "s": "「圣主」（k'uhul ajaw）", "sc": "theocratic city-states", "note": "不是帝国，是几十个互相征战的城邦：蒂卡尔、卡拉克穆尔、帕伦克。国王是宇宙秩序的中介，历法（长纪年）与文字掌握在祭司手里。古典期崩溃（约 800–950）原因仍有争议。", "kn": "与古希腊城邦在「城邦林立」上相似，但合法性与权力结构完全相反：这里是神王与历法，不是公民大会；而且每个城邦内部是绝对集权，不是分权。", "v": [0.8, -0.9, -0.5, -0.5, 0, -0.8, -0.5, -0.5, -0.8, -0.5, 0.5, -0.9, -0.9, -0.5, -0.9, -0.5, -0.9, 0.5, 0.5, -0.5, -1.0, -0.5, -0.5, 0.5]}, {"id": "shang", "f": "premodern", "n": "商朝", "p": "前1600–前1046", "pl": "中国", "s": "「余一人」；王即大巫", "sc": "theocratic kinship state / oracle bone polity", "note": "甲骨卜辞是王的日常政务记录：问雨、问战、问牙疼。人祭与人殉规模巨大（殷墟侯家庄）。王畿之外是方国，靠盟誓与征伐维系，不是郡县。", "kn": "与古埃及同形；区别在王畿之外靠方国盟誓——中央的直接统治半径比埃及小得多。", "v": [0.8, -0.9, -0.5, -0.5, 0, -0.8, -0.5, -0.5, -0.5, -0.5, 0.5, -0.9, -0.9, -0.5, -0.9, -0.5, -0.9, 0.5, 0.5, -0.5, -1.0, -0.8, -0.8, 0.8]}, {"id": "byzantium", "f": "premodern", "n": "拜占庭帝国", "p": "330–1453", "pl": "东地中海", "s": "「罗马人的帝国」（Basileia ton Romaion）", "sc": "caesaropapism / orthodox autocracy", "note": "皇帝是教会之首（caesaropapism），牧首由皇帝任命。查士丁尼《民法大全》（529–534）是罗马法传至近代的通道。军区制（thema）把土地授予军人换兵役。", "kn": "与古埃及同形（神权 + 官僚）；区别在教会是一个有独立传统的机构，皇帝管它，但不能替代它。", "v": [0.8, -0.8, -0.5, -0.5, 0, -0.8, -0.3, -0.5, -1.0, -0.8, 0.5, -1.0, -0.8, -0.5, -0.9, 0.5, -0.8, 0.5, 0.5, -0.5, -0.5, -0.8, -0.9, 0.5]}, {"id": "ru_peter", "f": "modern", "n": "彼得大帝的沙俄", "p": "1682–1725", "pl": "俄国", "s": "「全俄罗斯皇帝」（1721 称帝）", "sc": "forced modernization / enlightened despotism", "note": "剪胡子、换历法、建圣彼得堡、办科学院、改字母表。1722 官秩表（Table of Ranks）把贵族身份与服役绑定。农奴制同时被强化。用鞭子把国家拖进现代。", "kn": "与腓特烈同形；区别在改革的强制性——它不是「开明」，是把现代化当军令执行。", "v": [0.5, -0.5, -0.5, -0.5, 0, -0.5, -0.3, -0.5, -1.0, -0.8, 0.5, -1.0, 0.5, 0.5, -0.9, -0.5, -0.9, 0.5, 0.5, -0.5, -0.5, -0.8, -1.0, 0.8]}, {"id": "at_habsburg", "f": "premodern", "n": "哈布斯堡奥地利", "p": "1740–1918", "pl": "奥地利", "s": "「奥地利帝国」→「奥匈帝国」（1867）", "sc": "composite monarchy / multinational empire", "note": "一个王朝统治十几种语言：德意志人、匈牙利人、捷克人、波兰人、克罗地亚人、意大利人。1867 奥匈折衷（Ausgleich）给匈牙利半独立。1914 萨拉热窝，1918 解体。", "kn": "与奥斯曼同形（多民族帝国）；区别在它靠王朝联姻而非宗教社团来缝合，因此民族主义一兴起就散架。", "v": [0.8, -0.5, -0.5, -0.5, 0, -0.5, -0.3, -0.5, -0.5, -0.5, 0.5, -0.8, -0.8, -0.5, -0.9, -0.5, -0.8, 0.5, 0.5, -0.5, -0.8, -0.8, -0.5, 0.5]}, {"id": "cn_mingqing", "f": "premodern", "n": "明清中国", "p": "1368–1912", "pl": "中国", "s": "「奉天承运皇帝」", "sc": "imperial bureaucracy / examination state", "note": "科举把官僚变成可流动的阶层（理论上布衣可至宰相），内阁与军机处是皇帝的秘书机构而非决策机构。天命观给改朝换代提供了合法性语法。", "kn": "与路易十四同形（绝对君主 + 世俗官僚）；区别在科举——它让权力可以流动，但流动的方向只有一条：向上做官。", "v": [0.8, -0.8, -0.5, -0.5, 0.5, -0.8, -0.5, -0.5, -1.0, -0.8, 0.5, -0.8, -0.9, -0.5, -0.9, -0.8, -0.9, 0.5, 0.5, -0.5, -0.8, -0.8, -1.0, 0.8]}, {"id": "maurya", "f": "premodern", "n": "孔雀帝国", "p": "前322–前185", "pl": "印度", "s": "「转轮王」（chakravartin）；阿育王的法敕", "sc": "bureaucratic empire / dharmic kingship", "note": "旃陀罗笈多建国，阿育王（前268–232）以佛教治国，在岩壁与石柱上刻法敕（ edicts），是南亚最早的成文政治宣传。《政事论》（Arthashastra）系统讨论了间谍、税收与外交。种姓（瓦尔那）此时已固化。", "kn": "与波斯同形（行省 + 宽容）；区别在它的社会基础是种姓而不是臣民——这套等级比任何王朝都活得久。", "v": [0.8, -0.9, -0.5, -0.5, 0.5, -0.8, -0.5, -0.5, -0.9, -0.5, 0.5, -1.0, -0.8, -0.5, -0.9, -0.8, -1.0, 0.5, 0.5, -0.5, -0.8, -0.8, -0.5, 0.5]}, {"id": "hre", "f": "fd", "n": "神圣罗马帝国", "p": "962–1806", "pl": "中欧", "s": "「神圣罗马帝国」（Voltaire: 既不神圣，也不罗马，更非帝国）", "sc": "composite monarchy / Kleinstaaterei", "note": "选帝侯选皇帝，帝国议会（Reichstag）与帝国法院（Reichskammergericht）都弱。三百多个邦国、骑士领、自由市各自为政。1806 被拿破仑解散。", "kn": "与封建分权同形；区别在它有一个「皇帝」的空位——选出来的常常是一个没有实权的位置。", "v": [0.8, -0.9, -0.5, -0.5, 0, -0.5, -0.3, -0.3, 0.8, -0.5, -0.5, 0, -0.9, -0.5, -0.9, -0.8, -0.8, 0.5, 0.5, -0.5, -0.8, -0.5, 1.0, 0.5]}, {"id": "kyiv_rus", "f": "fd", "n": "基辅罗斯", "p": "882–1240", "pl": "东欧", "s": "「罗斯之地」（Rus'）", "sc": "patrimonial feudalism / appanage system", "note": "留里克王朝，王公在基辅、诺夫哥罗德、切尔尼戈夫等城之间轮转（rota system），不是长子继承。988 弗拉基米尔受洗，东正教成为国教。1240 蒙古攻陷基辅。", "kn": "与西欧中世纪封建同形；区别在王位继承是「轮转」而非长子继承——这使内斗成为常态。", "v": [0.8, -0.9, -0.5, -0.5, 0, -0.5, -0.5, -0.5, 0.8, -0.5, -0.5, -0.5, -0.9, -0.5, -0.9, -0.8, -0.8, 0.5, 0.5, -0.5, -0.8, -0.5, 0.5, 0.5]}, {"id": "mongol", "f": "milit", "n": "蒙古帝国", "p": "1206–1368", "pl": "欧亚草原", "s": "「也可蒙古兀鲁思」（大蒙古国）", "sc": "nomadic conquest empire", "note": "千户制把部落打散重编，怯薛（kheshig）为中央禁军。驿站（jam）网络贯通欧亚。宗教政策宽容（多种宗教并存），但征服过程伴随大规模屠城。", "kn": "与军国动员同形；区别在它没有「国民」——只有「部众」，编户是按军事单位而不是按公民身份。", "v": [0.8, -0.9, -0.5, -0.5, 0, -0.8, -0.5, -0.8, -0.8, -0.8, 0.5, -1.0, -0.8, -0.5, -0.9, -0.8, -0.9, 0.5, 0.5, -0.5, -0.8, -0.9, -0.9, 0.5]}, {"id": "xiongnu", "f": "milit", "n": "匈奴帝国", "p": "前209–453", "pl": "欧亚草原", "s": "「撑犁孤涂单于」（天子单于）", "sc": "steppe confederacy", "note": "冒顿单于设左右贤王、二十四长，按十进制编军。与汉朝和亲、互市、战争交替。欧洲的匈人（Huns）是否为其后裔仍有争议。", "kn": "与蒙古帝国同形；区别在它的中央化程度更低——单于之下是部落首领，不是官僚。", "v": [0.8, -0.9, -0.5, -0.5, 0, -0.8, -0.5, -0.8, -0.8, -0.8, 0.5, -1.0, -0.8, -0.5, -0.9, -0.8, -0.9, 0.5, 0.5, -0.5, -0.8, -0.9, -0.9, 0.5]}, {"id": "five_dyn", "f": "warlord", "n": "五代十国", "p": "907–979", "pl": "中国", "s": "各朝各称「中原正统」", "sc": "warlord fragmentation", "note": "五十三年，五个朝代、十国割据。皇帝多由节度使兵变上台（「天子宁有种耶？兵强马壮者为之耳」）。后周世宗改革为宋的统一打了底。", "kn": "与北洋时期同形；区别在它连「宪法」这层外壳都没有——武力就是唯一的合法性，所以更短命（五十三年五个朝代）。", "v": [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.9, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5]}], "regFams": [{"id": "su", "n": "苏式计划体制", "d": "党领导 + 指令性计划 + 公有制，动员式工业化", "v": [0.3, -0.86, -0.64, -0.68, -0.42, -0.82, -0.88, -0.58, -0.74, -0.46, 0.62, -0.6, 0.42, 0.84, -0.1, 0.5, -0.3, 0.62, 0.46, -0.74, 0.6, -0.42, -0.68, -0.34]}, {"id": "dev", "n": "东亚发展型威权", "d": "发展优先 + 强官僚 + 市场，政治竞争受限", "v": [-0.5, -0.743, -0.671, -0.4, 0.557, -0.614, -0.343, -0.5, -0.657, -0.457, 0.771, -0.6, 0.671, 0.243, -0.471, 0.214, -0.729, -0.557, 0.414, 0.029, 0.614, -0.7, -0.814, 0.571]}, {"id": "modern", "n": "早期现代化威权", "d": "自上而下的现代化，君主或军官集团主导", "v": [0.167, -0.633, -0.6, -0.567, 0.333, -0.267, -0.533, -0.6, -0.833, -0.7, 0.2, -0.9, 0.733, 0.633, -0.733, -0.133, -0.867, 0.5, 0.633, -0.567, -0.033, -0.7, -0.9, 0.733]}, {"id": "corp", "n": "威权官僚制", "d": "军队、教会或官僚垄断权力；等级森严，社会自上而下组织", "v": [0.25, -0.813, -0.5, -0.512, 0.425, -0.1, -0.625, -0.65, -0.725, -0.525, 0.263, -0.312, -0.375, 0.438, -0.487, 0.237, -0.55, 0.475, 0.287, -0.65, 0.062, -0.738, -0.763, 0.637]}, {"id": "socdem", "n": "社会民主共识", "d": "选举 + 福利国家 + 劳资谈判，资本主义内部的改良", "v": [-0.5, -0.6, -0.5, -0.34, -0.36, 0.32, -0.68, -0.52, -0.68, 0.08, -0.3, 0.52, 0.54, -0.36, 0.5, 0.48, 0.42, 0.46, -0.26, -0.5, 0.66, 0.4, 0.38, -0.28]}, {"id": "neolib", "n": "新自由主义改革", "d": "私有化 + 去管制 + 削弱工会", "v": [-0.5, 0.667, -0.5, 0.5, 0.567, -0.5, 0.9, 0.8, 0.533, 0.567, 0.5, 0.167, 0.8, -0.5, -0.5, 0.8, 0.667, -0.8, 0.733, 0.8, 0.767, 0.133, 0.233, 0.433]}, {"id": "pop", "n": "民粹动员体制", "d": "魅力领袖 + 群众动员 + 再分配，绕开中间机构", "v": [-0.5, -0.767, -0.5, -0.533, -0.333, -0.167, -0.8, -0.6, -0.7, -0.667, 0.5, -0.133, 0.767, 0.8, 0.6, -0.5, -0.7, 0.5, 0.733, -0.767, 0.5, -0.167, -0.7, 0.467]}, {"id": "hybrid", "n": "竞争性威权", "d": "有选举，但执政者结构性占优，结果可预期", "v": [0.167, -0.5, -0.5, -0.5, 0.633, -0.167, -0.067, -0.5, -0.8, -0.267, 0.5, 0.167, 0.1, 0.433, -0.5, 0.167, -0.867, 0.5, 0.467, -0.167, 0.167, -0.733, -0.767, 0.867]}, {"id": "lib", "n": "宪政自由民主", "d": "分权 + 法治 + 强权利保障 + 真实轮替", "v": [-0.667, 0.167, -0.5, 0.5, -0.5, 0.7, 0.167, 0.667, 0.5, 0.7, -0.5, 0.9, 0.6, -0.5, 0.433, 0.733, 0.767, 0.5, 0.233, 0.167, 0.633, 0.833, 0.8, -0.5]}, {"id": "milit", "n": "军国动员体制", "d": "军队主导 + 总体战动员 + 民族主义意识形态", "v": [0.65, -0.9, -0.575, -0.55, 0.2, -0.75, -0.6, -0.55, -0.825, -0.8, 0.575, -0.85, -0.425, -0.175, -0.85, -0.4, -0.9, 0.575, 0.6, -0.325, -0.725, -0.875, -0.9, 0.375]}, {"id": "fd", "n": "封建分权", "d": "中央弱、地方强，靠人身效忠与宗法维系，不是靠官僚", "v": [0.8, -0.833, -0.5, -0.5, 0.25, -0.167, -0.133, -0.55, 0.85, -0.5, -0.167, -0.533, -0.833, -0.167, -0.867, -0.817, -0.9, 0.5, 0.217, -0.6, -0.7, -0.567, 0.283, 0.517]}, {"id": "warlord", "n": "军阀割据", "d": "有宪法与国会，但中央政令出不了首都，实际权力在枪杆子手里", "v": [0.0, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.9, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.0, 0.5, 0.5, 0.0, 0.5, 0.5, 0.5]}, {"id": "rep", "n": "古典共和", "d": "权力属于有公民权的人——但「公民」是少数；参与统治的自由，不等于不受干涉的自由", "v": [0.543, -0.629, -0.5, -0.5, 0.0, -0.543, 0.429, 0.7, 0.757, 0.386, -0.629, 0.686, -0.714, -0.5, -0.129, 0.714, -0.714, 0.5, 0.5, 0.357, -0.186, 0.586, 0.829, -0.514]}, {"id": "merc", "n": "商业寡头", "d": "城市即公司，政权在几个家族手里；经济自由，政治不自由", "v": [0.5, -0.5, -0.5, -0.5, 0.0, -0.5, 0.933, 0.767, 0.267, -0.65, -0.383, 0.367, -0.783, -0.5, -0.9, 0.6, -0.75, 0.5, 0.5, 0.5, -0.5, -0.183, 0.633, -0.517]}, {"id": "charter", "n": "公司统治", "d": "主权在董事会：有军队、有征税权、有司法权，唯独没有选举", "v": [0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.95, 0.325, -0.825, -0.8, 0.5, -1.0, -0.5, -0.5, -1.0, -0.8, -0.8, 0.5, 0.5, -0.5, -0.5, -0.825, -0.925, 0.5]}, {"id": "tribe", "n": "部落社会", "d": "没有国家，但有秩序；靠血缘、互惠与仪式维系，不靠官僚与法典", "v": [0.5, -0.86, -0.5, -0.5, 0.5, -0.5, -0.74, 0.56, 0.92, 0.8, -0.74, 0.36, -0.94, -0.5, 0.78, 0.68, -0.8, 0.5, -0.1, 0.5, -1.0, 0.8, 0.58, -0.96]}, {"id": "premodern", "n": "前现代君主帝国", "d": "世袭君主 + 等级官僚 + 宇宙论合法性（天命、神谕、法老即神）", "v": [0.675, -0.831, -0.5, -0.5, 0.269, -0.606, -0.525, -0.581, -0.831, -0.55, 0.356, -0.875, -0.65, -0.188, -0.844, -0.131, -0.788, 0.5, 0.544, -0.481, -0.725, -0.656, -0.744, 0.625]}], "regSub": [1, 6, 7, 8, 11, 12, 13, 14, 22, 23], "fic": {"su": [["我们（扎米亚京 1920）", "大一统国"], ["1984（奥威尔 1949）", "大洋国"], ["原子之心（2023）", "苏联 1955"]], "corp": [["战锤 40K", "人类帝国"], ["美丽新世界（1932）", "世界国"]], "milit": [["星河战队（1959）", "地球联邦"], ["V 字仇杀队（2005）", "北方火焰"]], "fd": [["冰与火之歌", "七大王国"], ["沙丘（1965）", "厄拉科斯帝国"]], "pop": [["饥饿游戏", "施惠国"]], "socdem": [["星际迷航", "星际联邦"]], "warlord": [["三国演义", "汉末群雄"]], "charter": [["赛博朋克 2077", "荒坂 / 军用科技治下的夜之城"], ["异形（1979）", "维兰德-汤谷公司"]], "tribe": [["阿凡达（2009）", "纳美氏族"]], "premodern": [["基地（阿西莫夫 1951）", "银河帝国川陀"], ["战锤 40K", "人类帝国（另一面）"]]}, "fair": {"技术治理运动": "它诊断的病是真的。当决策者既不懂技术、也不承担后果，长期问题就会被一直推后——为选票回避、为利润限制产出，这两件事今天一样常见。它给的药失败了（工程师执政、能量凭证），因为「懂技术」不等于「懂治理」，而且它把效率当成了唯一的价值。但它问的问题没消失：外行凭什么决定内行的事，又该由谁来承担后果。", "数据主义": "它抓住了一件真事：行为数据确实能预测人，而且常常比本人的自我报告更准。它越界的地方在于把「可预测」当成「可还原」——能算出你会买什么，不等于你只是一个购买函数。赫拉利写这本书时本来就是在警告，不是在推荐。", "算法治理": "它对人类判断的批评站得住：偏见、疲劳、可被收买，这三样在真人决策里都有实证。它的问题是把「可审计」当成「可问责」——算法可以复现，但没人能为它的错误负责。所以它适合当辅助，不适合当主权者。", "贤能政治": "它指出的问题是真的：选举擅长换人，不擅长选出能干的人，而治理需要专业能力。它的困难在选拔环节——谁定标准，怎么防止选拔者自我复制成一个封闭阶层。这两问他答不好，但一人一票也答不好。", "政治犬儒": "犬儒往往不是懒得想，是想了之后失望了。它比盲目信任更接近真实，因为政治确实有大量表演成分。它的代价是放弃了改变的可能——既然都是演的，那做什么都没用。这个结论不成立，但那份疲惫是真的。", "左翼民粹": "民粹在中文里几乎是个骂人的词，政治学里却是中性的：把社会分成「普通人和精英」两半，认为精英拿走了属于人民的东西。这个诊断有时是对的——基层反复反映问题却没人回应，规则由不承担后果的人制定，「精英脱离了」就不是情绪，是事实。它的问题在药方：把「人民」当成一个整体，会抹掉人民内部的分歧；绕过中间机构，会让最会喊的人代表所有人。如果你是在一线做事的人，这个结果不奇怪：你处理的是具体的人和具体的矛盾，而决定这些事的人常常不在现场。说「精英脱离了」，在你这里不是修辞。", "右翼民粹": "和左翼民粹同源：都是「纯洁的人民对腐败的精英」。区别在它多划了一道线——把「人民」定义成本国人，把问题归给移民和超国家机构。这一层最容易滑向排外，但它的起点常常也是真的：当本地的活儿、房子、街坊在几年里被改变，却没有人问过住在那里的人，愤怒不是凭空来的。问题在于它把「变化太快」归因给「外人」，而不是「决定变化的人」。", "自由主义": "很多人转向自由主义，不是因为读过洛克，是因为在权力面前站过一次：它不解释、不回应、不留记录，而你拿它没有办法。这种经历会得出一个结论——权力必须被分割、被记录、被追责。这个结论不一定完整，但那个起点是真的。", "自由至上": "自由至上的起点常常不是经济学，是「被管过」：日常的决定要经过许可，而许可的标准你看不见。经历过的人容易走到另一个极端——只要不害别人，国家最好什么都别管。这个反应可以理解，代价是它容易忽略那些「没人管会更糟」的领域。", "国家资本主义": "很多人转向国家主导，不是因为相信计划，是因为被「逐利的逻辑」碾过一次：省下的成本由别人承担，赚到的收益归自己。这种经历会得出一个结论——有些东西不能交给逐利的人。这个结论不一定完整，但那个起点是真的。", "社会民主主义": "社会民主主义的起点通常不是理论，是「没被驯服的资本主义」长什么样：劳动被当成可以替换的东西，风险被推给最没有承受能力的人。十九世纪欧洲的劳工立法不是从哲学讨论里长出来的，是从伤亡数字里长出来的。相信资本主义需要被驯服的人，多半先见过没被驯服的样子。"}, "tie": {"0": ["甲：规矩是人定的，不合理就该改。", "乙：有些东西不是人能定的，硬改要出事。"], "1": ["甲：一个人过得怎么样，首先看他所在的社会怎么样。", "乙：一个人过得怎么样，首先看他自己。"], "2": ["甲：历史是被几个关键决定推着走的，换个人就是另一个样子。", "乙：趋势到了就会发生，换谁都差不多。"], "3": ["甲：好的制度是设计出来的，想清楚了再动手。", "乙：好的制度是长出来的，边做边改。"], "4": ["甲：人天生有善意，坏是环境逼出来的。", "乙：人天生有私心，好是规矩约束出来的。"], "5": ["甲：一个主张对不对，要看它在现实里能不能成。", "乙：一个主张对不对，要看它在道理上站不站得住。"], "6": ["甲：住房、医疗、教育这类东西，不该完全交给市场。", "乙：价格是最好的信号，政府少插手。"], "7": ["甲：只要不影响别人，人爱怎么活怎么活。", "乙：有些事就算不影响别人，也该有个规矩。"], "8": ["甲：各地差别太大，就该各地自己定。", "乙：各地自己定会乱，得有个统一标准。"], "9": ["甲：这类事该由居民自己组织起来办。", "乙：这类事该由上面的机构统一办。"], "10": ["甲：程序对了，结果不好也得认。", "乙：结果不好，程序再对也是空的。"], "11": ["甲：负责人该由上面任命，他要向上负责。", "乙：负责人该由大家选，他要向下负责。"], "12": ["甲：现在这样还行，没必要折腾。", "乙：不变就是退步，该动就得动。"], "13": ["甲：先试点，跑通了再推。", "乙：一次性改掉，拖着只会更麻烦。"], "14": ["甲：事情要靠一个有本事的人牵头。", "乙：事情要靠大家一起推。"], "15": ["甲：熟人之间，先讲关系。", "乙：办事的时候，先讲规矩。"], "16": ["甲：条件一样，但一个是自己人一个是外人，先照顾自己人不算错。", "乙：条件一样就该一样对待，自己人外人没区别。"], "17": ["甲：技术本身是中性的，看谁用。", "乙：技术一造出来就自带方向，用起来就由不得你。"], "18": ["甲：没把握的事，宁可慢一点。", "乙：不冒点险，什么也干不成。"], "19": ["甲：能拉的人都拉上，哪怕以前不对付。", "乙：只跟利益一致的人合作，不谈交情。"], "20": ["甲：世界的秩序背后，有一个会回应的存在。", "乙：世界只有规律，没有目的，也不回应谁。"], "21": ["甲：内部定完再公布结果，效率更高。", "乙：过程就得公开，不然错了也没法纠。"], "22": ["甲：一件事只能有一个拍板的地方。", "乙：几个中心互相牵制，比一个中心可靠。"], "23": ["甲：先把本国的事办好，别国的事轮不到我们管。", "乙：很多事只有跨国才办得成，国界不是理由。"]}, "tieTitle": "两个人在争论。你更同意谁？"};
+
+let ans = {}, cur = 0, ranking = {}, meta = {}, tie = {};
+// 作答计时：只记录，不参与匹配。tm 不能叫 t——t 已经用来存 tie 的答案
+let tm = { q:{}, chg:{}, start:0, end:0, idle:0, hiddenAt:0, show:0, last:0 };
+const TOTAL = D.q.length;
+// 冲突追问：默认关闭。11 份真人 + 11 位人物测试显示追问会降低精度（见 66 号文）
+const USE_TIE = false;
+// 形状相似度（余弦）低于这条线，不给传统名称，改说「没有明确立场」
+const MIN_COS = 0.70;
+
+// 本地缓存
+try { const s = localStorage.getItem('pv4'); if (s) { const o = JSON.parse(s); ans = o.a||{}; cur = o.c||0; ranking = o.r||{}; meta = o.m||{}; tie = o.t||{}; tm = o.tm || tm; } } catch(e) {}
+// 隔天续答：整份计时作废；关页面超过 5 分钟：那段时间算离场，不算思考
+(function(){
+  const now = Date.now();
+  if (!tm.start) return;
+  if (now - tm.start > 6*3600*1000) { tm = { q:{}, chg:{}, start:0, end:0, idle:0, hiddenAt:0, show:0, last:0 }; return; }
+  if (tm.last && now - tm.last > 5*60*1000) tm.idle += now - tm.last;
+  tm.end = 0; tm.hiddenAt = 0;
+})();
+function save(){ tm.last = Date.now(); try{ localStorage.setItem('pv4', JSON.stringify({a:ans,c:cur,r:ranking,m:meta,t:tie,tm:tm})); }catch(e){} }
+
+const app = document.getElementById('app');
+const L = 'ABCDEFG';
+
+// 左右滑动 / 方向键翻页（不需要先答题，方便查看和纠错）
+if (typeof document !== 'undefined' && document.addEventListener) {
+  let _tx = 0, _ty = 0;
+  document.addEventListener('touchstart', e => { _tx = e.touches[0].clientX; _ty = e.touches[0].clientY; }, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - _tx, dy = e.changedTouches[0].clientY - _ty;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { dx < 0 ? next() : prev(); }
+  }, {passive:true});
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden) { if (!tm.hiddenAt) tm.hiddenAt = Date.now(); }
+    else if (tm.hiddenAt) { tm.idle += Date.now() - tm.hiddenAt; tm.hiddenAt = 0; save(); }
+  });
+  document.addEventListener('keydown', e => {
+    if (cur < 0 || cur >= TOTAL) return;
+    if (e.key === 'ArrowRight') next();
+    else if (e.key === 'ArrowLeft') prev();
+  });
+}
+
+function render(){
+  if (cur < 0) return renderCover();
+  if (cur >= TOTAL) {
+    if (USE_TIE) {
+      const nt = tieDims();
+      if (nt.length && nt.some(i => tie[i] === undefined)) return renderTie(nt);
+    }
+    const need = metaDims();
+    if (need.length && need.some(i => !meta[i])) return renderMeta(need);
+    return renderResult();
+  }
+  const q = D.q[cur], picked = ans[q.n];
+  const pct = Math.round(cur / TOTAL * 100);
+
+  let opts = '';
+  if (q.type === 'r') {
+    const sel = ranking[q.n] || [];
+    opts = '<div class="rank-hint">可多选。点击顺序即为重要性排序，再点一次取消。</div>';
+    q.opts.forEach((t, i) => {
+      const idx = sel.indexOf(i);
+      opts += `<div class="rk ${idx>-1?'on':''}" data-r="${i}">
+        <div class="key">${idx>-1?idx+1:L[i]}</div><div class="txt">${t}</div></div>`;
+    });
+  } else {
+    q.opts.forEach((t, i) => {
+      opts += `<div class="opt ${picked===L[i]?'on':''}" data-o="${L[i]}">
+        <div class="key">${L[i]}</div><div class="txt">${t}</div></div>`;
+    });
+  }
+
+  app.innerHTML = `
+    <div class="bar">
+      <div class="row"><span>${cur+1} / ${TOTAL}</span><span><span onclick="showNav()" style="cursor:pointer;text-decoration:underline;text-underline-offset:3px">题号</span>　${pct}%</span></div>
+      <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q">
+      <div class="no">第 ${cur+1} 题</div>
+      <h2>${q.t}</h2>
+      <div id="opts">${opts}</div>
+    </div>
+    <div class="foot"><div class="inner">
+      <button class="btn ghost" onclick="prev()">上一题</button>
+      ${allDone()?`<button class="btn ghost" onclick="toResult()">直接看结果</button>`:''}
+      <button class="btn" id="nx" onclick="next()">
+        ${cur===TOTAL-1?'看结果':'下一题'}</button>
+    </div></div>`;
+  tm.show = Date.now();
+
+  if (q.type === 'r') {
+    document.querySelectorAll('.rk').forEach(el => el.onclick = () => {
+      const i = +el.dataset.r;
+      ranking[q.n] = ranking[q.n] || [];
+      const p = ranking[q.n].indexOf(i);
+      if (p > -1) ranking[q.n].splice(p,1); else ranking[q.n].push(i);
+      save(); render();
+    });
+  } else {
+    document.querySelectorAll('.opt').forEach(el => el.onclick = () => {
+      ans[q.n] = el.dataset.o;
+      tmTouch(q.n, false);
+      save();
+      setTimeout(() => { if (cur < TOTAL-1) { cur++; save(); render(); } else render(); }, 130);
+    });
+  }
+}
+
+function next(){ if (cur < TOTAL) { cur++; save(); render(); window.scrollTo(0,0); } }
+function allDone(){ return D.q.every(q => q.d === 0 || (q.type==='r' ? (ranking[q.n]&&ranking[q.n].length) : !!ans[q.n])); }
+function toResult(){ cur = TOTAL; save(); render(); window.scrollTo(0,0); }
+function backToEdit(){ cur = 0; tm.end = 0; save(); render(); window.scrollTo(0,0); }
+function showNav(){
+  const ov = document.createElement('div');
+  ov.className = 'dim-modal';
+  ov.onclick = e => { if (e.target === ov) ov.remove(); };
+  let cells = '', nAns = 0;
+  D.q.forEach((q,i) => {
+    const a = q.type==='r' ? (ranking[q.n]&&ranking[q.n].length ? '✓' : '') : (ans[q.n] || '');
+    if (a) nAns++;
+    cells += `<div class="navc" data-i="${i}" style="cursor:pointer;text-align:center;padding:6px 0 5px;border-radius:8px;font-size:12px;line-height:1.25;${a?'background:#1a1a1a;color:#fff':'background:#fff;color:#c0392b;border:1px solid #f0c8c8'}">
+      <div style="font-weight:600">${i+1}</div>
+      <div style="font-size:10px;opacity:.75">${a||'未答'}</div></div>`;
+  });
+  const left = TOTAL - nAns;
+  ov.innerHTML = `<div class="dim-box">
+    <div class="dim-h">答题卡
+      <div style="font-size:12px;color:#999;font-weight:400;margin-top:4px">已答 ${nAns} / ${TOTAL}${left?`　还有 ${left} 题没答`:''}　点任意一格跳过去</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:7px;padding:6px 0 14px">${cells}</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn ghost" style="flex:1" onclick="this.closest('.dim-modal').remove()">取消</button>
+      ${left?`<button class="btn ghost" style="flex:1" onclick="jumpFirstUnanswered()">跳到第一个未答</button>`:''}
+      ${allDone()?`<button class="btn" style="flex:1" onclick="this.closest('.dim-modal').remove();toResult()">看结果</button>`:''}
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.querySelectorAll('.navc').forEach(el => {
+    el.onclick = () => { cur = +el.dataset.i; save(); ov.remove(); render(); window.scrollTo(0,0); };
+  });
+}
+function jumpFirstUnanswered(){
+  const i = D.q.findIndex(q => q.type==='r' ? !(ranking[q.n]&&ranking[q.n].length) : !ans[q.n]);
+  document.querySelectorAll('.dim-modal').forEach(el => el.remove());
+  if (i >= 0) { cur = i; save(); render(); window.scrollTo(0,0); }
+}
+function prev(){ if (cur > 0) { cur--; save(); render(); window.scrollTo(0,0); } }
+
+// ===== 冲突追问：只在该维两题方向相反时出现 =====
+function tieDims(){
+  const buckets = {};
+  D.q.forEach(q => {
+    if (!q.o || !D.qmap[q.o] || q.type === 'r') return;
+    const [dim, map] = D.qmap[q.o];
+    const c = ans[q.n]; if (!c) return;
+    const v = map[c]; if (v === null || v === undefined) return;
+    (buckets[dim-1] = buckets[dim-1] || []).push(v);
+  });
+  const out = [];
+  for (const k in buckets) {
+    const b = buckets[k];
+    if (b.length < 2) continue;
+    const strong = b.filter(v => Math.abs(v) >= 0.3);
+    if (strong.length >= 2 && Math.max(...strong) > 0 && Math.min(...strong) < 0) out.push(+k);
+  }
+  return out.slice(0, 5);
+}
+function skipTie(i){ tie[i] = -1; save(); render(); }
+function renderTie(need){
+  const i = need.find(x => tie[x] === undefined);
+  if (i === undefined) return render();
+  const pair = (D.tie||{})[String(i)] || ['', ''];
+  const picked = tie[i];
+  app.innerHTML = `
+    <div class="q">
+      <div class="no">需要确认一下</div>
+      <h2>${D.tieTitle||''}</h2>
+      <div style="font-size:12.5px;color:#999;line-height:1.7;margin:-14px 0 22px">${dimLabel(i)}　这一维的两道题你给了相反的回答。只问方向，不算新维度。</div>
+      <div class="opt ${picked===0?'on':''}" data-t="0"><div class="key">A</div><div class="txt">${pair[0]}</div></div>
+      <div class="opt ${picked===1?'on':''}" data-t="1"><div class="key">B</div><div class="txt">${pair[1]}</div></div>
+    </div>
+    <div class="foot"><div class="inner">
+      <button class="btn ghost" onclick="skipTie(${i})">跳过</button>
+      <button class="btn" ${picked!==undefined?'':'disabled'} onclick="render()">下一题</button>
+    </div></div>`;
+  document.querySelectorAll('[data-t]').forEach(el => el.onclick = () => {
+    tie[i] = +el.dataset.t; save(); render();
+  });
+  window.scrollTo(0,0);
+}
+
+// ===== 元问题：只问最中立的三个维度，不改向量，只改措辞 =====
+function metaDims(){
+  const S = score();
+  const cand = S.vec.map((v,i)=>({i, a:Math.abs(v)}))
+    .filter(x => x.a < 0.25 && x.i !== 5)
+    .sort((x,y) => x.a - y.a)
+    .slice(0, 3);
+  return cand.map(x => x.i);
+}
+function renderMeta(need){
+  const rows = need.map(i => {
+    const picked = meta[i] || '';
+    const q = ((D.dimInfo||{})[String(i)]||{}).q || '';
+    return `<div style="margin-bottom:22px">
+      <div style="font-size:14.5px;font-weight:600;margin-bottom:3px">${dimLabel(i)}</div>
+      <div style="font-size:12px;color:#999;line-height:1.6;margin-bottom:10px">${q}</div>
+      <div class="opt ${picked==='care'?'on':''}" data-m="${i}:care"><div class="key">A</div><div class="txt">我真的不太在乎这个问题</div></div>
+      <div class="opt ${picked==='ctx'?'on':''}" data-m="${i}:ctx"><div class="key">B</div><div class="txt">两边都有道理，要看具体是什么事</div></div>
+    </div>`;
+  }).join('');
+  const done = need.every(i => meta[i]);
+  app.innerHTML = `
+    <div class="q">
+      <div class="no">最后三个问题</div>
+      <h2>有三个问题，你两边的答案都接近中间。想确认一下是哪种情况——</h2>
+      <div style="font-size:12.5px;color:#999;line-height:1.7;margin:-14px 0 24px">这不改分数，只影响结果里怎么描述这几个维度。</div>
+      ${rows}
+    </div>
+    <div class="foot"><div class="inner">
+      <button class="btn" ${done?'':'disabled'} onclick="renderResult()">看结果</button>
+    </div></div>`;
+  document.querySelectorAll('[data-m]').forEach(el => el.onclick = () => {
+    const [i, k] = el.dataset.m.split(':');
+    meta[i] = k; save(); renderMeta(need);
+  });
+  window.scrollTo(0,0);
+}
+// 哪些维没进比较：两题相反 / 分情境 / 真不在乎
+function uncovered(S){
+  const buckets = {};
+  D.q.forEach(q => {
+    if (!q.o || !D.qmap[q.o] || q.type === 'r') return;
+    const [dim, map] = D.qmap[q.o];
+    const c = ans[q.n]; if (!c) return;
+    const v = map[c]; if (v === null || v === undefined) return;
+    (buckets[dim-1] = buckets[dim-1] || []).push({ q, v, c });
+  });
+  const conflicts = [];
+  for (const k in buckets) {
+    const items = buckets[k];
+    if (items.length < 2) continue;
+    const strong = items.filter(x => Math.abs(x.v) >= 0.3);
+    if (strong.length >= 2 && Math.max(...strong.map(x => x.v)) > 0 && Math.min(...strong.map(x => x.v)) < 0) {
+      conflicts.push({ i: +k, items });
+    }
+  }
+  const neutral = S.vec.map((v,i)=>({ i, a:Math.abs(v) })).filter(x => x.a < 0.3 && x.i !== 5);
+  return { conflicts, neutral };
+}
+
+function renderCover(){
+  app.innerHTML = `
+  <div class="cover">
+    <h1>政治立场测试</h1>
+    <div class="sub">这是一份关于社会、制度与价值的问卷<br>没有标准答案，也没有对错</div>
+    <div class="meta">
+      <div><b>${TOTAL}</b>题目</div><div><b>15</b>分钟</div><div><b>${D.dims.length}</b>维度</div>
+    </div>
+    <div class="note">
+      <b>填写说明</b><br>
+      · 完全匿名，数据只存在你的手机上<br>
+      · 每题选一个最接近的，不要选"应该"的<br>
+      · 有些选项看起来都不理想——这说明题目在逼你做真实取舍<br>
+      · 拿不准可以跳过，跳过本身也是信息
+    </div>
+    <button class="btn" onclick="start()">开始</button>
+    <div style="text-align:center;margin-top:16px"><a href="../" style="font-size:12.5px;color:#999;text-decoration:none;border-bottom:1px solid #ddd">English version</a></div>
+    <div style="font-size:11.5px;color:#aaa;line-height:1.85;max-width:520px;margin:26px auto 0;text-align:left;border-top:1px solid #eee;padding-top:16px">
+      本工具用于政治传统的知识普及与自我认识，收录并客观呈现包括中国特色社会主义、自由主义、社会民主主义、无政府主义在内的 ${Object.keys(D.anchors).length} 种政治传统。
+      结果是对答题倾向的近似描述，不含道德评价，不构成政治主张，也不代表对任何现实制度的判断。<br><br>
+      全部答案只保存在你自己的浏览器里，不上传、不收集、不统计。
+    </div>
+  </div>`;
+}
+function start(){ if (!tm.start) tm.start = Date.now(); cur = 0; save(); render(); }
+
+// ========== 作答计时 ==========
+function tmTouch(n, isRank){
+  const now = Date.now();
+  if (!tm.start) tm.start = now;
+  if (!isRank && tm.show) {
+    const dt = Math.min(Math.max(0, now - tm.show), 600000);
+    tm.q[n] = (tm.q[n]||0) + dt;
+    tm.chg[n] = (tm.chg[n]||0) + 1;
+  }
+  tm.show = now;
+}
+function fmtDur(ms){
+  const s = Math.round(ms/1000);
+  if (s < 60) return s + ' 秒';
+  const m = Math.floor(s/60), r = s%60;
+  return m + ' 分' + (r ? ' ' + r + ' 秒' : '');
+}
+function timeStats(){
+  const now = tm.end || Date.now();
+  const idle = tm.idle + (tm.hiddenAt ? now - tm.hiddenAt : 0);
+  const total = tm.start ? Math.max(0, now - tm.start) : 0;
+  const active = Math.max(0, total - idle);
+  const ns = Object.keys(tm.q).filter(k => (tm.q[k]||0) > 0);
+  const times = ns.map(k => tm.q[k]);
+  const sorted = times.slice().sort((a,b)=>a-b);
+  const med = sorted.length ? sorted[Math.floor(sorted.length/2)] : 0;
+  const mean = times.length ? times.reduce((a,b)=>a+b,0)/times.length : 0;
+  const fast = times.filter(x=>x<2000).length;
+  const changed = Object.keys(tm.chg).filter(k=>tm.chg[k]>1).length;
+  let fastIdx=0, slowIdx=0, mn=Infinity, mx=-Infinity;
+  ns.forEach(k=>{ const v=tm.q[k]; if(v<mn){mn=v;fastIdx=+k;} if(v>mx){mx=v;slowIdx=+k;} });
+  const answered = D.q.filter(q=>q.d!==0 && (q.type==='r' ? (ranking[q.n]&&ranking[q.n].length) : !!ans[q.n])).length;
+  let verdict='正常';
+  if (!answered) verdict='未作答';
+  else if (med && med < 3000) verdict='偏快';
+  else if (times.length && fast/times.length > 0.4) verdict='偏快';
+  else if (active && active < 300000 && answered >= TOTAL*0.8) verdict='偏短';
+  else if (med > 90000) verdict='偏慢';
+  return {total,idle,active,med,mean,fast,changed,fastIdx,slowIdx,n:times.length,answered,verdict};
+}
+function timeLine(){
+  if (!tm.start || !Object.keys(tm.q).length) return '';
+  const t = timeStats();
+  if (!t.total) return '';
+  return `<div style="font-size:11.5px;color:#bbb;line-height:1.9;margin-top:18px;text-align:center">
+    本次作答 ${fmtDur(t.total)}${t.idle>60000?`（有效 ${fmtDur(t.active)}，离场 ${fmtDur(t.idle)}）`:''} · 每题中位 ${fmtDur(t.med)} · 改过 ${t.changed} 题 · 质量：${t.verdict}
+  </div>`;
+}
+
+// ========== 计分 ==========
+function cos(a,b){
+  let d=0,na=0,nb=0;
+  for(let i=0;i<a.length;i++){ d+=a[i]*b[i]; na+=a[i]*a[i]; nb+=b[i]*b[i]; }
+  return (na&&nb)? d/Math.sqrt(na*nb) : 0;
+}
+function nrm(a){ return Math.sqrt(a.reduce((s,x)=>s+x*x,0)); }
+
+function score(){
+  const buckets = Array.from({length:D.dims.length},()=>[]);
+  const marks = [];
+  let skipped = 0;
+
+  D.q.forEach(q => {
+    const orig = q.o;
+    if (!orig || !D.qmap[orig]) return;
+    const [dim, map] = D.qmap[orig];
+    if (q.type === 'r') {
+      const sel = ranking[q.n] || [];
+      if (!sel.length) { skipped++; return; }
+      return; // 排序题不计维
+    }
+    const c = ans[q.n];
+    if (!c) { skipped++; return; }
+    const v = map[c];
+    if (v === null || v === undefined) {
+      const m = (D.marks[orig]||{})[c];
+      if (m) marks.push(m);
+      return;
+    }
+    buckets[dim-1].push(v);
+  });
+
+  const vec = buckets.map((b, i) => {
+    if (USE_TIE && (tie[i] === 0 || tie[i] === 1)) return tie[i] === 0 ? -0.9 : 0.9;
+    return b.length ? b.reduce((s,x)=>s+x,0)/b.length : 0;
+  });
+  const missing = buckets.map((b,i)=>b.length?null:D.dims[i]).filter(Boolean);
+
+  // 只在「双方都有明确立场」的维度上比较：堵住"不表态被当成半个反对"的稀释
+  const THR = 0.3, MIN_K = 6;
+  const res = Object.entries(D.anchors).map(([n,a]) => {
+    const idx = [];
+    for (let i = 0; i < vec.length; i++)
+      if (Math.abs(vec[i]) >= THR && Math.abs(a[i]) >= THR) idx.push(i);
+    const vv = idx.map(i => vec[i]), aa = idx.map(i => a[i]);
+    const c = idx.length >= MIN_K ? cos(vv, aa) : null;
+    const same = idx.filter(i => (vec[i] >= 0) === (a[i] >= 0)).length;
+    return {
+      n, c, m: nrm(a),
+      k: idx.length,                       // 可比维数
+      s: same,                             // 同向维数
+      // 拉普拉斯平滑：k 小的时候把同向率往 0.5 拉，堵住「sparse 锚点靠全对拿满分」
+      // k=6 全对 → 7/8=0.875；k=18 全对 → 19/20=0.95
+      r: idx.length ? (same + 1) / (idx.length + 2) : 0,
+      r0: idx.length ? same / idx.length : 0, // 原始同向率（逐维明细显示用）
+      full: cos(vec, a),                   // 全维余弦（仅参考）
+    };
+  }).sort((x, y) => {
+    if (x.c === null && y.c === null) return 0;
+    if (x.c === null) return 1;
+    if (y.c === null) return -1;
+    // 先看平滑同向率（方向一致度）。平滑后 1 维之差只值 0.008 左右，
+    // 落到这个量级就交给余弦判强度，否则「k 多一维」会压过「明显更像」
+    if (Math.abs(y.r - x.r) > 0.001) return y.r - x.r;
+    return y.c - x.c;
+  });
+
+  const a2c = {};
+  Object.entries(D.clusters).forEach(([c,ms]) => ms.forEach(m => a2c[m]=c));
+
+  // 维度6 的中间有两种：两题都选「实践中验证」= 真·看效果；一正一负对冲 = 前后不一致
+  const mid6 = buckets[5].length > 0 && buckets[5].every(x => Math.abs(x) < 0.4);
+  // 哪些维两题选了相反方向且都强
+  const conflictDims = buckets
+    .map((b, i) => {
+      if (b.length < 2) return null;
+      const strong = b.filter(x => Math.abs(x) >= 0.3);
+      if (strong.length >= 2 && Math.max(...strong) > 0 && Math.min(...strong) < 0) return i;
+      return null;
+    })
+    .filter(x => x !== null);
+
+  return {vec, missing, skipped, marks, res, a2c, mid6, conflictDims};
+}
+
+function verdict(c, g, r, k, hard, gc){
+  if (k < 8)              return '依据不足（可比维度太少）';
+  // 并列要两个条件同时成立：匹配度接近，且强度也接近。
+  // 只看匹配度会把「11/11 vs 15/16 但余弦差 18pp」误判成并列。
+  const tie = g < 0.05 && (gc === undefined || gc < 0.10);
+  const h = hard || 0;
+  if (h >= 3)             return `方向接近，但有 ${h} 处方向相反，不建议当作归属`;
+  if (r >= 0.85 && c >= 0.70) {
+    if (tie) return '方向高度一致，但有两个传统并列';
+    return h ? `高度一致，但有 ${h} 处方向相反` : '高度一致';
+  }
+  if (r >= 0.85)          return `方向高度一致，但强度差得多${h?`，且有 ${h} 处方向相反`:''}`;
+  if (r >= 0.72) {
+    if (k < 11)          return `部分一致（可比维只有 ${k} 个，依据较弱）`;
+    return tie ? '方向一致，但分不清是哪一支' : `方向一致${h?`，但有 ${h} 处方向相反`:''}`;
+  }
+  if (r >= 0.60)          return '部分一致';
+  return '不一致';
+}
+
+function showDimInfo(i){
+  const d = (D.dimInfo||{})[String(i)];
+  if (!d) return;
+  const ov = document.createElement('div');
+  ov.className = 'dim-modal';
+  ov.innerHTML = `<div class="dim-box">
+    <div class="dim-h">${D.poles[i][0]} / ${D.poles[i][1]}
+      <div style="font-size:12px;color:#999;font-weight:400;margin-top:4px;letter-spacing:.2px">${dimEn(i)}</div>
+    </div>
+    <div class="dim-q">${d.q}</div>
+    <div class="dim-side"><b>${D.poles[i][0]}</b>：${d.lo}</div>
+    <div class="dim-side"><b>${D.poles[i][1]}</b>：${d.hi}</div>
+    ${d.mid?`<div class="dim-side" style="color:#888"><b>两者之间</b>：${d.mid}</div>`:''}
+    <button class="dim-close" onclick="this.closest('.dim-modal').remove()">知道了</button>
+  </div>`;
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function lvlWord(a){ return a>=0.75?'强烈':a>=0.5?'明显':a>=0.25?'略微':'中立'; }
+// 维度6（必然/应然）的中间不是「中立」，是一个独立立场：看效果
+function dimText(v, i, mid6){
+  const a = Math.abs(v);
+  if (a < 0.25) {
+    if (i !== 5) return '中立';
+    return mid6 ? '看效果' : '两题相反';
+  }
+  return lvlWord(a) + '偏' + sideName(v, i);
+}
+function sideName(v,i){ return v>0 ? D.poles[i][1] : D.poles[i][0]; }
+function dimLabel(i){ return D.poles[i][0] + ' / ' + D.poles[i][1]; }
+function dimEn(i){ return (D.dimEn||{})[String(i+1)] || ''; }
+function anchorEn(n){ return (D.anchorEn||{})[n] || ''; }
+
+function diagnose(vec, conflictDims){
+  const rank = vec.map((v,i)=>({i, v, a:Math.abs(v)}));
+  const strong = rank.filter(x=>x.a>=0.5).sort((x,y)=>y.a-x.a);
+  const core = rank.filter(x=>x.a>=0.6).sort((x,y)=>y.a-x.a).slice(0,3);
+
+  const layers = [];
+  for (const key of Object.keys(D.layers)) {
+    const idxs = D.layers[key];
+    const items = idxs.map(d=>({d, i:d-1, v:vec[d-1], a:Math.abs(vec[d-1])}))
+                      .sort((x,y)=>y.a-x.a);
+    layers.push({name:key, items, n:items.length});
+  }
+
+  // 张力必须靠语义预定义，不能只看符号相反（符号相反 ≠ 立场矛盾）
+  const TENSIONS = [
+    {x:9,  y:10, sx:-1, sy: 1, say:'你要权力集中，但又希望有独立于它的组织能制衡它。如果这些组织归它管，它们就制衡不了；如果它们真能制衡，权力就不算最集中。'},
+    {x:2,  y:10, sx:-1, sy: 1, say:'你要集体优先，但希望集体由民间自己组织，而不是由官方主导。这两条可以并存，前提是那些民间组织真的能覆盖多数人。'},
+    {x:15, y:9,  sx: 1, sy:-1, say:'你相信改变要靠多数人参与，但又希望权力集中。这两条要同时成立，前提是集中后的权力愿意让多数人参与决定。'},
+    {x:13, y:14, sx:-1, sy: 1, say:'你认为现状还过得去，又主张彻底改。这两条不能同时成立——要么现状值得保，要么必须推倒重来。'},
+    {x:11, y:12, sx: 1, sy:-1, say:'你看重结果，但不看重「谁选的」。这条的代价是：干得好的人没有下台的机制，干得差的也没人能换掉他。'},
+  ];
+  const cross = TENSIONS
+    .filter(t => Math.abs(vec[t.x-1]) >= 0.5 && Math.abs(vec[t.y-1]) >= 0.5
+              && Math.sign(vec[t.x-1]) === t.sx && Math.sign(vec[t.y-1]) === t.sy)
+    .map(t => ({a:t.x-1, b:t.y-1, say:t.say}));
+  // 维度6 的中间是「看效果」（一个立场），不算「没有明确倾向」
+  // 中间项要区分：两题都选中立 = 没态度；两题相反 = 前后不一致（另有提示）
+  const neutral = rank.filter(x => x.a < 0.25 && x.i !== 5);
+  return {core, layers, cross, neutral};
+}
+
+// ===== 历史体制参照层 =====
+// 只比「政体结构」十维（D.regSub）。个人的向量偏中间、常有一半维不表态，
+// 所以在整 24 维上比会全部落在 0.2-0.5 之间，没有区分力。
+function regimeScore(vec, a){
+  const THR = 0.3;
+  const idx = D.regSub.filter(i => Math.abs(vec[i]) >= THR && Math.abs(a[i]) >= THR);
+  if (idx.length < 4) return null;
+  const same = idx.filter(i => vec[i] * a[i] > 0).length;
+  const dot = idx.reduce((t,i)=>t+vec[i]*a[i], 0);
+  const na = Math.sqrt(idx.reduce((t,i)=>t+vec[i]*vec[i], 0)) || 1;
+  const nb = Math.sqrt(idx.reduce((t,i)=>t+a[i]*a[i], 0)) || 1;
+  return { k: idx.length, rate: (same+1)/(idx.length+2), cos: dot/(na*nb),
+           conf: idx.length - same, idx };
+}
+function regimeHits(vec){
+  // 先算每个「时期」，用最像的那个时期决定显示哪个家族。
+  // 不能只用家族质心排序——族内成员离散时，质心会把人带到别的族去
+  // （例：朴正熙型会被算成「军国动员」，因为昭和是单成员族、质心更极端）。
+  const tags = (D.regimes || []).map(t => ({ t, s: regimeScore(vec, t.v) }))
+    .filter(x => x.s && x.s.k >= 4);
+  if (!tags.length) return [];
+  tags.sort((a, b) => b.s.cos - a.s.cos);
+  const fit = (famId) => {
+    const f = (D.regFams || []).find(x => x.id === famId);
+    if (!f) return null;
+    const fs = regimeScore(vec, f.v);
+    if (!fs || fs.k < 4 || fs.rate < 0.72 || fs.cos < 0.60) return null;
+    return fs;
+  };
+  // 按「最像的时期」顺序取家族，最多两个，同族不重复
+  const out = [], seen = {};
+  for (const x of tags) {
+    const famId = x.t.f;
+    if (seen[famId]) continue;
+    const fs = fit(famId);
+    if (!fs) continue;
+    seen[famId] = 1;
+    const f = D.regFams.find(y => y.id === famId);
+    const ms = tags.filter(y => y.t.f === famId).slice(0, 4);
+    out.push({ f, s: fs, ms, bestCos: x.s.cos });
+    if (out.length >= 3) break;
+  }
+  out.sort((a, b) => b.bestCos - a.bestCos);
+  return out;
+}
+// 全部时期一览：只作参照，不参与匹配
+function regimeAll(){
+  const byFam = {};
+  (D.regimes || []).forEach(t => { (byFam[t.f] = byFam[t.f] || []).push(t); });
+  return (D.regFams || []).filter(f => byFam[f.id]).map(f => `<div style="margin-bottom:18px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:1px">${f.n}<span style="font-weight:400;color:#ccc;font-size:11px;margin-left:6px">${byFam[f.id].length} 个</span></div>
+      <div style="font-size:11px;color:#bbb;line-height:1.65;margin-bottom:6px">${f.d}</div>
+      <div style="font-size:12px;line-height:1.95;color:#666">${byFam[f.id].map(t=>`${t.n}<span style="color:#c4c4c4">（${t.p}　${t.pl}）</span>`).join('<br>')}</div>
+    </div>`).join('');
+}
+function regimeDetails(){
+  return `<details style="margin-top:12px">
+    <summary style="font-size:12.5px;color:#888;cursor:pointer;outline:none">看全部 ${(D.regimes||[]).length} 个历史时期</summary>
+    <div style="margin-top:16px">${regimeAll()}</div>
+    <div style="font-size:11px;color:#ccc;line-height:1.8;margin-top:4px">这些是参照，不是选项。每一条都真实存在过，只是有些只留下了税单和废墟。</div>
+  </details>`;
+}
+function partState(){
+  const byO = {};
+  D.q.forEach(q => { if (q.o) byO[q.o] = ans[q.n]; });
+  const att = byO['34'] || '', eff = byO['35'] || '', resp = byO['36'] || '';
+  if (!att || !eff) return null;
+  const hiAtt = ['A','B'].indexOf(att) >= 0;
+  const hiEff = ['A','B'].indexOf(eff) >= 0;
+  const key = (hiAtt ? 'h' : 'l') + (hiEff ? 'H' : 'L');
+  const meta = {
+    hH: ['参与者', '你关注，也相信参与有用。', '这一格在现实里是少数——多数人只占其中一条。'],
+    hL: ['关注但不信', '你还在看，但认为改变不了结果。', '关注度和效能感在这里断开了：判断力还在，行动意愿没有了。'],
+    lH: ['搭便车', '你不太关注，但相信别人参与是有用的。', '这不一定是不负责——如果制度真能回应，不参与是理性选择。'],
+    lL: ['疏离', '你不太关注，也不认为参与有用。', '这不是立场，是对政治的感受。它通常来自经历，不是来自阅读。'],
+  }[key];
+  const respMap = {A:'会，渠道有效', B:'有时会，看议题', C:'很少，除非闹大', D:'不会，只回应有实力的人', E:'没想过'};
+  return {key, name:meta[0], say:meta[1], note:meta[2], resp: respMap[resp] || ''};
+}
+function partCell(key, cur, label, sub){
+  const on = key === cur;
+  return `<div style="border-radius:10px;padding:10px 8px;text-align:center;${on?'background:#1a1a1a;color:#fff':'background:#f7f7f7;color:#999'}">
+    <div style="font-size:13px;font-weight:${on?600:400}">${label}</div>
+    <div style="font-size:10.5px;opacity:.7;margin-top:2px">${sub}</div></div>`;
+}
+function partCard(){
+  const st = partState();
+  if (!st) return '';
+  return `<div class="card">
+    <h3>你的政治参与状态</h3>
+    <div style="font-size:13.5px;line-height:1.85;color:#3a3a3a;margin-bottom:12px">${st.say}${st.note}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+      ${partCell('lH', st.key, '搭便车', '不关注 · 信有用')}
+      ${partCell('hH', st.key, '参与者', '关注 · 信有用')}
+      ${partCell('lL', st.key, '疏离', '不关注 · 不信有用')}
+      ${partCell('hL', st.key, '关注但不信', '关注 · 不信有用')}
+    </div>
+    <div style="font-size:11.5px;color:#bbb;line-height:1.8;margin-top:10px">
+      横轴是关注度，纵轴是效能感。四格没有哪一格是「正常」的基准，深色只是你现在的位置。${st.resp?`<br>另外，你认为决策者会回应普通人的诉求吗：<b style="color:#999">${st.resp}</b>`:''}
+    </div>
+  </div>`;
+}
+
+// 形状不够像：不给传统名称，回到维度层面描述
+function noStanceHtml(S){
+  const top = S.res[0];
+  const strong = S.vec.map((v,i)=>({i,v,a:Math.abs(v)}))
+    .filter(x=>x.a>=0.6).sort((x,y)=>y.a-x.a).slice(0,4);
+  const items = strong.map(x=>`· <b>${dimLabel(x.i)}</b> — ${lvlWord(x.a)}偏${sideName(x.v,x.i)}（${x.v>0?'+':''}${x.v.toFixed(1)}）`).join('<br>');
+  return `<div class="card">
+    <h3>没有明确的政治立场</h3>
+    <div style="font-size:13.5px;line-height:1.95;color:#3a3a3a;margin-bottom:14px">
+      形状最接近的是「${top.n}」，但强度只有 ${(top.c*100).toFixed(0)}%，低于 70% 的判定线。差距不是数据不够——是它和你在结构上本来就不是一回事。
+    </div>
+    ${strong.length?`<div style="font-size:12px;color:#999;margin-bottom:6px">但你在几个方向上比多数人明确</div>
+    <div style="font-size:13.5px;line-height:1.95;color:#3a3a3a;margin-bottom:14px">${items}</div>`:''}
+    <div style="font-size:13px;line-height:1.9;color:#555">
+      这些倾向没有凑成一套政纲。现存的 ${Object.keys(D.anchors).length} 个传统回答的是「权力怎么组织、经济怎么安排」「什么值得追求」；你的答案更多落在其中一两层，在制度问题上大多没有表态。这不是缺陷——多数人也是这样。
+    </div>
+    ${(S.vec[16] <= -0.5 || S.vec[1] <= -0.5)?`<div style="font-size:13px;line-height:1.95;color:#3a3a3a;margin-top:14px;padding-top:14px;border-top:1px solid #f0f0f0">
+      这种组合有名字。费孝通叫它「差序格局」——以自己为中心，按亲疏远近一圈圈推出去，越近责任越重；梁漱溟说中国是「伦理本位」，不是个人本位，也不是社会本位。<br><br>
+      这不是「没有想法」。你关心的是具体的人：父母、家人、同事、邻居，而不是抽象的制度该怎么设计。在一个把「治国平天下」当最高问题的测试里，这种关心会被记成「没表态」；但在过日子这件事上，它比任何政纲都用得上。任何一个社会能稳住，靠的也是这些人日复一日处理的具体事务，不是少数人对制度的争论。
+    </div>`:''}
+    <div style="font-size:13px;line-height:1.9;color:#3a3a3a;margin-top:12px;padding:13px 15px;background:#f7f7fa;border-radius:9px">
+      <b>如果愿意多想一步</b><br>
+      这套题问的十个维度，拆开是三个问题：<b>权力归谁 · 怎么产生 · 怎么结束</b>。它们不需要你有立场，只需要你看清楚两件事——你所在的地方，答案是什么；你认为答案应该是什么。
+    </div>
+    <div style="font-size:11.5px;color:#bbb;line-height:1.8;margin-top:14px;border-top:1px solid #f0f0f0;padding-top:12px">
+      判定线：形状相似度 ≥ 70% 才给传统名称。这条线用 11 位按原典作答的人物校准——他们全部在 81% 以上；随手作答的答卷多数落在 30–70%。
+    </div>
+  </div>`;
+}
+
+// 问题有限 / 问题常驻：不计维，只作描述
+function probCard(){
+  const q44 = D.q.find(x => x.o === '44');
+  const a = q44 ? ans[q44.n] : null;
+  if (!a) return '';
+  const m = {
+    A: ['问题是有数的', '你相信问题可以被逐个解决，只是需要时间。有这个信念的人，才会认真对待长期目标——因为相信终点存在，才愿意走。'],
+    B: ['问题在更替中改善', '你相信老问题会解决，但新问题会出现，总体在变好。这是最常见的判断，也是改革派的基本假设。'],
+    C: ['问题只是换形', '你认为问题解决不完，只是换一种形式。这让你对「彻底解决」的承诺保持警惕，但也容易低估那些真的被解决掉的事。'],
+    D: ['有些问题无解', '你认为有些问题注定无解，能做的只是减轻痛苦。这个判断不会让人变冷漠——它通常让人更在意具体的、能减轻一点的事。'],
+  }[a];
+  if (!m) return '';
+  return `<div class="card">
+    <h3>你怎么看「问题本身」</h3>
+    <div style="font-size:15px;font-weight:600;margin-bottom:6px">${m[0]}</div>
+    <div style="font-size:13px;line-height:1.9;color:#3a3a3a">${m[1]}</div>
+    <div style="font-size:11.5px;color:#bbb;line-height:1.8;margin-top:10px">这条不参与匹配。它描述的是你对「问题有没有尽头」的判断，不是你对某个制度的主张。</div>
+  </div>`;
+}
+
+function renderResult(){
+  const S = score();
+  if (!S.res.length || S.res[0].c === null) {
+    app.innerHTML = `<div class="res"><h1>你的结果</h1>
+      <div class="card"><h3>信息不足</h3>
+      <div style="font-size:14px;line-height:1.9">你在太多题目上选了「看情况 / 说不清 / 跟我没关系」，没有足够的维度可以和任何传统比较。<br><br>这不是问题，只说明这套题问的东西你有不少不在乎。<br>如果想知道自己更像谁，回去把那些题重新选一遍、尽量给个方向。</div></div>
+      <button class="btn ghost" onclick="restart()">重新开始</button></div>`;
+    window.scrollTo(0,0);
+    return;
+  }
+  const top = S.res[0];
+  // 形状对不上就不给名字：匹配度再高，形状不像也不算归属
+  const noStance = top.c < MIN_COS;
+  // 排序依据是同向率，区分度也必须用同向率差，否则两套标准
+  const gap = (S.res.length>1 && S.res[1].c !== null) ? top.r - S.res[1].r : 0;
+  const dg = diagnose(S.vec, S.conflictDims);
+  const info = noStance ? null : (D.info||{})[top.n];
+  const isMethod = !noStance && (D.methodAnchors||[]).includes(top.n);
+  // 结果页第一次画出来时冻结计时，避免在结果页停留也计入作答时间
+  if (!tm.end && tm.start) { tm.end = Date.now(); save(); }
+  const TS = timeStats();
+  const quickWarn = TS.verdict==='偏快' ? `<div class="warn" style="margin-bottom:16px"><b>这份答卷答得很快</b><br>每题中位 ${fmtDur(TS.med)}${TS.fast?`，${TS.fast} 道题在 2 秒内点完`:''}。结果仍然算给你，但它更适合当参考，不适合当结论。</div>` : '';
+
+  // ① 核心原则
+  const coreHtml = dg.core.length
+    ? dg.core.map(x=>`<div class="rk-item"><span style="flex:1;cursor:pointer" onclick="showDimInfo(${x.i})">${dimLabel(x.i)}<span class="dimhint">?</span><span style="display:block;font-size:11px;color:#b3b3b3;letter-spacing:.2px;margin-top:2px">${dimEn(x.i)}</span></span>
+        <span class="s">${dimText(x.v, x.i, S.mid6)}</span></div>`).join('')
+    : `<div style="font-size:14px;color:#888">你在任何方向上都没有达到「明确」的强度。这可能说明你还在权衡。</div>`;
+
+  // ② 四层
+  let layerHtml = '';
+  dg.layers.forEach(L => {
+    const s2 = L.items.filter(x=>x.a>=0.5).slice(0,2);
+    const desc = s2.length
+      ? '这一层你最明确的是：' + s2.map(x=>`<b>${dimLabel(x.i)}</b> ${sideName(x.v,x.i)}（${lvlWord(x.a)}）`).join('；')
+      : '这一层你没有明显倾向。';
+    const conf = '';
+    const rows = L.items.map(x=>
+      `<div class="rk-item"><span style="flex:1;font-size:13px;cursor:pointer;line-height:1.45" onclick="showDimInfo(${x.i})">${dimLabel(x.i)}<span class="dimhint">?</span><br><span style="font-size:10px;color:#c4c4c4">${dimEn(x.i)}</span></span>
+       <span class="s" style="font-size:13px">${dimText(x.v, x.i, S.mid6)}</span></div>`).join('');
+    layerHtml += `<div class="card">
+      <h3>${L.name}<span style="font-size:12px;color:#aaa;margin-left:8px;font-weight:400">${L.n} 个问题</span></h3>
+      <div style="font-size:14px;line-height:1.85;margin-bottom:6px">${desc}</div>
+      ${conf}
+      <details style="margin-top:12px"><summary style="cursor:pointer;font-size:13px;color:#888">展开 ${L.n} 条明细</summary>
+        <div style="margin-top:10px">${rows}</div>
+      </details>
+    </div>`;
+  });
+
+  // ③ 张力
+  const crossHtml = dg.cross.length
+    ? `<div class="card"><h3>你观点之间的张力</h3>
+       ${dg.cross.map((c,idx)=>`<div style="font-size:14px;line-height:1.9;${idx?'margin-top:16px':''}">
+         <b>${idx+1}. ${dimLabel(c.a)} × ${dimLabel(c.b)}</b><br>${c.say}
+       </div>`).join('')}</div>`
+    : '';
+
+  // ④ 没进比较的维度
+  const unc = uncovered(S);
+  const isConf = new Set(unc.conflicts.map(c => c.i));
+  const resolved = unc.conflicts.filter(c => tie[c.i] === 0 || tie[c.i] === 1);
+  const conf = unc.conflicts.filter(c => tie[c.i] !== 0 && tie[c.i] !== 1 && !meta[c.i]);
+  const careList = unc.neutral.filter(x => meta[x.i] === 'care');
+  const ctxList  = unc.neutral.filter(x => meta[x.i] === 'ctx');
+  const plainList = unc.neutral.filter(x => !meta[x.i] && !isConf.has(x.i));
+  const neutralHtml = (unc.neutral.length || conf.length) ? `<div class="card">
+    <h3>没有参与比较的维度</h3>
+    ${resolved.length?`<div style="font-size:13px;line-height:1.85;color:#3a3a3a;margin-bottom:10px"><b style="color:#8a6d3b">追问后计入</b>　${resolved.map(c=>dimLabel(c.i)).join('、')}。这几维你两题相反，追问后按你选的方向算了。</div>`:''}
+    ${conf.map(c => `<div style="font-size:13px;line-height:1.85;color:#3a3a3a;margin-bottom:10px">
+      <b style="color:#8a6d3b">两题方向相反</b>　${dimLabel(c.i)}——${c.items.map(x=>`你选「${x.q.opts[L.indexOf(x.c)]}」`).join('，另一题')}。方向对不上，这维按 0 算。</div>`).join('')}
+    ${ctxList.length?`<div style="font-size:13px;line-height:1.85;color:#3a3a3a;margin-bottom:10px"><b style="color:#8a6d3b">分情境</b>　${ctxList.map(x=>dimLabel(x.i)+(isConf.has(x.i)?'（两题方向相反）':'')).join('、')}。这些不是没立场，是不同场景给不同答案——你的判断是场景化的，不是原则化的。</div>`:''}
+    ${careList.length?`<div style="font-size:13px;line-height:1.85;color:#3a3a3a;margin-bottom:10px"><b>确实不在乎</b>　${careList.map(x=>dimLabel(x.i)).join('、')}。这些问题对你不构成问题。</div>`:''}
+    ${plainList.length?`<div style="font-size:13px;line-height:1.85;color:#3a3a3a;margin-bottom:10px"><b>倾向不明显</b>　${plainList.map(x=>dimLabel(x.i)).join('、')}。</div>`:''}
+    <div style="font-size:11.5px;color:#bbb;line-height:1.75;margin-top:10px">这几维不参与任何比较，所以上面的结论只建立在剩下的 ${D.dims.length - unc.neutral.length} 维上。</div>
+  </div>` : '';
+
+  // ① 最接近的立场（放最前）
+  const topHtml = noStance ? noStanceHtml(S) : `<div class="card">
+    <h3>最接近的立场</h3>
+    <div style="font-size:22px;font-weight:600;margin:2px 0 2px">${top.n}</div>
+    <div style="font-size:12px;color:#aaa;letter-spacing:.3px;margin-bottom:8px">${anchorEn(top.n)}</div>
+    <div style="font-size:13px;color:#888;margin-bottom:6px">${top.k} 个维度可比，其中 ${top.s} 个方向一致　匹配度 ${(top.r*100).toFixed(0)}%　强度接近 ${(top.c*100).toFixed(0)}%</div>
+    <div style="font-size:13px;color:${gap>=0.05?'#888':'#c00'};margin-bottom:${top.k<8?'8px':'16px'}">${gap>=0.05?`比第二名领先 ${(gap*100).toFixed(0)} 个百分点`:`和第二名几乎并列（差 ${(gap*100).toFixed(0)} 个百分点）—— 说明你在这两者之间摇摆，或者这两者本来就像`}</div>
+    ${(()=>{const vs=(D.variants||{})[top.n]; if(!vs) return '';
+      const ns=Object.keys(vs); if(!ns.length) return '';
+      return `<div style="font-size:13px;color:#555;margin-bottom:16px">这一支下面还有：<b style="color:#111">${ns.join('、')}</b>。本测试分不出你和它们的差别。</div>`;})()}
+    ${['技术治理运动','国家资本主义'].includes(top.n)?`<div style="font-size:13px;color:#555;margin-bottom:16px">如果你更看重的是<b>发展生产力、征服自然、集中力量办大事</b>，而不是效率或技术本身，你可能更接近「工业党 / 生产主义」——本测试没有这一维，分不出。</div>`:''}
+    ${top.k<8?`<div class="warn" style="margin-bottom:16px"><b>这个结果的依据很薄</b><br>你和它只有 <b>${top.k} 个</b>维度可以比较（其余 ${D.dims.length-top.k} 维至少一方没有明确立场）。${top.k} 个维度全同向，说明方向对得上，但样本太少，不足以说「你就是这一类」。<br>想更准，回去把那些选了「看情况 / 说不清 / 跟我没关系」的题重新给个方向。</div>`:''}
+    ${top.k>=8&&top.k<12?`<div style="font-size:12px;color:#b8860b;margin-bottom:8px">注意：只有 ${top.k} 个维度可比，结论比「12 维以上」的样本弱一些。</div>`:''}
+    ${quickWarn}
+    ${(()=>{const ab=S.vec.map((v,i)=>({d:D.dims[i],v})).filter(x=>Math.abs(x.v)<0.3);
+      if(!ab.length) return '';
+      return `<div style="font-size:12px;color:#999;margin-bottom:16px;line-height:1.75">你有 <b>${ab.length}</b> 个维度没有明确表态：${ab.map(x=>x.d).join('、')}。这几维不参与任何比较，所以结论只建立在剩下的 ${D.dims.length-ab.length} 维上。</div>`;})()}
+    ${info?`
+      <div style="font-size:15px;line-height:1.85;margin-bottom:16px">${info.one}</div>
+      <div style="font-size:12px;color:#999;margin-bottom:4px">代表人物</div>
+      <div style="font-size:14px;line-height:1.7;margin-bottom:16px">${info.figures}</div>
+      <div style="font-size:12px;color:#999;margin-bottom:6px">核心主张</div>
+      <ul style="margin:0 0 16px 18px;font-size:14px;line-height:1.95">${info.tenets.map(t=>`<li>${t}</li>`).join('')}</ul>
+      ${info.history?`<div style="font-size:12px;color:#999;margin-bottom:6px">历史沿革</div>
+        <div style="font-size:14px;line-height:1.95;margin-bottom:16px;color:#3a3a3a">${info.history}</div>`:''}
+      <div class="warn"><b>常见误解</b><br>${info.misread}</div>
+      ${(D.fair||{})[top.n]?`<div style="font-size:13px;line-height:1.9;color:#3a3a3a;margin-top:12px;padding:13px 15px;background:#f4f7f4;border-radius:9px"><b style="color:#4a6a4a">公允地说</b><br>${D.fair[top.n]}</div>`:''}
+      <div style="font-size:13px;color:#555;margin-top:14px">想深入了解：${info.read}</div>
+    `:''}
+    ${isMethod?`<div class="warn" style="margin-top:14px"><b>这是「方法型」传统，不是政治立场</b><br>它测的是「怎么判断对错」，在政治光谱上横跨左右。你的<b>决策方法</b>接近它，但政治立场要看下面的核心原则。</div>`:''}
+  </div>`;
+
+  // ⑥ 另一个参考
+  const refHtml = (!noStance && S.res.length>1 && S.res[1].c !== null) ? `<div class="card">
+    <h3>另一个参考</h3>
+    ${(()=>{ const r=S.res[1], inf=(D.info||{})[r.n]; return `<div>
+      <div style="font-weight:600">${r.n}<span style="font-size:12px;color:#888;margin-left:8px">${r.s}/${r.k} 维同向</span></div>
+      ${inf?`<div style="font-size:13px;color:#555;margin-top:4px;line-height:1.8">${inf.one}</div>
+      <div style="font-size:12px;color:#999;margin-top:4px">代表：${inf.figures}</div>`:''}
+    </div>`; })()}
+    <div style="font-size:12px;color:#aaa;line-height:1.7;margin-top:12px">这不是给你的标签。你和它的差距，就在上面那些方向相反的项目里。</div>
+  </div>` : '';
+
+  app.innerHTML = `
+  <div class="res">
+    <h1>你的结果</h1>
+
+    ${topHtml}
+
+    ${(()=>{
+      // 连传统都没对上，历史层更不该给名字：十维里能比的只有 5 个，全靠巧合
+      if (noStance) return '';
+      const hits = regimeHits(S.vec);
+      // 几种体制挤在一起时，不给具体名字——那种情形下「说哪一套都对一半」
+      if(hits.length >= 2 && (hits[0].bestCos - hits[1].bestCos) < 0.05){
+        return `<div class="card">
+          <h3>落在几种体制的交界处</h3>
+          <div style="font-size:13.5px;line-height:1.95;color:#3a3a3a">
+            你在「政体怎么安排」上的组合，同时贴近这几族：<b>${hits.slice(0,3).map(h=>h.f.n).join('、')}</b>。<br><br>
+            差得太近，说哪一套都是对一半。这不是数据不够，是这几族在结构上本来就相邻——它们的区别主要在宗教、经济形态和统治者的自我叙述，而这三样本测试都测不准。
+          </div>${regimeDetails()}</div>`;
+      }
+      if(!hits.length) return `<div class="card">
+        <h3>历史上没有明显对应</h3>
+        <div style="font-size:13.5px;line-height:1.95;color:#3a3a3a">
+          你在「政体怎么安排」那十个维度上的组合，没有对上任何一种真实存在过的体制。<br><br>
+          这不是错误，反而更常见：<b>真实体制是自洽的，人是混合的</b>。一套能运转的体制必须让经济、权力、合法性三件事互相对得上；而一个人的答案里，常常同时要「强政府」和「多分权」、「讲规矩」和「讲关系」——这些组合在纸面上成立，但没有哪一届政府能真的这么干。
+        </div>${regimeDetails()}
+      </div>`;
+      const h = hits[0], best = h.ms[0], others = h.ms.slice(1,4);
+      return `<div class="card">
+        <h3>你的立场在历史上最接近</h3>
+        <div style="font-size:19px;font-weight:600;margin:2px 0 4px">${h.f.n}</div>
+        <div style="font-size:13px;color:#888;margin-bottom:10px">${h.f.d}</div>
+        <div style="font-size:12px;color:#aaa;margin-bottom:14px">依据 ${h.s.k} 个政体维度　方向一致 ${h.s.k-h.s.conf}/${h.s.k}　强度接近 ${(h.s.cos*100).toFixed(0)}%</div>
+        ${best?`<div style="font-size:12px;color:#999;margin-bottom:4px">其中最近的一段</div>
+        <div style="font-size:15.5px;font-weight:600;margin-bottom:3px">${best.t.n}<span style="font-weight:400;color:#999;font-size:13px">　${best.t.p}　${best.t.pl}</span></div>
+        <div style="font-size:13.5px;line-height:1.85;color:#3a3a3a;margin-bottom:10px">${best.t.note}</div>
+        ${best.t.kn?`<div style="font-size:12.5px;color:#7a6535;background:#fdfaf1;border-left:2px solid #e6d8ab;padding:8px 11px;border-radius:0 6px 6px 0;line-height:1.8;margin-bottom:12px"><b style="color:#8a6d3b">同形提示</b>　${best.t.kn}</div>`:''}
+        <div style="font-size:12.5px;color:#777;line-height:1.85;margin-bottom:12px">自称：${best.t.s}<br>学界叫法：${best.t.sc}</div>`:''}
+        ${others.length?`<div style="font-size:12px;color:#999;margin-bottom:6px">同一族的其他时期<span style="color:#ccc">（本族共 ${D.regimes.filter(x=>x.f===h.f.id).length} 个）</span></div>
+        <div style="font-size:13.5px;line-height:1.9">${others.map(x=>`${x.t.n}（${x.t.p}　${x.t.pl}）`).join('<br>')}</div>`:''}
+        ${(D.fic||{})[h.f.id]?`<div style="font-size:12px;color:#999;margin:12px 0 6px">虚构里的同一族<span style="color:#ccc">（不是历史，只作对照）</span></div>
+        <div style="font-size:13px;line-height:1.9;color:#666">${D.fic[h.f.id].map(x=>`${x[0]} → ${x[1]}`).join('<br>')}</div>`:''}
+        <div style="font-size:11.5px;color:#bbb;line-height:1.8;margin-top:14px;border-top:1px solid #f0f0f0;padding-top:12px">
+          只比了「政体怎么安排」的十个维度。同一族内部还有本测试测不到的差异——宗教地位、族群构成、殖民遗产、领袖性格。这不是「你属于它」，是「你这套偏好真的被实施过，长这样」。
+        </div>
+        ${regimeDetails()}
+      </div>`;})()}
+    ${partCard()}
+    ${probCard()}
+
+    <div class="card"><h3>你的核心原则</h3>${coreHtml}${S.marks.length?`<div style="font-size:12.5px;color:#999;margin-top:14px;line-height:1.75;border-top:1px solid #f0f0f0;padding-top:12px">另外，你有几道题选的是「不落在轴上的答案」——${S.marks.join('、')}。这类答案既不偏这一端也不偏那一端，所以没有算进上面的诊断。</div>`:''}</div>
+
+    ${layerHtml}
+
+    ${crossHtml}
+    ${neutralHtml}
+    ${refHtml}
+
+    <div class="card">
+      <h3>分享给作者</h3>
+      <div style="font-size:13px;color:#888;margin-bottom:12px">复制下面这段发给我，或直接截图</div>
+      <button class="btn ghost" style="margin-bottom:10px" onclick="copyResult()">复制结果文本</button>
+      <button class="btn ghost" style="margin-bottom:10px;margin-left:8px" onclick="makeShareCard()">生成分享卡</button>
+      <pre id="raw">${buildText(S)}</pre>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn" style="flex:1.2" onclick="backToEdit()">回去改答案</button>
+      <button class="btn ghost" style="flex:1" onclick="showNav()">答题卡</button>
+      <button class="btn ghost" style="flex:1" onclick="restart()">重新开始</button>
+    </div>
+    ${timeLine()}
+    <div style="font-size:11.5px;color:#bbb;line-height:1.8;margin-top:22px;text-align:center">本结果仅描述作答分布，不构成诊断或评价；不评价任何立场，也不代表任何政治主张。</div>
+  </div>`;
+  window.scrollTo(0,0);
+}
+
+function buildText(S){
+  const top = S.res[0];
+  const noStance = top.c < MIN_COS;
+  let t = `【政治立场测试结果】\n`;
+  if (noStance) t += `没有明确的政治立场（形状最接近 ${top.n}，强度 ${(top.c*100).toFixed(0)}%，低于 70% 判定线）\n`;
+  else t += `最接近：${top.n}（${top.c.toFixed(3)}）\n`;
+  const g2 = (S.res.length>1 && S.res[1].c !== null) ? top.r - S.res[1].r : 0;
+  const g2c = (S.res.length>1 && S.res[1].c !== null) ? top.c - S.res[1].c : 0;
+  t += `方向一致：${top.s}/${top.k}　匹配度 ${(top.r*100).toFixed(0)}%  强度接近：${(top.c*100).toFixed(0)}%  与第二差：${(g2*100).toFixed(0)}pp\n`;
+  const topA = D.anchors[top.n] || [];
+  const DTHR = 0.3;
+  // 方向相反只在「双方都有明确立场」时成立——和排序用同一把尺子。
+  // 你中立（|v|<0.3）而它有强立场，不算相反，另列为「它有你没有」。
+  const hardList = S.vec.map((v,i)=>({g:Math.abs(v-(topA[i]||0)), d:D.dims[i], v, a:topA[i]||0, p:(D.poles||[])[i]}))
+    .filter(x => x.g >= 1.0 && Math.abs(x.v) >= DTHR && Math.abs(x.a) >= DTHR);
+  const gapList = S.vec.map((v,i)=>({d:D.dims[i], v, a:topA[i]||0}))
+    .filter(x => Math.abs(x.a) >= 0.6 && Math.abs(x.v) < DTHR);
+  const poleName = (h, val) => {
+    const pr = h.p || ["负端","正端"];
+    return (val < 0 ? "偏" + pr[0] : "偏" + pr[1]) + " " + (val >= 0 ? "+" : "") + val.toFixed(1);
+  };
+  t += `判定：${verdict(top.c, g2, top.r, top.k, hardList.length, g2c)}
+`;
+  t += `方向相反：${hardList.length ? hardList.map(h=>`${h.d}（你${poleName(h,h.v)}，它${poleName(h,h.a)}）`).join("、") : "无"}
+`;
+  if (gapList.length) t += `它有你没有：${gapList.map(g=>g.d).join("、")}（它有明确主张，你没有明确表态，所以这些维没算进匹配度）
+`;
+  const unc = uncovered(S);
+  const confTxt = unc.conflicts.filter(c => !meta[c.i]);
+  if (confTxt.length) t += `两题方向相反：${confTxt.map(c=>`${D.dims[c.i]}（${c.items.map(x=>x.q.opts[L.indexOf(x.c)]).join(' / ')}）`).join('、')}
+`;
+  const careL = unc.neutral.filter(x=>meta[x.i]==='care').map(x=>D.dims[x.i]);
+  const ctxL  = unc.neutral.filter(x=>meta[x.i]==='ctx').map(x=>D.dims[x.i]);
+  const plainL = unc.neutral.filter(x=>!meta[x.i] && !unc.conflicts.some(c=>c.i===x.i)).map(x=>D.dims[x.i]);
+  if (careL.length) t += `确实不在乎：${careL.join('、')}
+`;
+  if (ctxL.length)  t += `分情境：${ctxL.join('、')}
+`;
+  if (plainL.length) t += `倾向不明显：${plainL.length} 维（${plainL.join('、')}），这几维没参与比较
+`;
+  t += `前五：${S.res.slice(0,5).map(r=>r.n+' '+(r.c===null?'—':(r.r*100).toFixed(0)+"%("+r.s+"/"+r.k+")")).join(' / ')}\n`;
+  t += `${D.dims.length}维：${S.vec.map(v=>v.toFixed(1)).join(',')}\n`;
+  if (S.marks.length) t += `标记：${S.marks.join('、')}\n`;
+  const TS = timeStats();
+  if (TS.total && TS.n) {
+    t += `\n【用时】\n`;
+    t += `总 ${fmtDur(TS.total)}${TS.idle>60000?`（有效 ${fmtDur(TS.active)}，离场 ${fmtDur(TS.idle)}）`:''}\n`;
+    t += `平均每题 ${(TS.mean/1000).toFixed(1)} 秒，中位 ${(TS.med/1000).toFixed(1)} 秒\n`;
+    t += `最快第 ${TS.fastIdx} 题 ${(tm.q[TS.fastIdx]/1000).toFixed(1)} 秒；最慢第 ${TS.slowIdx} 题 ${(tm.q[TS.slowIdx]/1000).toFixed(1)} 秒\n`;
+    t += `超快（<2 秒）${TS.fast} / ${TS.n} 题（${Math.round(TS.fast/TS.n*100)}%）；改过答案 ${TS.changed} 题\n`;
+    t += `质量：${TS.verdict}\n`;
+    t += `逐题秒数：${Object.keys(tm.q).sort((a,b)=>a-b).map(k=>`${k}:${(tm.q[k]/1000).toFixed(0)}`).join(' ')}\n`;
+  }
+  t += `\n【逐题答案】\n`;
+  D.q.forEach(q => {
+    if (q.type==='r') {
+      const sel = ranking[q.n]||[];
+      t += `${q.n}. [${sel.map(i=>L[i]).join('>')||'-'}] 原题${q.o}\n`;
+    } else {
+      t += `${q.n}.${ans[q.n]||'-'} 原题${q.o}\n`;
+    }
+  });
+  return t;
+}
+
+// ===== 分享卡：1080×1440，纯 Canvas，二维码内嵌 =====
+function makeShareCard(){
+  const S = score();
+  if (!S.res.length || S.res[0].c === null) { alert('还没有足够的结果'); return; }
+  const top = S.res[0];
+  const noStance = top.c < MIN_COS;
+  const dg = diagnose(S.vec, S.conflictDims);
+  const strong = (dg.core && dg.core.length) ? dg.core
+    : S.vec.map((v,i)=>({i,v,a:Math.abs(v)})).sort((x,y)=>y.a-x.a).slice(0,3);
+
+  const W = 1080, H = 1440;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const g = cv.getContext('2d');
+  const INK='#1A1A1A', SUB='#6B6B66', MUT='#9A968C', BG='#FAFAF7', LINE='#E2E0D8';
+  const FONT = "'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif";
+
+  g.fillStyle = BG; g.fillRect(0,0,W,H);
+  g.fillStyle = INK; g.fillRect(0,0,W,12);
+
+  g.fillStyle = MUT; g.font = '26px ' + FONT;
+  g.fillText('价值观坐标 · 24 维 / 54 个传统 / 90 个历史时期', 88, 120);
+
+  let fs = 82;
+  g.fillStyle = INK; g.font = 'bold ' + fs + 'px ' + FONT;
+  const title = noStance ? '没有明确的政治立场' : top.n;
+  while (g.measureText(title).width > 880 && fs > 46) { fs -= 4; g.font = 'bold ' + fs + 'px ' + FONT; }
+  g.fillText(title, 88, 244);
+
+  g.fillStyle = SUB; g.font = '28px ' + FONT;
+  const sub = noStance
+    ? '形状最接近 ' + top.n + ' · 强度 ' + (top.c*100).toFixed(0) + '%（低于 70% 判定线）'
+    : top.k + ' 维可比 · 匹配度 ' + (top.r*100).toFixed(0) + '% · 强度 ' + (top.c*100).toFixed(0) + '%';
+  g.fillText(sub, 88, 302);
+
+  g.fillStyle = MUT; g.font = '24px ' + FONT;
+  g.fillText('最明显的三处', 88, 394);
+
+  let y = 458;
+  strong.slice(0,3).forEach(x => {
+    const rowText = dimLabel(x.i) + ' → ' + sideName(x.v, x.i);
+    let lfs = 31;
+    g.fillStyle = INK; g.font = lfs + 'px ' + FONT;
+    while (g.measureText(rowText).width > 780 && lfs > 18) { lfs -= 1; g.font = lfs + 'px ' + FONT; }
+    g.fillText(rowText, 88, y);
+    const cx = 520, half = 432, by = y + 22;
+    g.fillStyle = LINE; g.fillRect(cx-half, by, half*2, 7);
+    const w = Math.min(1, Math.abs(x.v)) * half;
+    g.fillStyle = x.v >= 0 ? INK : MUT;
+    g.fillRect(x.v >= 0 ? cx : cx-w, by, w, 7);
+    g.fillStyle = MUT; g.font = '21px ' + FONT;
+    g.textAlign = 'right'; g.fillText((x.v>0?'+':'') + x.v.toFixed(1), 952, y); g.textAlign = 'left';
+    y += 108;
+  });
+
+  const baseY = 930, maxH = 90;
+  g.fillStyle = MUT; g.font = '24px ' + FONT;
+  g.fillText('24 维坐标', 88, 820);
+  g.fillStyle = '#C9C6BC'; g.fillRect(88, baseY, 864, 1);
+  const slot = 864/24, bw = 14;
+  for (let i=0;i<24;i++){
+    const v = S.vec[i], h = Math.min(1, Math.abs(v)) * maxH;
+    const bx = 88 + i*slot + (slot-bw)/2;
+    g.fillStyle = Math.abs(v) < 0.3 ? '#DDDAD2' : (v > 0 ? INK : MUT);
+    if (h < 3) g.fillRect(bx, baseY-1.5, bw, 3);
+    else if (v > 0) g.fillRect(bx, baseY-h, bw, h);
+    else g.fillRect(bx, baseY, bw, h);
+  }
+  g.fillStyle = MUT; g.font = '19px ' + FONT;
+  g.fillText('向上为正向，向下为反向；浅色为中立', 88, baseY + maxH + 38);
+
+  g.fillStyle = LINE; g.fillRect(88, 1090, 600, 1);
+  g.fillStyle = SUB; g.font = '23px ' + FONT;
+  g.fillText('本结果仅描述作答分布，不构成诊断或评价。', 88, 1144);
+  g.fillText('不评价任何立场，也不代表任何政治主张。', 88, 1182);
+  g.fillStyle = MUT; g.font = '20px ' + FONT;
+  g.fillText('作答数据与用时保存在浏览器本地，本页不上传。', 88, 1230);
+
+  const qr = document.getElementById('qrSrc');
+  const drawQR = () => { try { g.drawImage(qr, 748, 1090, 200, 200); } catch(e) {} };
+  if (qr && qr.complete && qr.naturalWidth) drawQR(); else if (qr) qr.onload = drawQR;
+  g.fillStyle = INK; g.font = '24px ' + FONT;
+  g.fillText('扫码测你自己的', 748, 1332);
+
+  const url = cv.toDataURL('image/png');
+  document.getElementById('scImg').src = url;
+  const dl = document.getElementById('scDl'); if (dl) dl.href = url;
+  document.getElementById('scModal').style.display = 'block';
+}
+
+function copyResult(){
+  const S = score();
+  const txt = buildText(S);
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(()=>alert('已复制，粘给我就行'));
+  } else {
+    const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy'); ta.remove(); alert('已复制');
+  }
+}
+
+function restart(){
+  if(!confirm('清空所有答案重新开始？')) return;
+  ans={}; ranking={}; meta={}; tie={}; tm={ q:{}, chg:{}, start:0, end:0, idle:0, hiddenAt:0, show:0, last:0 }; cur=-1; localStorage.removeItem('pv4'); renderCover();
+  window.scrollTo(0,0);
+}
+
+// 启动
+try {
+  if (cur >= TOTAL && Object.keys(ans).length) renderResult(); else render();
+} catch (e) {
+  // 兜底：宁可让用户看到错误和重来按钮，也不能白屏
+  try { localStorage.removeItem('pv4'); } catch (_) {}
+  document.getElementById('app').innerHTML =
+    '<div style="padding:48px 28px;text-align:center;line-height:2">'
+    + '<div style="font-size:18px;font-weight:600;margin-bottom:12px">出了点问题</div>'
+    + '<div style="color:#888;font-size:14px">可能是旧版本留下的数据。点下面按钮清空后重来。</div>'
+    + '<button onclick="try{localStorage.clear()}catch(e){};location.reload()" '
+    + 'style="margin-top:24px;padding:14px 32px;border:0;border-radius:10px;background:#1a1a1a;color:#fff;font-size:16px">清空并重新开始</button>'
+    + '</div>';
+  console.error(e);
+}
+</script>
+</body>
+</html>

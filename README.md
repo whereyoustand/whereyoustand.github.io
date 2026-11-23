@@ -4,9 +4,25 @@ A 61-question test that maps your answers onto **24 dimensions** of political ju
 
 It names a tradition only when the shape matches. When nothing fits, it says so — and shows which dimensions you left blank.
 
-- **Take it**: [index.html](index.html)
+- **Take it (English)**: https://whereyoustand.github.io/
+- **中文版**: https://whereyoustand.github.io/zh/
 - **Method and data**: [METHOD.md](METHOD.md)
-- **Online**: https://whereyoustand.github.io/
+
+---
+
+## 中文说明
+
+一套 61 题的自我定位测试：把答案映射到 **24 个维度**，再与 **54 个政治传统**、**90 个历史时期**对照。
+
+**它只在形状对得上时才给名字。** 对不上就说「没有明确的政治立场」，并列出你在哪些维度上是清楚的、在哪些维度上留了空白。多数人属于后者——这不是缺陷。
+
+- **24 个维度**：不只有「大政府 / 小政府」，还有「规则因能说出理由而有效，还是因被传下来而有效」「历史由决定推动，还是由趋势推动」这类问题。每维一对相反的极，取值 −1 到 +1。
+- **54 个传统**：从无政府共产主义到秩序自由主义，从儒家到世界联邦主义，按原典、传承与在世信徒编写。只在**双方都明确表态**的维度上比较。
+- **90 个历史时期**：不是给你贴标签，是给你参照——这套偏好真的被实施过，长这样。分不开两族时它会说「落在交界处」，而不是硬挑一个。
+
+方法与数据全部公开在 [METHOD.md](METHOD.md) 和 [data/](data/)，**包括已知缺陷**：3000 份随机作答里有约 30% 能通过当前的 70% 判定线。这一条写在文档里，不藏。
+
+**边界**：不做地区、职业、群体的聚合统计；不评价任何制度；不构成诊断。
 
 ---
 
@@ -56,7 +72,9 @@ The published HTML is self-contained; these files are the source of truth it was
 
 ## A note on scenarios
 
-This English edition uses cross-institutional settings — towns, city governments, local councils, residential blocks — rather than the Chinese local institutions in the Chinese edition. The dimensions, option values, anchors and algorithm are identical; only the scenario nouns differ. The Chinese edition is published separately.
+This English edition uses cross-institutional settings — towns, city governments, local councils, residential blocks — rather than Chinese local institutions.
+
+The Chinese edition at [/zh/](zh/) keeps the original Chinese settings (villages, village committees, counties and townships). The 24 dimensions, option values, anchors, thresholds and algorithm are identical; **only the scenario nouns differ**. A figure answering from primary texts lands on the same tradition in both editions.
 
 ---
 
@@ -86,6 +104,13 @@ The HTML is generated, not hand-edited. The published file is self-contained. Th
 ## Contributing
 
 Corrections to historical facts, translations, and misreadings of a tradition are welcome — open an issue with the specific claim and a source. Disagreements about where a tradition sits on a dimension are also welcome, but bring the citation.
+
+Three issue templates are provided (correction / question wording / method). They are for **errors and ambiguity**, not for arguing about politics: the repository takes no position on which system is better.
+
+Please also note what this project will **not** do, by design:
+
+- It will not publish aggregate distributions by region, occupation, or any other group. Turning test results into "which province is more liberal" is exactly the use this design exists to avoid.
+- It will not tell you which tradition you *should* hold.
 
 ---
 

@@ -1,0 +1,33 @@
+name: Method or statistics
+description: A threshold, a weighting, or a validation claim is wrong
+title: "[Method] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for the parts that are numerical: the 0.3 comparability floor, the Laplace-smoothed agreement rate, the 0.70 shape gate, the corpus construction, the calibration claims in METHOD.md.
+
+        **This is the category most likely to change the project.** If you have a better estimator, or evidence that a threshold is mis-set, say so with the numbers.
+
+        中文填写也可以。
+  - type: input
+    id: target
+    attributes:
+      label: Which part of METHOD.md
+      placeholder: e.g. §4, the 0.70 shape gate
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What is wrong
+      description: The claim, and why it does not hold.
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Suggested change, with numbers
+      description: If you have a better threshold or estimator, state it and what it would do to the false-positive rate.
+    validations:
+      required: false

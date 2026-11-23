@@ -1,0 +1,48 @@
+name: Correction
+description: A coordinate, a historical fact, a description, or a translation is wrong
+title: "[Correction] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for **errors**: a tradition given a value it should not have, a historical date that is wrong, a misread definition, a bad translation.
+
+        Errors are the most useful thing you can send. Please be specific — "Anarcho-individualism should not be −0.9 on Centralisation / Localism because…" is actionable; "the results feel off" is not.
+
+        中文填写也可以。
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of error
+      options:
+        - A coordinate (a tradition's value on one dimension)
+        - A historical period or its family
+        - A definition, tenet or misreading
+        - An English translation
+        - A question's wording
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: The tradition, dimension, period or file path. Include the number if you are citing a coordinate.
+      placeholder: e.g. data/anchors.json → "Anarcho-individualism", dimension 9 (Centralisation / Localism)
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: What is wrong, and what it should be
+      description: One or two sentences. If it is a value, give the value you think is right.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: A book, chapter, page, or a link. Primary texts beat summaries.
+      placeholder: e.g. Kropotkin, *Mutual Aid*, ch. 3
+    validations:
+      required: false

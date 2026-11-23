@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Read METHOD.md first
+    url: https://github.com/whereyoustand/whereyoustand.github.io/blob/main/METHOD.md
+    about: Every threshold, the calibration evidence, and the known failure modes are documented there.

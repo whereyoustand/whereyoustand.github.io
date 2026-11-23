@@ -1,0 +1,37 @@
+name: Question wording
+description: A question or an option is ambiguous, double-barrelled, or does not sit on its dimension
+title: "[Question] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this when a question can be read two ways, when two options are not really opposed, or when an option does not belong on the dimension it is scored against.
+
+        Please say **which reading you took first** — that is usually the fastest way to see the ambiguity.
+
+        中文填写也可以。
+  - type: input
+    id: question
+    attributes:
+      label: Question number
+      description: The number shown on the page (1–61), and the source id if you have it (e.g. W1).
+      placeholder: e.g. 46 (source W1)
+    validations:
+      required: true
+  - type: textarea
+    id: readings
+    attributes:
+      label: The two readings
+      description: How you read it, and how it could be read instead.
+    validations:
+      required: true
+  - type: dropdown
+    id: dimension
+    attributes:
+      label: Does the option fit the dimension it is scored on?
+      options:
+        - "Yes — the problem is only the wording"
+        - "No — an option is scored against the wrong dimension"
+        - Not sure
+    validations:
+      required: true

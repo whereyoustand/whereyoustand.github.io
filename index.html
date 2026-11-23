@@ -121,7 +121,9 @@ const TOTAL = D.q.length;
 // Tie-breakers are off by default: 11 human sheets and 11 figure profiles showed they reduce accuracy
 const USE_TIE = false;
 // below this shape similarity, no tradition is named
-const MIN_COS = 0.70;
+const PARAMS = {"ver": "2026-11-23", "thr": 0.3, "minK": 6, "cosGate": 0.7, "sortEps": 0.001, "verdictHigh": 0.72, "verdictMid": 0.6, "tieGap": 0.05, "tieCos": 0.1, "regimeMinK": 4, "regimeRate": 0.72, "regimeCos": 0.6, "regimeTieCos": 0.05};
+const VER = PARAMS.ver;
+const MIN_COS = PARAMS.cosGate;
 
 try { const s = localStorage.getItem('pv4en'); if (s) { const o = JSON.parse(s); ans = o.a||{}; cur = o.c||0; ranking = o.r||{}; meta = o.m||{}; tie = o.t||{}; tm = o.tm || tm; } } catch(e) {}
 // resumed next day: discard the timing; away for over 5 minutes: count it as away, not thinking
@@ -132,7 +134,7 @@ try { const s = localStorage.getItem('pv4en'); if (s) { const o = JSON.parse(s);
   if (tm.last && now - tm.last > 5*60*1000) tm.idle += now - tm.last;
   tm.end = 0; tm.hiddenAt = 0;
 })();
-function save(){ tm.last = Date.now(); try{ localStorage.setItem('pv4en', JSON.stringify({a:ans,c:cur,r:ranking,m:meta,t:tie,tm:tm})); }catch(e){} }
+function save(){ tm.last = Date.now(); try{ localStorage.setItem('pv4en', JSON.stringify({a:ans,c:cur,r:ranking,m:meta,t:tie,tm:tm,ver:VER})); }catch(e){} }
 
 const app = document.getElementById('app');
 const L = 'ABCDEFG';
@@ -479,7 +481,7 @@ function score(){
   });
   const missing = buckets.map((b,i)=>b.length?null:D.dims[i]).filter(Boolean);
 
-  const THR = 0.3, MIN_K = 6;
+  const THR = PARAMS.thr, MIN_K = PARAMS.minK;
   const res = Object.entries(D.anchors).map(([n,a]) => {
     const idx = [];
     for (let i = 0; i < vec.length; i++)
@@ -498,7 +500,7 @@ function score(){
     if (x.c === null && y.c === null) return 0;
     if (x.c === null) return 1;
     if (y.c === null) return -1;
-    if (Math.abs(y.r - x.r) > 0.001) return y.r - x.r;
+    if (Math.abs(y.r - x.r) > PARAMS.sortEps) return y.r - x.r;
     return y.c - x.c;
   });
 
@@ -520,7 +522,7 @@ function score(){
 
 function verdict(c, g, r, k, hard, gc){
   if (k < 8)              return 'Too few comparable dimensions to judge';
-  const tie = g < 0.05 && (gc === undefined || gc < 0.10);
+  const tie = g < PARAMS.tieGap && (gc === undefined || gc < PARAMS.tieCos);
   const h = hard || 0;
   if (h >= 3)             return `Directionally close, but ${h} dimensions point opposite — not a safe attribution`;
   if (r >= 0.85 && c >= 0.70) {
@@ -528,11 +530,11 @@ function verdict(c, g, r, k, hard, gc){
     return h ? `Highly consistent, with ${h} opposing dimensions` : 'Highly consistent';
   }
   if (r >= 0.85)          return `Direction is highly consistent, but strength differs a lot${h?`, and ${h} dimensions point opposite`:''}`;
-  if (r >= 0.72) {
+  if (r >= PARAMS.verdictHigh) {
     if (k < 11)          return `Partly consistent (only ${k} comparable dimensions — weak basis)`;
     return tie ? 'Consistent in direction, but cannot tell which branch' : `Consistent in direction${h?`, with ${h} opposing dimensions`:''}`;
   }
-  if (r >= 0.60)          return 'Partly consistent';
+  if (r >= PARAMS.verdictMid)          return 'Partly consistent';
   return 'Not consistent';
 }
 
@@ -598,7 +600,7 @@ function diagnose(vec, conflictDims){
 
 // ===== historical regimes =====
 function regimeScore(vec, a){
-  const THR = 0.3;
+  const THR = PARAMS.thr;
   const idx = D.regSub.filter(i => Math.abs(vec[i]) >= THR && Math.abs(a[i]) >= THR);
   if (idx.length < 4) return null;
   const same = idx.filter(i => vec[i] * a[i] > 0).length;
@@ -617,7 +619,7 @@ function regimeHits(vec){
     const f = (D.regFams || []).find(x => x.id === famId);
     if (!f) return null;
     const fs = regimeScore(vec, f.v);
-    if (!fs || fs.k < 4 || fs.rate < 0.72 || fs.cos < 0.60) return null;
+    if (!fs || fs.k < PARAMS.regimeMinK || fs.rate < PARAMS.regimeRate || fs.cos < PARAMS.regimeCos) return null;
     return fs;
   };
   const out = [], seen = {};
@@ -861,7 +863,7 @@ function renderResult(){
     ${(()=>{
       if (noStance) return '';
       const hits = regimeHits(S.vec);
-      if(hits.length >= 2 && (hits[0].bestCos - hits[1].bestCos) < 0.05){
+      if(hits.length >= 2 && (hits[0].bestCos - hits[1].bestCos) < PARAMS.regimeTieCos){
         return `<div class="card">
           <h3>On the border between several regimes</h3>
           <div style="font-size:13.5px;line-height:1.95;color:#3a3a3a">
@@ -929,14 +931,14 @@ function renderResult(){
 function buildText(S){
   const top = S.res[0];
   const noStance = top.c < MIN_COS;
-  let t = `[Where You Stand]\n`;
+  let t = `[Where You Stand]  build ${VER}\n`;
   if (noStance) t += `No clear political stance (closest shape ${nm(top.n)}, strength ${(top.c*100).toFixed(0)}%, below the 70% threshold)\n`;
   else t += `Closest: ${nm(top.n)} (${top.c.toFixed(3)})\n`;
   const g2 = (S.res.length>1 && S.res[1].c !== null) ? top.r - S.res[1].r : 0;
   const g2c = (S.res.length>1 && S.res[1].c !== null) ? top.c - S.res[1].c : 0;
   t += `Aligned: ${top.s}/${top.k}  match ${(top.r*100).toFixed(0)}%  strength ${(top.c*100).toFixed(0)}%  gap to second: ${(g2*100).toFixed(0)}pp\n`;
   const topA = D.anchors[top.n] || [];
-  const DTHR = 0.3;
+  const DTHR = PARAMS.thr;
   const hardList = S.vec.map((v,i)=>({g:Math.abs(v-(topA[i]||0)), d:D.dims[i], v, a:topA[i]||0, p:(D.poles||[])[i]}))
     .filter(x => x.g >= 1.0 && Math.abs(x.v) >= DTHR && Math.abs(x.a) >= DTHR);
   const gapList = S.vec.map((v,i)=>({d:D.dims[i], v, a:topA[i]||0}))

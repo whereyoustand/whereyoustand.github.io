@@ -121,7 +121,9 @@ const TOTAL = D.q.length;
 // 冲突追问：默认关闭。11 份真人 + 11 位人物测试显示追问会降低精度（见 66 号文）
 const USE_TIE = false;
 // 形状相似度（余弦）低于这条线，不给传统名称，改说「没有明确立场」
-const MIN_COS = 0.70;
+const PARAMS = {"ver": "2026-11-23", "thr": 0.3, "minK": 6, "cosGate": 0.7, "sortEps": 0.001, "verdictHigh": 0.72, "verdictMid": 0.6, "tieGap": 0.05, "tieCos": 0.1, "regimeMinK": 4, "regimeRate": 0.72, "regimeCos": 0.6, "regimeTieCos": 0.05};
+const VER = PARAMS.ver;
+const MIN_COS = PARAMS.cosGate;
 
 // 本地缓存
 try { const s = localStorage.getItem('pv4'); if (s) { const o = JSON.parse(s); ans = o.a||{}; cur = o.c||0; ranking = o.r||{}; meta = o.m||{}; tie = o.t||{}; tm = o.tm || tm; } } catch(e) {}
@@ -133,7 +135,7 @@ try { const s = localStorage.getItem('pv4'); if (s) { const o = JSON.parse(s); a
   if (tm.last && now - tm.last > 5*60*1000) tm.idle += now - tm.last;
   tm.end = 0; tm.hiddenAt = 0;
 })();
-function save(){ tm.last = Date.now(); try{ localStorage.setItem('pv4', JSON.stringify({a:ans,c:cur,r:ranking,m:meta,t:tie,tm:tm})); }catch(e){} }
+function save(){ tm.last = Date.now(); try{ localStorage.setItem('pv4', JSON.stringify({a:ans,c:cur,r:ranking,m:meta,t:tie,tm:tm,ver:VER})); }catch(e){} }
 
 const app = document.getElementById('app');
 const L = 'ABCDEFG';
@@ -481,7 +483,7 @@ function score(){
   const missing = buckets.map((b,i)=>b.length?null:D.dims[i]).filter(Boolean);
 
   // 只在「双方都有明确立场」的维度上比较：堵住"不表态被当成半个反对"的稀释
-  const THR = 0.3, MIN_K = 6;
+  const THR = PARAMS.thr, MIN_K = PARAMS.minK;
   const res = Object.entries(D.anchors).map(([n,a]) => {
     const idx = [];
     for (let i = 0; i < vec.length; i++)
@@ -505,7 +507,7 @@ function score(){
     if (y.c === null) return -1;
     // 先看平滑同向率（方向一致度）。平滑后 1 维之差只值 0.008 左右，
     // 落到这个量级就交给余弦判强度，否则「k 多一维」会压过「明显更像」
-    if (Math.abs(y.r - x.r) > 0.001) return y.r - x.r;
+    if (Math.abs(y.r - x.r) > PARAMS.sortEps) return y.r - x.r;
     return y.c - x.c;
   });
 
@@ -531,7 +533,7 @@ function verdict(c, g, r, k, hard, gc){
   if (k < 8)              return '依据不足（可比维度太少）';
   // 并列要两个条件同时成立：匹配度接近，且强度也接近。
   // 只看匹配度会把「11/11 vs 15/16 但余弦差 18pp」误判成并列。
-  const tie = g < 0.05 && (gc === undefined || gc < 0.10);
+  const tie = g < PARAMS.tieGap && (gc === undefined || gc < PARAMS.tieCos);
   const h = hard || 0;
   if (h >= 3)             return `方向接近，但有 ${h} 处方向相反，不建议当作归属`;
   if (r >= 0.85 && c >= 0.70) {
@@ -539,11 +541,11 @@ function verdict(c, g, r, k, hard, gc){
     return h ? `高度一致，但有 ${h} 处方向相反` : '高度一致';
   }
   if (r >= 0.85)          return `方向高度一致，但强度差得多${h?`，且有 ${h} 处方向相反`:''}`;
-  if (r >= 0.72) {
+  if (r >= PARAMS.verdictHigh) {
     if (k < 11)          return `部分一致（可比维只有 ${k} 个，依据较弱）`;
     return tie ? '方向一致，但分不清是哪一支' : `方向一致${h?`，但有 ${h} 处方向相反`:''}`;
   }
-  if (r >= 0.60)          return '部分一致';
+  if (r >= PARAMS.verdictMid)          return '部分一致';
   return '不一致';
 }
 
@@ -616,7 +618,7 @@ function diagnose(vec, conflictDims){
 // 只比「政体结构」十维（D.regSub）。个人的向量偏中间、常有一半维不表态，
 // 所以在整 24 维上比会全部落在 0.2-0.5 之间，没有区分力。
 function regimeScore(vec, a){
-  const THR = 0.3;
+  const THR = PARAMS.thr;
   const idx = D.regSub.filter(i => Math.abs(vec[i]) >= THR && Math.abs(a[i]) >= THR);
   if (idx.length < 4) return null;
   const same = idx.filter(i => vec[i] * a[i] > 0).length;
@@ -638,7 +640,7 @@ function regimeHits(vec){
     const f = (D.regFams || []).find(x => x.id === famId);
     if (!f) return null;
     const fs = regimeScore(vec, f.v);
-    if (!fs || fs.k < 4 || fs.rate < 0.72 || fs.cos < 0.60) return null;
+    if (!fs || fs.k < PARAMS.regimeMinK || fs.rate < PARAMS.regimeRate || fs.cos < PARAMS.regimeCos) return null;
     return fs;
   };
   // 按「最像的时期」顺序取家族，最多两个，同族不重复
@@ -896,7 +898,7 @@ function renderResult(){
       if (noStance) return '';
       const hits = regimeHits(S.vec);
       // 几种体制挤在一起时，不给具体名字——那种情形下「说哪一套都对一半」
-      if(hits.length >= 2 && (hits[0].bestCos - hits[1].bestCos) < 0.05){
+      if(hits.length >= 2 && (hits[0].bestCos - hits[1].bestCos) < PARAMS.regimeTieCos){
         return `<div class="card">
           <h3>落在几种体制的交界处</h3>
           <div style="font-size:13.5px;line-height:1.95;color:#3a3a3a">
@@ -964,14 +966,14 @@ function renderResult(){
 function buildText(S){
   const top = S.res[0];
   const noStance = top.c < MIN_COS;
-  let t = `【政治立场测试结果】\n`;
+  let t = `【政治立场测试结果】 版本 ${VER}\n`;
   if (noStance) t += `没有明确的政治立场（形状最接近 ${top.n}，强度 ${(top.c*100).toFixed(0)}%，低于 70% 判定线）\n`;
   else t += `最接近：${top.n}（${top.c.toFixed(3)}）\n`;
   const g2 = (S.res.length>1 && S.res[1].c !== null) ? top.r - S.res[1].r : 0;
   const g2c = (S.res.length>1 && S.res[1].c !== null) ? top.c - S.res[1].c : 0;
   t += `方向一致：${top.s}/${top.k}　匹配度 ${(top.r*100).toFixed(0)}%  强度接近：${(top.c*100).toFixed(0)}%  与第二差：${(g2*100).toFixed(0)}pp\n`;
   const topA = D.anchors[top.n] || [];
-  const DTHR = 0.3;
+  const DTHR = PARAMS.thr;
   // 方向相反只在「双方都有明确立场」时成立——和排序用同一把尺子。
   // 你中立（|v|<0.3）而它有强立场，不算相反，另列为「它有你没有」。
   const hardList = S.vec.map((v,i)=>({g:Math.abs(v-(topA[i]||0)), d:D.dims[i], v, a:topA[i]||0, p:(D.poles||[])[i]}))

@@ -1,0 +1,242 @@
+[
+ {
+  "id": 1,
+  "pole_negative": "人定",
+  "pole_positive": "天定",
+  "question": "规则和权力，最终凭什么算数？",
+  "low": "规则是人商量出来的。理由说得清就留，说不清就改。没有哪个规矩是「不用问为什么」的。",
+  "high": "有些规矩不需要理由。它背后有神、天道、历史规律或自然法则，人只能顺着来。",
+  "en": "Conventionalism / Transcendent Order",
+  "en_source": "古希腊 nomos vs physis（柏拉图《法律篇》卷十）；施特劳斯《自然权利与历史》"
+ },
+ {
+  "id": 2,
+  "pole_negative": "集体",
+  "pole_positive": "个人",
+  "question": "社会的基本单位是什么？",
+  "low": "人离开共同体什么都不是。语言、意义、能力，都是社会给的。",
+  "high": "社会只是个体的总和。个体才是权利和意义的最终载体。",
+  "en": "Collectivism / Individualism",
+  "en_source": "经典二分，无争议"
+ },
+ {
+  "id": 3,
+  "pole_negative": "人为",
+  "pole_positive": "大势",
+  "question": "历史由什么推动？",
+  "low": "关键决策、领袖意志、人的选择改变走向。换一个决定就是另一个结局。",
+  "high": "技术、人口、地理、趋势到了就会发生。人只是顺势，或者被动应对。",
+  "en": "Voluntarism / Determinism",
+  "en_source": "哲学：意志论 vs 决定论"
+ },
+ {
+  "id": 4,
+  "pole_negative": "设计",
+  "pole_positive": "生长",
+  "question": "制度能不能事先设计好？",
+  "low": "能。设计得足够好，它就能按设计运行。",
+  "high": "不能。好的制度是试错累积出来的，越想设计越糟。",
+  "en": "Constructivism / Spontaneous Order",
+  "en_source": "哈耶克《致命的自负》；波普尔"
+ },
+ {
+  "id": 5,
+  "pole_negative": "性善",
+  "pole_positive": "性恶",
+  "question": "人天性怎么样？",
+  "low": "人性本善，或者可以通过教育、环境改造变好。",
+  "high": "人性有恒定的自私和局限，只能靠制度约束，改不掉。",
+  "en": "Human Perfectibility / Original Sin",
+  "en_source": "卢梭《爱弥儿》；奥古斯丁《上帝之城》（可完善 vs 原罪）"
+ },
+ {
+  "id": 6,
+  "pole_negative": "必然",
+  "pole_positive": "应然",
+  "question": "你相信一个主张，凭什么？",
+  "low": "它符合发展趋势，迟早会实现。所以值得信。",
+  "high": "它在道理上是对的，即使永远实现不了，也该追求。",
+  "en": "Historicism / Normativism",
+  "en_source": "波普尔《历史决定论的贫困》；休谟 is–ought 问题"
+ },
+ {
+  "id": 7,
+  "pole_negative": "行政",
+  "pole_positive": "市场",
+  "question": "经济该由谁调配？",
+  "low": "政府定指标、发许可、管价格，用行政手段配置资源。",
+  "high": "价格和竞争自己会找到位置，政府少插手。",
+  "en": "Interventionism / Laissez-Faire",
+  "en_source": "政治经济学标准配对；凯恩斯 vs 哈耶克"
+ },
+ {
+  "id": 8,
+  "pole_negative": "管制",
+  "pole_positive": "自由",
+  "question": "社会事务该管多少？",
+  "low": "社区、行为、言论都需要规则约束。没人管就乱套。",
+  "high": "管得越少越舒服。人有自己的判断，不需要事事立规矩。",
+  "en": "Paternalism / Liberty",
+  "en_source": "密尔《论自由》；父权主义立法之争"
+ },
+ {
+  "id": 9,
+  "pole_negative": "中央",
+  "pole_positive": "地方",
+  "question": "权力该集中还是分散？",
+  "low": "统一规划、统一规定，否则会失控。",
+  "high": "各地情况差别很大，自己决定才合理。",
+  "en": "Centralization / Decentralization",
+  "en_source": "公共行政学标准术语"
+ },
+ {
+  "id": 10,
+  "pole_negative": "官方",
+  "pole_positive": "民间",
+  "question": "介于国家和个人之间的组织，归谁？",
+  "low": "由行政机构统一代理——居委会、上级派出机构。",
+  "high": "由自治团体自己组织——业委会、合作社、行业协会。",
+  "en": "Corporatism / Pluralism",
+  "en_source": "施密特：法团主义 vs 多元主义（中介组织归国家还是归社会）"
+ },
+ {
+  "id": 11,
+  "pole_negative": "程序",
+  "pole_positive": "结果",
+  "question": "一个人够不够格，看什么？",
+  "low": "来源正当才算数。程序不对，干得再好也不正当。",
+  "high": "干得好就有资格。结果是最硬的证据。",
+  "en": "Proceduralism / Consequentialism",
+  "en_source": "伦理学与法哲学：程序主义 vs 后果主义"
+ },
+ {
+  "id": 12,
+  "pole_negative": "任命",
+  "pole_positive": "选举",
+  "question": "领导的权力从哪来？",
+  "low": "上级委派，或者按能力提拔。不需要被领导者投票。",
+  "high": "被领导者投票授权。选出来才算数。",
+  "en": "Appointment / Electoral Accountability",
+  "en_source": "韦伯《经济与社会》（官僚制）；熊彼特《资本主义、社会主义与民主》"
+ },
+ {
+  "id": 13,
+  "pole_negative": "守成",
+  "pole_positive": "变革",
+  "question": "现状该不该动？",
+  "low": "现在这样挺好。稳定本身就是价值，不必折腾。",
+  "high": "不变就是退步。该改就得改。",
+  "en": "Status Quo / Reform",
+  "en_source": "伯克《法国革命论》；保守主义 vs 改革主义"
+ },
+ {
+  "id": 14,
+  "pole_negative": "改革",
+  "pole_positive": "革命",
+  "question": "要改的话，怎么改？",
+  "low": "先试点、渐进推开、留回调余地。",
+  "high": "一次性推倒重来。长痛不如短痛，拖下去只会更麻烦。",
+  "en": "Reformism / Revolutionism",
+  "en_source": "改良主义 vs 革命主义"
+ },
+ {
+  "id": 15,
+  "pole_negative": "精英",
+  "pole_positive": "群众",
+  "question": "改变靠谁推动？",
+  "low": "有能力的人牵头、发起。多数人只是跟随。",
+  "high": "多数人参与才牢靠。没有群众基础的变化，立不住。",
+  "en": "Vanguardism / Spontaneism",
+  "en_source": "列宁《怎么办？》vs 卢森堡《群众罢工、党与工会》"
+ },
+ {
+  "id": 16,
+  "pole_negative": "人情",
+  "pole_positive": "契约",
+  "question": "人和人靠什么维系？",
+  "low": "血缘、地缘、关系、面子。人对了，什么都好办。",
+  "high": "合同、规则、法律程序。规矩清楚才不会伤感情。",
+  "en": "Gemeinschaft / Gesellschaft",
+  "en_source": "滕尼斯《共同体与社会》1887；梅因「从身份到契约」"
+ },
+ {
+  "id": 17,
+  "pole_negative": "自己人",
+  "pole_positive": "所有人",
+  "question": "你的道德义务覆盖到哪？",
+  "low": "越近责任越重。远方的管不了，也不该由个人管。",
+  "high": "都是人，责任一样。距离不改变义务。",
+  "en": "Particularism / Universalism",
+  "en_source": "帕森斯模式变量：特殊主义 vs 普遍主义"
+ },
+ {
+  "id": 18,
+  "pole_negative": "工具",
+  "pole_positive": "立场",
+  "question": "技术是中性工具，还是本身带倾向？",
+  "low": "枪不杀人，人杀人。关键看谁用、怎么用。",
+  "high": "某些技术的设计本身就会锁定某种权力结构，用起来就改不了。",
+  "en": "Instrumentalism / Substantivism",
+  "en_source": "温纳《人工物有政治吗》；芬伯格《技术批判理论》"
+ },
+ {
+  "id": 19,
+  "pole_negative": "谨慎",
+  "pole_positive": "冒险",
+  "question": "面对后果不确定的新事物，怎么处理？",
+  "low": "先证明无害，才允许推广。有些错不能犯。",
+  "high": "先允许，出了问题再管。不冒险就什么也做不成。",
+  "en": "Precautionary / Proactionary",
+  "en_source": "欧盟预防原则 vs 创新优先原则"
+ },
+ {
+  "id": 20,
+  "pole_negative": "联合",
+  "pole_positive": "交易",
+  "question": "怎么跟别人合作？",
+  "low": "拉拢所有能拉拢的，哪怕立场不同。把敌人缩到最小。",
+  "high": "谁有共同利益就跟谁合作，不谈长期交情。或者干脆自己干。",
+  "en": "Coalition-building / Transactionalism",
+  "en_source": "共产国际七大统一战线策略（1935）；交易式联盟"
+ },
+ {
+  "id": 21,
+  "pole_negative": "神",
+  "pole_positive": "自然",
+  "question": "如果有一个更高的秩序，它是什么？",
+  "low": "一个有意志的存在，会安排、会回应、会审判。",
+  "high": "客观规律，没有目的，也不回应人的祈求。",
+  "en": "Personal God / Impersonal Order",
+  "en_source": "斯宾诺莎《伦理学》（deus sive natura）；帕斯卡《思想录》"
+ },
+ {
+  "id": 22,
+  "pole_negative": "内部",
+  "pole_positive": "公开",
+  "question": "决策过程该让多少人知道？",
+  "low": "效率优先。不必事事摊开，内部处理完给个结果就行。",
+  "high": "过程必须可查、可质询。看不见的过程没法纠错。",
+  "en": "Arcana Imperii / Publicity",
+  "en_source": "塔西佗《编年史》（统治秘术）；康德《永久和平论》附录二「公开性原则」"
+ },
+ {
+  "id": 23,
+  "pole_negative": "一元",
+  "pole_positive": "多元",
+  "question": "权力该归一个中心，还是分散在几个中心？",
+  "low": "必须有一个最终拍板的地方。多头就是内耗，出事没人负责。",
+  "high": "权力必须分散、互相牵制。单一中心迟早会腐化，哪怕它一开始是好的。",
+  "en": "Unitary / Pluralist",
+  "en_source": "政治学：单一主权 vs 多元主权（Bodin / Laski）；联邦主义与分权理论"
+ },
+ {
+  "id": 24,
+  "pole_negative": "国际",
+  "pole_positive": "本国",
+  "question": "变革该以什么为单位？",
+  "low": "很多问题只能跨国解决。把自己圈在国界里，是自欺。",
+  "high": "先把本国的事办好。别国的事，我们没能力也不该替他们决定。",
+  "en": "Internationalism / Nationalism",
+  "en_source": "政治哲学：世界主义 vs 民族主义（康德《永久和平论》/ Miller《论民族性》）"
+ }
+]

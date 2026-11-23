@@ -1,0 +1,5 @@
+.DS_Store
+Thumbs.db
+*.log
+.git_local_backup/
+.git_backup*/
